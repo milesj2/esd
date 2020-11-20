@@ -1,7 +1,7 @@
 package com.esd.servlet.authentication;
 
 import com.esd.model.data.User;
-import com.esd.model.data.UserGroup;
+import com.esd.model.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,30 +18,16 @@ public class LoginServlet extends HttpServlet{
 
         try
         {
-            User user = login(request.getParameter("username"), request.getParameter("password"));
+            User user = UserService.getInstance().validateCredentials(request.getParameter("username"), request.getParameter("password"));
 
-            if (user != null)
-            {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("currentSessionUser",user);
-                response.sendRedirect("index.jsp"); //logged-in page
-            }
-
-            else
-                response.sendRedirect("index.jsp?err=true"); //error page
+            HttpSession session = request.getSession(true);
+            session.setAttribute("currentSessionUser",user);
+            response.sendRedirect("index.jsp"); //logged-in page
         }
-        catch (Throwable theException)
+        catch (Exception e)
         {
-            System.out.println(theException);
-            throw theException;
+            System.out.println(e);
+            response.sendRedirect("index.jsp?err=true"); //error page
         }
     }
-
-    private User login(String username, String password){
-        if(username.equals("patient") && password.equals("patient")){
-            return new User(username, password, UserGroup.PATIENT);
-        }
-        return null;
-    }
-
 }
