@@ -1,4 +1,4 @@
-package com.esd.servlet.authentication;
+package com.esd.controller.authentication;
 
 import com.esd.model.data.User;
 import com.esd.model.service.UserService;
@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet{
+public class LoginController extends HttpServlet{
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {

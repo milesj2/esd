@@ -1,5 +1,5 @@
 <%@ page import="com.esd.model.data.User" %>
-<%@ page import="com.esd.servlet.authentication.LoginServlet" %>
+<%@ page import="com.esd.controller.authentication.LoginController" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
