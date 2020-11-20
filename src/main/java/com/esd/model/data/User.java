@@ -1,5 +1,9 @@
 package com.esd.model.data;
 
+/**
+ * Original Author: Jordan Hellier
+ * Use: This class is a simple data class used to store the data about a user
+ */
 public class User {
 
     private String username;

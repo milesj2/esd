@@ -6,6 +6,10 @@ import com.esd.model.exceptions.InvalidUserCredentialsException;
 
 import java.sql.SQLException;
 
+/**
+ * Original Author: Jordan Hellier
+ * Use: This class is a singleton, The use of this class is to do any functionality needed for user such as Authentication
+ */
 public class UserService {
     private static UserService instance;
     private UserDao userdao = UserDao.getInstance();

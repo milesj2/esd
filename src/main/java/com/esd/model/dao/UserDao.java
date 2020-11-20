@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * This class is a singleton class which is thread safe,
- * it's use is to perform all DAO operations in relation to users
+ * Original Author: Jordan Hellier
+ * Use: This class is a singleton, The use of this class is to all DAO operations in relation to users
  */
 public class UserDao {
 
