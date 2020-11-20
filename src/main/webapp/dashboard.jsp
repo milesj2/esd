@@ -1,4 +1,4 @@
-<%@ page import="com.esd.model.User" %>
+<%@ page import="com.esd.model.data.User" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>

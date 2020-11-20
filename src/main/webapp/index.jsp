@@ -1,4 +1,4 @@
-<%@ page import="com.esd.model.User" %>
+<%@ page import="com.esd.model.data.User" %>
 <%@ page import="com.esd.servlet.authentication.LoginServlet" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -7,23 +7,28 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/master.css">
 </head>
 <body>
-    <div>
+    <div class="container">
 
     <% if(currentUser == null){%>
-        <h1>Login</h1>
-        <form action="login" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" placeholder="username" id="username" name="username" val=""/>
-            <label for="password">Password:</label>
-            <input type="password" placeholder="password" id="password" name="password" val=""/>
-            <button type="submit">Login</button>
-            <span style="color:red;"><% if(request.getParameter("err") != null){
-                out.print("Invalid username/password");
-            } %></span>
-        </form>
-        <a href="#">Don't have an account? Signup</a>
+        <div class="loginFormWrapper">
+            <img src="images/logo.png" class="loginLogo" alt="" />
+            <form action="login" method="POST">
+                <input type="text" placeholder="username" id="username" name="username" val=""/><br/>
+                <input type="password" placeholder="password" id="password" name="password" val=""/><br/>
+                <button type="submit">Login</button>
+                <span class="errMessage"><% if(request.getParameter("err") != null){
+                    out.print("Invalid username/password");
+                } %></span>
+            </form>
+            <div class="noAccount">
+                <h1>Don't have an account?</h1>
+                <a href="#">Create account</a>
+            </div>
+        </div>
     <% }else{ %>
         Redirects are disabled in your browser please enable them to continue;
         <% response.sendRedirect("dashboard.jsp"); %>

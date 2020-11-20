@@ -1,4 +1,4 @@
-package com.esd.model;
+package com.esd.model.data;
 
 public enum UserGroup {
     ADMIN,

@@ -1,7 +1,7 @@
 package com.esd.servlet.authentication;
 
-import com.esd.model.User;
-import com.esd.model.UserGroup;
+import com.esd.model.data.User;
+import com.esd.model.data.UserGroup;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
