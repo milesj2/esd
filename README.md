@@ -3,7 +3,7 @@ The below is guidance for various aspects of the project
 
 ## Branch naming standard
 Naming of branches will be based on the issue number assigned to the work you are doing, and the label on this work. It's important to note branch names shouldn't be too long and spaces should not be used a - will replace a space. The format will be:
-<label>/<issuenumber>-short-desc-of-issue 
+\<label\>/\<issuenumber\>-short-desc-of-issue 
 
 IE: feature/7-initilise-basic-web-code
 
