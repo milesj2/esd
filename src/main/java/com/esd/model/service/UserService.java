@@ -12,9 +12,13 @@ import java.sql.SQLException;
  */
 public class UserService {
     private static UserService instance;
-    private UserDao userdao = UserDao.getInstance();
+    private UserDao userdao;
 
-    private UserService() {
+    private UserService(UserDao userdao) {
+        if(userdao == null){
+            throw new IllegalArgumentException("userdao must not be null");
+        }
+        this.userdao = userdao;
     }
 
     public User validateCredentials(String username, String password) throws SQLException, InvalidUserCredentialsException {
@@ -27,8 +31,12 @@ public class UserService {
 
     public synchronized static UserService getInstance(){
         if(instance == null){
-            instance = new UserService();
+            instance = new UserService(UserDao.getInstance());
         }
         return instance;
+    }
+
+    public static UserService getTestInstance(UserDao userdao){
+        return new UserService(userdao);
     }
 }
