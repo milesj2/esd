@@ -14,7 +14,7 @@
 
     <nav><a href="logout">Logout</a> </nav>
     <div>
-        welcome to your dashboard <% currentUser.getUsername(); %>
+        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privalage level is <% out.print(currentUser.getUserGroup().name()); %>
     </div>
 
 </body>

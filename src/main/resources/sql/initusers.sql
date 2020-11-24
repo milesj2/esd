@@ -6,3 +6,8 @@ create table tblUser(
 );
 
 insert into tblUser(username, password, usergroup) values('patient', 'patient', 'PATIENT');
+insert into tblUser(username, password, usergroup) values('admin', 'admin', 'ADMIN');
+insert into tblUser(username, password, usergroup) values('doctor', 'doctor', 'DOCTOR');
+insert into tblUser(username, password, usergroup) values('nurse', 'nurse', 'NURSE');
+insert into tblUser(username, password, usergroup) values('receptionist', 'receptionist', 'RECEPTIONIST');
+

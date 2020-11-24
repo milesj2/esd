@@ -31,7 +31,7 @@ public class UserDao {
         PreparedStatement statement = con.prepareStatement(GET_USER_BY_USERNAME);
         statement.setString(1, username);
         ResultSet result = statement.executeQuery();
-        //TODO validate only one user found
+
         boolean resultFound = result.next();
         if(!resultFound){
             throw new InvalidUserCredentialsException("no user found for username");
