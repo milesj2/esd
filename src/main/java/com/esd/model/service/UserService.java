@@ -1,7 +1,7 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
-import com.esd.model.data.User;
+import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 
 import java.sql.SQLException;

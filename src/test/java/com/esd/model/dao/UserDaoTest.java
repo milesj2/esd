@@ -1,7 +1,7 @@
 package com.esd.model.dao;
 
 
-import com.esd.model.data.User;
+import com.esd.model.data.persisted.User;
 import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import org.junit.jupiter.api.Test;

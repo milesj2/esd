@@ -1,1 +1,0 @@
-insert into tblUser(username, password, usergroup) values('testusername', 'testpass', 'PATIENT');

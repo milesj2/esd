@@ -1,4 +1,6 @@
-package com.esd.model.data;
+package com.esd.model.data.persisted;
+
+import com.esd.model.data.UserGroup;
 
 /**
  * Original Author: Jordan Hellier
@@ -6,9 +8,11 @@ package com.esd.model.data;
  */
 public class User {
 
+    private int id;
     private String username;
     private String password;
     private UserGroup userGroup;
+    private UserDetails userDetails;
 
     public User() {
     }
@@ -19,12 +23,12 @@ public class User {
         this.userGroup = userGroup;
     }
 
-    public UserGroup getUserGroup() {
-        return userGroup;
+    public int getId() {
+        return id;
     }
 
-    public void setUserGroup(UserGroup userGroup) {
-        this.userGroup = userGroup;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -41,5 +45,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 }

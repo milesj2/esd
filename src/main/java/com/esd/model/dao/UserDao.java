@@ -1,6 +1,6 @@
 package com.esd.model.dao;
 
-import com.esd.model.data.User;
+import com.esd.model.data.persisted.User;
 import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class UserDao {
 
     private static UserDao instance;
-    private static final String GET_USER_BY_USERNAME = "select * from tblUser where tblUser.username=?";
+    private static final String GET_USER_BY_USERNAME = "select * from systemUser where systemUser.username=?";
 
 
 
