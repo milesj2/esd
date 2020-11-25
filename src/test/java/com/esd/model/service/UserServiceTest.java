@@ -1,14 +1,13 @@
 package com.esd.controller.authentication;
 
 import com.esd.model.dao.UserDao;
-import com.esd.model.data.User;
+import com.esd.model.data.persisted.User;
 import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.SQLException;

@@ -1,6 +1,6 @@
 package com.esd.controller.authentication;
 
-import com.esd.model.data.User;
+import com.esd.model.data.persisted.User;
 import com.esd.model.service.UserService;
 
 import javax.servlet.ServletException;
