@@ -1,6 +1,18 @@
 # ESD
 The below is guidance for various aspects of the project
 
+# Derby DB
+## creating users
+Creating a database user is done in 2 steps execute the 2 below commands as root user to create a new user:
+
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.user.\<username\>','\<password\>');
+create schema <USERNAME>
+
+when creating the schema it needs to be in caps to work no matter username, the 2 above commands should look like below
+
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.user.admin','pw');
+create schema ADMIN;
+
 ## merging of work
 Branches should not be merged to the main branch until everyone in the group has read over the content of the merge work and has confirmed they agree and like they changes, this achieves 2 things, Stops bad code entering the code base, allows everyone to know how everything is working
 ## Naming Standard
