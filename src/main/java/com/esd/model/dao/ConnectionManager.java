@@ -31,10 +31,26 @@ public class ConnectionManager {
     private void initialiseConnection(){
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
-            connection = DriverManager.getConnection("jdbc:derby://" + properties.getProperty("databaseURl") + ":" + properties.getProperty("port")+"/" + properties.getProperty("database"));
+            connection = DriverManager.getConnection(createConnectionURL(), createConnectionProperties());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+        int i = 0;
+    }
+
+    private Properties createConnectionProperties() {
+        Properties connectionProperties = new Properties();
+        if(!properties.getProperty("user").equals("")){
+            connectionProperties.setProperty("user", properties.getProperty("user"));
+        }
+        if(!properties.getProperty("password").equals("")){
+            connectionProperties.setProperty("password", properties.getProperty("password"));
+        }
+        return connectionProperties;
+    }
+
+    private String createConnectionURL() {
+        return String.format("jdbc:derby://%s:%s/%s", properties.getProperty("databaseURl"), properties.getProperty("port"), properties.getProperty("database"));
     }
 
     public Connection getConnection(){
