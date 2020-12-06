@@ -1,6 +1,9 @@
 # ESD
 The below is guidance for various aspects of the project
 
+# code style
+For consistency it's important we all follow the same code style, this involves formatting code in a certain way, here is a link to googles Java code style which we will follow throughout the project https://google.github.io/styleguide/javaguide.html pay particular attention to package naming, class naming, function names etc. 
+
 # Derby DB
 ## creating users
 Creating a database user is done in 2 steps execute the 2 below commands as root user to create a new user:
