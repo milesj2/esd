@@ -24,6 +24,7 @@ create table systemUser(
                            id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
                            username varchar(50) NOT NULL unique,
                            password varchar(255) NOT NULL,
+                           active boolean NOT NULL DEFAULT false,
                            userGroup varchar(16) NOT NULL
 );
 
@@ -37,7 +38,6 @@ create table userDetails(
                             addressLine3 varchar(255) NOT NULL,
                             town varchar(255) NOT NULL,
                             postCode varchar(7) NOT NULL,
-                            userGroup varchar(16) NOT NULL,
                             dob DATE NOT NULL,
 
                             constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
@@ -89,23 +89,23 @@ id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) 
 
 --The order of these are important they link to the above records
 
-insert into systemUser(username, password, usergroup) values('admin', 'admin', 'ADMIN');
-insert into systemUser(username, password, usergroup) values('receptionist', 'receptionist', 'RECEPTIONIST');
+insert into systemUser(username, password, usergroup, active) values('admin', 'admin', 'ADMIN', true);
+insert into systemUser(username, password, usergroup, active) values('receptionist', 'receptionist', 'RECEPTIONIST', true);
 insert into systemUser(username, password, usergroup) values('doctor', 'doctor', 'DOCTOR');
 insert into systemUser(username, password, usergroup) values('nurse', 'nurse', 'NURSE');
-insert into systemUser(username, password, usergroup) values('patient', 'patient', 'PATIENT');
+insert into systemUser(username, password, usergroup, active) values('patient', 'patient', 'PATIENT', true);
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob)
-values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', 'ADMIN', DATE('1982-05-13'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
+values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DATE('1982-05-13'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob)
-values (2,'casandra', 'smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', 'RECEPTIONIST', DATE('1955-11-29'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
+values (2,'casandra', 'smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob)
-values (3,'jake', 'docotor', '52 john Road', '', '', 'Bristol', 'BS098TP', 'DOCTOR', DATE('1980-12-20'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
+values (3,'jake', 'docotor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob)
-values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', 'NURSE', DATE('1982-05-13'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
+values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob)
-values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', 'PATIENT', DATE('1995-02-01'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
+values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));

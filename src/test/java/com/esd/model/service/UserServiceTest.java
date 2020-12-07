@@ -22,6 +22,7 @@ public class UserServiceTest {
 
     public static final String USERNAME = "user";
     public static final String PASSWORD = "pass";
+    public static final Boolean ACTIVE = true;
     public static final UserGroup USER_GROUP = UserGroup.ADMIN;
 
     private UserDao mockUserDao = mock(UserDao.class);
@@ -30,7 +31,7 @@ public class UserServiceTest {
 
     @Before
     public void setup() throws SQLException, InvalidUserCredentialsException {
-        user = new User(USERNAME, PASSWORD, USER_GROUP);
+        user = new User(USERNAME, PASSWORD, USER_GROUP, ACTIVE);
         when(mockUserDao.getUserByUsername(USERNAME)).thenReturn(user);
     }
 

@@ -13,14 +13,16 @@ public class User {
     private String password;
     private UserGroup userGroup;
     private UserDetails userDetails;
+    private boolean active = false;
 
     public User() {
     }
 
-    public User(String username, String password, UserGroup userGroup) {
+    public User(String username, String password, UserGroup userGroup, boolean active) {
         this.username = username;
         this.password = password;
         this.userGroup = userGroup;
+        this.active = active;
     }
 
     public int getId() {
@@ -62,4 +64,8 @@ public class User {
     public void setUserDetails(UserDetails userDetails) {
         this.userDetails = userDetails;
     }
+
+    public boolean isActive() { return active; }
+
+    public void setActive(boolean active) { this.active = active; }
 }
