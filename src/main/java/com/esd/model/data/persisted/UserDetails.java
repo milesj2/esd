@@ -13,14 +13,39 @@ public class UserDetails {
 
     private String firstName;
     private String lastName;
+
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-
     private String town;
     private String postCode;
-    private UserGroup userGroup;
 
+    private String dob;
+
+    public UserDetails (int id,
+                        int userId,
+                        String firstName,
+                        String lastName,
+                        String addressLine1,
+                        String addressLine2,
+                        String addressLine3,
+                        String town,
+                        String postCode,
+                        String dob)
+    {
+        this.id = id;
+        this.userId = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.addressLine3 = addressLine3;
+        this.town = town;
+        this.postCode = postCode;
+
+        this.dob = dob;
+    }
 
     public String getFullAddress(){
         StringBuilder sb = new StringBuilder();
@@ -104,11 +129,12 @@ public class UserDetails {
         this.postCode = postCode;
     }
 
-    public UserGroup getUserGroup() {
-        return userGroup;
+    public String getDOB() {
+        return dob;
     }
 
-    public void setUserGroup(UserGroup userGroup) {
-        this.userGroup = userGroup;
+    public void setDOB(String dob) {
+        this.dob = dob;
     }
+
 }
