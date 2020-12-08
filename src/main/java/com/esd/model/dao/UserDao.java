@@ -1,7 +1,7 @@
 package com.esd.model.dao;
 
-import com.esd.model.data.persisted.User;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 
 import java.sql.Connection;
@@ -18,8 +18,6 @@ public class UserDao {
     private static UserDao instance;
     private static final String GET_USER_BY_USERNAME = "select * from systemUser where systemUser.username=?";
 
-
-
     private UserDao() {
     }
 
@@ -34,14 +32,14 @@ public class UserDao {
 
         boolean resultFound = result.next();
         if(!resultFound){
-            throw new InvalidUserCredentialsException("no user found for username");
+            throw new InvalidUserCredentialsException("No user found for username");
         }
-        User user = new User(
-                result.getString("username"),
-                result.getString("password"),
-                UserGroup.valueOf(result.getString("usergroup"))
+        return new User(
+                result.getString(DaoConsts.SYSTEMUSER_ID),
+                result.getString(DaoConsts.SYSTEMUSER_PASSWORD),
+                UserGroup.valueOf(result.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
+                result.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
         );
-        return user;
     }
 
     public synchronized static UserDao getInstance(){
