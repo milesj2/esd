@@ -184,7 +184,7 @@ public class UserDao {
                 resultSet.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
         );
     }
-
+    
     public synchronized static UserDao getInstance(){
         if(instance == null){
             instance = new UserDao();

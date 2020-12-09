@@ -7,6 +7,7 @@ package com.esd.controller.authentication;
 
 import javax.servlet.annotation.WebServlet;
 import com.esd.model.service.UserService;
+import com.esd.model.dao.UserDao;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -59,13 +60,13 @@ public class RegisterUser extends HttpServlet {
         view.forward(request, response);
     }
 
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-  
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
