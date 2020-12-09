@@ -1,6 +1,7 @@
-# Compiled class file
-*.class
+# ignore everything...
+*
 
+<<<<<<< HEAD
 #intelliJ
 .idea/
 target/
@@ -28,3 +29,8 @@ hs_err_pid*
 
 #glassfish-web.xml
 src/main/webapp/WEB-INF/glassfish-web.xml
+=======
+# ...except these...
+!.gitignore
+!*/src/*
+>>>>>>> 30dc8ea (15 Update gitignore, move UserServiceTest to correct package as suggested by eclipse)
