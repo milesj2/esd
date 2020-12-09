@@ -98,8 +98,8 @@
         
         <%-- For testing use only 
         <%=request.getAttribute("msg")%><br>
-        <%=request.getAttribute("msg2")%>  
-        --%> 
+        <%=request.getAttribute("msg2")%>
+        --%>
 
     </body>
 </html>
