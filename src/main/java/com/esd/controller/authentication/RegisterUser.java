@@ -54,7 +54,7 @@ public class RegisterUser extends HttpServlet {
         catch (Exception e) {
           System.out.println("Error: " + e);
         }
-         
+        
         request.setAttribute("notify",notify);
         RequestDispatcher view = request.getRequestDispatcher("/signup.jsp");
         view.forward(request, response);
