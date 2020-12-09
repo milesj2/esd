@@ -5,6 +5,7 @@
 
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -23,53 +24,53 @@
     <title>Invoice Search</title>
 </head>
 <body>
-<h2>Invoice search page</h2>
+<h2>Invoice Search page</h2>
+<h3>Enter your search terms to retrieve the invoice details</h3>
 <div>
     <form method="post" action="${pageContext.request.contextPath}/invoiceSearchForm">
-        <table>
+        <table border="1" cellpadding="5">
             <tr>
-                <td><select name="SearchMatch">
-                    <option value="All">-Select all-</option>
-                    <option value="INVOICEID">Invoice ID</option>
-                    <option value="INVOICEDATE">Invoice Date</option>
-                    <option value="INVOICESTATUS">Invoice Status</option>
-                    <option value="EMPOLOYEEID">Employee Id</option>
-                    <option value="PATIENTID">Patient Id</option>
-                </select></td>
-                <td> is: </td>
-                <td><input type="text" name="Search Term" size="10" /></td>
-                <td><input type="submit" value="Search" /></td>
+                <th>Id</th>
+                <th>Invoice Date</th>
+                <th>Invoice Time</th>
+                <th>Invoice Status</th>
+                <th>Employee Id</th>
+                <th>Patient Id</th>
+                <th>Appointment Id</th>
+                <th>Actions</th>
             </tr>
+            <tr>
+                <td><input type="text" name=<%=DaoConsts.INVOICE_ID%> size="10" /></td>
+                <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
+                <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.PATIENT_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID%> size="10" /></td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <input type="submit" value="Search" />
+            </tr>
+            <% try {
+                ArrayList<Invoice> invoiceList = (ArrayList<Invoice>)request.getAttribute("table");
+                for(Invoice invoice:invoiceList){ %>
+            <tr>
+                <td><%=invoice.getId()%></td>
+                <td><%=invoice.getInvoiceDate()%></td>
+                <td><%=invoice.getInvoiceTime()%></td>
+                <td><%=invoice.getInvoiceStatus()%></td>
+                <td><%=invoice.getEmployeeId()%></td>
+                <td><%=invoice.getPatientId()%></td>
+                <td><%=invoice.getAppointmentId()%></td>
+                <td><a href='InvoicePage?id=<%=invoice.getId()%>'>Search Invoice</a></td>
+            </tr>
+            <% }
+            } catch(Exception e){
+            } %>
         </table>
     </form>
-    <% try {
-        ArrayList<Invoice> Invoices = (ArrayList<Invoice>)request.getAttribute("table"); %>
-    <table border="1" cellpadding="5">
-        <% if(Invoices.size() > 0) { // todo change for appropriate user group
-            out.print("<tr>\n" +
-                    "<th>ID</th>\n" +
-                    "<th>Invoice Date</th>\n" +
-                    "<th>Invoice Time</th>\n" +
-                    "<th>Invoice Status</th>\n" +
-                    "<th>Employee ID</th>\n" +
-                    "<th>Patient ID</th>\n" +
-                    "<th>Actions</th>\n" +
-                    "</tr>");
-        }
-            for(Invoice invoice:Invoices){ %>
-        <tr>
-            <td><%=invoice.getId()%></td>
-            <td><%=invoice.getInvoiceDate()%></td>
-            <td><%=invoice.getInvoiceTime()%></td>
-            <td><%=invoice.getInvoiceStatus()%>
-            <td><%=invoice.getEmployeeId()%></td>
-            <td><%=invoice.getPatientId()%></td>
-            <td><a href='invoicepage?id=<%=invoice.getId()%>'>Search Users</a></td>
-        </tr>
-        <% } %>
-    </table>
-    <% } catch(Exception e){
-    } %>
 </div>
 </body>
 </html>

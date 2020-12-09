@@ -22,6 +22,9 @@ public class Invoice {
     private List<InvoiceItem> items;
     private InvoiceStatus invoiceStatus;
 
+    public Invoice() {
+    }
+
     public void AddInvoiceItem(InvoiceItem invoiceItem){
         this.items.add(invoiceItem);
     }

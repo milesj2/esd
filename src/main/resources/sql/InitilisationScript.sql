@@ -102,10 +102,10 @@ insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2,
 values (2,'casandra', 'smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
-values (3,'jake', 'docotor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
+values (3,'jake', 'doctor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
-values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
+values (4,'sandra', 'johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));
