@@ -65,7 +65,7 @@ public class UserDao {
         try {
         Connection con = ConnectionManager.getInstance().getConnection();
         state = con.createStatement();
-        flag = state.executeUpdate("insert into systemUser (username, password, userGroup) values" + data);
+        flag = state.executeUpdate("insert into systemUser (username, password, userGroup, active) values" + data);
         state.close();
         } catch(SQLException e) {
           System.err.println("Error: " + e);
@@ -98,7 +98,7 @@ public class UserDao {
         try {
         Connection con = ConnectionManager.getInstance().getConnection();
         state = con.createStatement();
-        flag2 = state.executeUpdate("insert into userDetails (userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, userGroup, dob) values" + data2);
+        flag2 = state.executeUpdate("insert into userDetails (userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) values" + data2);
         state.close();
         } catch(SQLException e) {
           System.err.println("Error: " + e);

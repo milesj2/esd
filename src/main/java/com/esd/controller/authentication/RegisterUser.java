@@ -35,19 +35,20 @@ public class RegisterUser extends HttpServlet {
         String postCode = request.getParameter("postCode");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String active = "true";
         
 
         int flag1 = 0;
         int flag2 = 0;
         String notify;
         String userId = "";
-        String data = "('"+username.trim()+"',"+"'"+password.trim()+"',"+"'"+userGroup.trim()+"')";
+        String data = "('"+username.trim()+"',"+"'"+password.trim()+"',"+"'"+userGroup.trim()+"',"+active.trim()+")";
         UserDao db = UserDao.getInstance();
         boolean matchFound = db.verifyUsernameIsUnique(username);
         if (!matchFound) {
           flag1 = db.addUser2SystemUser(data);
           userId =  db.getUserId(username);
-          String data2 = "("+userId.trim()+","+"'"+firstName.trim()+"',"+"'"+lastName.trim()+"',"+"'"+addressLine1.trim()+"',"+"'"+addressLine2.trim()+"',"+"'"+addressLine3.trim()+"',"+"'"+town.trim()+"',"+"'"+postCode.trim()+"',"+"'"+userGroup.trim()+"',"+"'"+dob.trim()+"')";
+          String data2 = "("+userId.trim()+","+"'"+firstName.trim()+"',"+"'"+lastName.trim()+"',"+"'"+addressLine1.trim()+"',"+"'"+addressLine2.trim()+"',"+"'"+addressLine3.trim()+"',"+"'"+town.trim()+"',"+"'"+postCode.trim()+"',"+"'"+dob.trim()+"')";
           flag2 = db.addUser2UserDetails(data2);
           notify = "Sucessfully Registered! Please Sign in with the link below.";
         }
