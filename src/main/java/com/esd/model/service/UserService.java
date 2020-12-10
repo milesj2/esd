@@ -4,6 +4,7 @@ import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.exceptions.InvalidUserIDException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,6 +59,14 @@ public class UserService {
     }
 
     public boolean updateUser(User user) throws SQLException, InvalidIdValueException {
+        return userDao.updateUser(user);
+    }
+
+    public User getUserByID(int id) throws SQLException, InvalidUserIDException {
+        return userDao.getUserByID(id);
+    }
+
+    public boolean updateUser(User user) throws SQLException, InvalidUserIDException {
         return userDao.updateUser(user);
     }
 
