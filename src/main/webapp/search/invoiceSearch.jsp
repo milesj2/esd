@@ -1,21 +1,8 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="com.esd.model.data.UserGroup" %>
-<%@ page import="com.esd.model.data.persisted.User" %>
+<%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Invoice" %>
 
-<%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%
-    User currentUser = (User)(session.getAttribute("currentSessionUser"));
-    if(currentUser == null){
-        response.sendRedirect("../index.jsp");
-        return;
-    }
-    String[] userGroups = Arrays.toString(UserGroup.class.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
-%>
 
 <!DOCTYPE html>
 <html lang="en">
