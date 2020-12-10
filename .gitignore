@@ -32,5 +32,21 @@ src/main/webapp/WEB-INF/glassfish-web.xml
 =======
 # ...except these...
 !.gitignore
+<<<<<<< HEAD
 !*/src/*
 >>>>>>> 30dc8ea (15 Update gitignore, move UserServiceTest to correct package as suggested by eclipse)
+=======
+!*.html
+!*.java
+!*.jsp
+!*.xhtml
+!*.xml
+
+# ...even if they're in subdirectories...
+!*/
+
+# ...and ignore these paths
+.settings/*
+target/*
+bin/*
+>>>>>>> 2a360ab (15 Update gitignore, add system settings JSP file and update web xml)
