@@ -1,22 +1,38 @@
 package com.esd.controller.search;
 
+import com.esd.model.dao.DaoConsts;
+import com.esd.model.dao.InvoiceDao;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.User;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Original Author: Trent meier
- * Use: the invoice search controller provides user access filtering and redirects to
+ * Use: the invoice search controller provides invoice access filtering and redirects to
  * user search page
  */
 
 @WebServlet("/invoiceSearch")
 public class InvoiceSearchController extends HttpServlet {
+
+    private ArrayList<String> invoiceFormsConst = new ArrayList<String>(Arrays.asList(
+            DaoConsts.INVOICE_ID,
+            DaoConsts.INVOICE_DATE,
+            DaoConsts.INVOICE_STATUS ,
+            DaoConsts.INVOICE_TIME,
+            DaoConsts.INVOICE_STATUS,
+            DaoConsts.EMPLOYEE_ID,
+            DaoConsts.PATIENT_ID,
+            DaoConsts.APPOINTMENT_ID));
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
@@ -37,5 +53,16 @@ public class InvoiceSearchController extends HttpServlet {
             System.out.println(e);
             response.sendRedirect("index.jsp?err=true"); //error page
         }
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, java.io.IOException {
+
+        ArrayList<Invoice> invoiceList = InvoiceDao.getFilteredDetails(invoiceFormsConst, request);
+
+        request.setAttribute("table", invoiceList);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
+        requestDispatcher.forward(request, response);
     }
 }

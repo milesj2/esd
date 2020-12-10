@@ -14,7 +14,7 @@
 <h2>User Search page</h2>
 <h3>Enter your search terms to retrieve user details</h3>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/userSearchForm">
+    <form method="post" action="${pageContext.request.contextPath}/userSearch">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Id</th>
