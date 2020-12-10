@@ -16,6 +16,7 @@
     <nav><a href="logout">Logout</a> </nav>
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
+	<br>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
             out.print("<a href='user/manage'>Manage Users</a>");
         }%>
