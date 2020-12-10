@@ -2,7 +2,11 @@ package com.esd.controller.systemsettings;
 
 import java.io.IOException;
 
+import com.esd.model.systemsettings.SystemSettings;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,24 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Original Author: Sam Barba
  * 
- * This page should be restricted to the admin user and allows changing of the various system settings, the proposed
- * approach is to: Load this into a SystemSettings singleton which contains all the values. (this can come from the
- * database or a conf file)
- * 
- * The page will need to post to a controller which will then update the persisted configuration with the new value
- * aswell as updating the SystemSettings singleton.
- * 
  * Use: The system settings controller use is to update the site settings as per a qualified user's request. Settings
  * are persisted via a conf file.
  *
  */
+@WebServlet("/systemSettings")
 public class SystemSettingsController extends HttpServlet {
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private static final String SUCCESS_ATTRIBUTE = "Success!";
 
-		response.setContentType("text/html;charset=UTF-8");
-	}
+	private static final String FAILURE_NOTIFY = "Save failed.";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +35,22 @@ public class SystemSettingsController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		processRequest(request, response);
+	}
+
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		SystemSettings sysSettings = SystemSettings.getInstance();
+		sysSettings.updatePropertyWithoutSave(request.getParameter("baseConsultationFeeDoctor"));
+		sysSettings.updatePropertyWithoutSave(request.getParameter("baseConsultationFeeNurse"));
+		sysSettings.updatePropertyWithoutSave(request.getParameter("consultationSlotTimeMins"));
+		sysSettings.save();
+
+		request.setAttribute("success", SUCCESS_ATTRIBUTE);
+		request.setAttribute("failure", FAILURE_NOTIFY);
+		RequestDispatcher view = request.getRequestDispatcher("/systemSettings");
+		response.setContentType("text/html;charset=UTF-8");
+		view.forward(request, response);
 	}
 
 	@Override
