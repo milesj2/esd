@@ -15,7 +15,10 @@
 
     <nav><a href="logout">Logout</a> </nav>
     <div>
-        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privalage level is <% out.print(currentUser.getUserGroup().name()); %>
+        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
+            out.print("<a href='admin/users/manage.jsp'>Manage Users</a>");
+        }%>
     </div>
 
     <div>

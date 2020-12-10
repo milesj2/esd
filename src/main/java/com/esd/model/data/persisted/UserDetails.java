@@ -34,7 +34,7 @@ public class UserDetails {
                         String dob)
     {
         this.id = id;
-        this.userId = id;
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
 
