@@ -2,7 +2,6 @@ package com.esd.model.dao;
 
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
-import com.esd.model.exceptions.DuplicateUserException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.exceptions.InvalidUserIDException;
 
