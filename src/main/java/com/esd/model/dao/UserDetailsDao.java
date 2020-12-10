@@ -3,12 +3,14 @@ package com.esd.model.dao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.exceptions.InvalidUserDetailsIDException;
 import com.esd.model.exceptions.InvalidUserIDException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.Format;
 
 /**
  * Original Author: Miles Jarvis
@@ -18,6 +20,16 @@ public class UserDetailsDao {
     private static UserDetailsDao instance;
 
     private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
+    private static final String UPDATE_USER_DETAILS = "UPDATE USERDETAILS SET " +
+            "firstname=?" +
+            ",lastname=?" +
+            ",addressline1=?" +
+            ",addressline2=?" +
+            ",addressline3=?" +
+            ",town=?" +
+            ",postcode=?" +
+            ",dob=? " +
+            "WHERE USERID=?";
 
     private UserDetailsDao() {
     }
@@ -52,8 +64,37 @@ public class UserDetailsDao {
 
         boolean resultFound = result.next();
         if(!resultFound){
-            throw new InvalidUserIDException("No user found for user id");
+            throw new InvalidUserIDException(String.format(InvalidUserIDException.DEFAULT_MESSAGE, id));
         }
         return getUserDetailsFromResults(result);
+    }
+
+    public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidUserDetailsIDException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+
+        PreparedStatement statement = con.prepareStatement(UPDATE_USER_DETAILS);
+
+        statement.setString(1, userDetails.getFirstName());
+        statement.setString(2, userDetails.getLastName());
+        statement.setString(3, userDetails.getAddressLine1());
+        statement.setString(4, userDetails.getAddressLine2());
+        statement.setString(5, userDetails.getAddressLine3());
+        statement.setString(6, userDetails.getTown());
+        statement.setString(7, userDetails.getPostCode());
+        statement.setString(8, userDetails.getDOB());
+        statement.setInt(9, userDetails.getUserId());
+
+        int result = statement.executeUpdate();
+
+        if (result == 1){
+            return true;
+        } else if (result == 0){
+            throw new InvalidUserDetailsIDException(
+                    String.format(InvalidUserDetailsIDException.DEFAULT_MESSAGE, userDetails.getUserId())
+            );
+        } else {
+            //throw custom error
+            return false;
+        }
     }
 }

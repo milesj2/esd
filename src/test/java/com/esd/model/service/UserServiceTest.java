@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
+    public static final int ID = -1;
     public static final String USERNAME = "user";
     public static final String PASSWORD = "pass";
     public static final Boolean ACTIVE = true;
@@ -31,7 +32,7 @@ public class UserServiceTest {
 
     @Before
     public void setup() throws SQLException, InvalidUserCredentialsException {
-        user = new User(USERNAME, PASSWORD, USER_GROUP, ACTIVE);
+        user = new User(ID, USERNAME, PASSWORD, USER_GROUP, ACTIVE);
         when(mockUserDao.getUserByUsername(USERNAME)).thenReturn(user);
     }
 
