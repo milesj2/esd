@@ -25,13 +25,17 @@ public class LoginController extends HttpServlet{
             User user = UserService.getInstance()
                     .validateCredentials(request.getParameter("username"), request.getParameter("password"));
 
+            if (!user.isActive()){
+                response.sendRedirect("index.jsp?err=2");
+                return;
+            }
             //create http session
             HttpSession session = request.getSession(true);
             session.setAttribute("currentSessionUser",user);
             response.sendRedirect("dashboard.jsp"); //logged-in page
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
+            response.sendRedirect("index.jsp?err=1"); //error page
         }
     }
 }
