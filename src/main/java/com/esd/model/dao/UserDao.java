@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 /**
  * Original Author: Jordan Hellier
+ * Modified by: Angela Jackson
  * Use: This class is a singleton, The use of this class is to all DAO operations in relation to users
  */
 public class UserDao {
@@ -19,6 +20,8 @@ public class UserDao {
     private static UserDao instance;
     private static final String GET_USER_BY_USERNAME = "select * from systemUser where systemUser.username=?";
     private static final String GET_ID_BY_USERNAME = "select ID from systemUser where systemUser.username=?";
+    private static final String INSERT_INTO_SYSTEMUSER = "insert into systemUser (username, password, active, userGroup) values (?, ?, ?, ?)";
+    private static final String INSERT_INTO_USERDETAILS = "insert into userDetails (userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private Statement state;
 
     private UserDao() {
@@ -59,18 +62,21 @@ public class UserDao {
         return matchFound;
     }
     
-    public int addUser2SystemUser(String data){
-        int flag = 0;
+    public void addUser2SystemUser(String username, String password, String active, String userGroup){
+
+        Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        state = con.createStatement();
-        flag = state.executeUpdate("insert into systemUser (username, password, userGroup, active) values" + data);
-        state.close();
+        PreparedStatement statement = con.prepareStatement(INSERT_INTO_SYSTEMUSER);
+        statement.setString(1, username);
+        statement.setString(2, password);
+        statement.setString(3, active);
+        statement.setString(4, userGroup);
+        int resultAdded = statement.executeUpdate();
+        
         } catch(SQLException e) {
           System.err.println("Error: " + e);
-        }//try
-        return (flag);
+        }
     }
     
      public String getUserId(String dataUserName) {
@@ -92,18 +98,26 @@ public class UserDao {
         return userid;
     }
     
-    public int addUser2UserDetails(String data2){
-        int flag2 = 0;
+    public void addUser2UserDetails(String userId, String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob){
+
+        Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        state = con.createStatement();
-        flag2 = state.executeUpdate("insert into userDetails (userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) values" + data2);
-        state.close();
+        PreparedStatement statement = con.prepareStatement(INSERT_INTO_USERDETAILS);
+        statement.setString(1, userId);
+        statement.setString(2, firstName);
+        statement.setString(3, lastName);
+        statement.setString(4, addressLine1);
+        statement.setString(5, addressLine2);
+        statement.setString(6, addressLine3);
+        statement.setString(7, town);
+        statement.setString(8, postCode);
+        statement.setString(9, dob);
+        int checkUserAddedToUserDetails = statement.executeUpdate();
+        
         } catch(SQLException e) {
           System.err.println("Error: " + e);
-        }//try
-        return (flag2);
+        }        
     }
 
     public synchronized static UserDao getInstance(){

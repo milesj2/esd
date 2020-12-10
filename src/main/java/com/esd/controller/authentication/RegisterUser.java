@@ -5,8 +5,8 @@
  */
 package com.esd.controller.authentication;
 
-
-import com.esd.model.dao.UserDao;
+import javax.servlet.annotation.WebServlet;
+import com.esd.model.service.UserService;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author angela
  */
+@WebServlet("/RegisterUser")
 public class RegisterUser extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -38,66 +39,39 @@ public class RegisterUser extends HttpServlet {
         String active = "true";
         
 
-        int flag1 = 0;
-        int flag2 = 0;
-        String notify;
-        String userId = "";
-        String data = "('"+username.trim()+"',"+"'"+password.trim()+"',"+"'"+userGroup.trim()+"',"+active.trim()+")";
-        UserDao db = UserDao.getInstance();
-        boolean matchFound = db.verifyUsernameIsUnique(username);
-        if (!matchFound) {
-          flag1 = db.addUser2SystemUser(data);
-          userId =  db.getUserId(username);
-          String data2 = "("+userId.trim()+","+"'"+firstName.trim()+"',"+"'"+lastName.trim()+"',"+"'"+addressLine1.trim()+"',"+"'"+addressLine2.trim()+"',"+"'"+addressLine3.trim()+"',"+"'"+town.trim()+"',"+"'"+postCode.trim()+"',"+"'"+dob.trim()+"')";
-          flag2 = db.addUser2UserDetails(data2);
-          notify = "Sucessfully Registered! Please Sign in with the link below.";
+        String notify = "";
+        try {
+            boolean userRegisterd = UserService.getInstance()
+                .createUser(username, password, active, userGroup, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+            if (userRegisterd) {
+              notify = "Sucessfully Registered! Please Sign in with the link below.";
+            }
+            else {
+              notify = "Error: Username already exsists, please choose another username or sign in with the exsisting username";
+            }
+        }//endtry
+        catch (Exception e) {
+          System.out.println("Error: " + e);
         }
-        else {
-          notify = "Error: Username already exsists, please choose another username or sign in with the exsisting username";
-        }
-        int flag = flag1+flag2;
- 
+         
         request.setAttribute("notify",notify);
-        request.setAttribute("msg",flag+" database tables updated");
-        request.setAttribute("msg2",userId.trim()+" user id for user");
         RequestDispatcher view = request.getRequestDispatcher("/signup.jsp");
         view.forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+  
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
