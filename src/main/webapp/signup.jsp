@@ -95,11 +95,5 @@
             <% } %>
             <p>Already have an account? <a href="index.jsp">Sign in</a>.</p>
         </form>        
-        
-        <%-- For testing use only 
-        <%=request.getAttribute("msg")%><br>
-        <%=request.getAttribute("msg2")%>
-        --%>
-
     </body>
 </html>

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 /**
  * Original Author: Jordan Hellier
+ * Modified by: Angela Jackson
  * Use: This class is a singleton, The use of this class is to do any functionality needed for user such as Authentication
  */
 public class UserService {
@@ -27,6 +28,23 @@ public class UserService {
             return user;
         }
         throw new InvalidUserCredentialsException("Passwords don't match");
+    }
+    
+    public boolean createUser(String username, String password, String active, String userGroup, 
+        String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob) 
+        throws SQLException {
+        
+        UserDao db = UserDao.getInstance();
+        boolean matchFound = db.verifyUsernameIsUnique(username);
+        
+        if (!matchFound) {
+          db.addUser2SystemUser(username, password, active, userGroup);
+          String userId =  db.getUserId(username);
+          db.addUser2UserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+          return true;
+        }
+        
+        return false;
     }
 
     public synchronized static UserService getInstance(){
