@@ -11,31 +11,28 @@
 <%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <html>
 <head>
-    <title>Admin Reports</title>
+    <title>Generate Report</title>
 </head>
-<body>
-    <jsp:include page="../includes/header.jsp" />
-    this is the placeholder page for the admin reports
-    <% out.print("<span style=\"color:red;\">This is some text</span>"); %>
-    <form method="POST" action="reports">
-        Report: <select name="report">
+    <body>
+        <form method="POST" action="reports">
+            Report: <select name="report">
+            <%
+                for (String key : SystemReports.availableReports.keySet()) {
+                    out.print("<option value=\"" + key + "\">" + SystemReports.availableReports.get(key).getReportName() + "</option>");
+                }
+            %>
+            </select> <br/>
+                Report parameters: <br/>
+                Start Date: <input type="date" name="startDate"/><br/>
+                End Date: <input type="date" name="endDate"/><br/>
+                report type: <select name="reportType">
                 <%
-                    for(String key : SystemReports.availableReports.keySet()){
-                        out.print("<option value=\"" + key +"\">" + SystemReports.availableReports.get(key).getReportName() +"</option>");
+                    for (ReportType key : ReportType.values()) {
+                        out.print("<option value=\"" + key + "\">" + key.name() + "</option>");
                     }
                 %>
-                </select> <br/>
-        Report parameters: <br/>
-        Start Date: <input type="date" name="startDate"/><br/>
-        End Date: <input type="date" name="endDate"/><br/>
-        report type: <select name="reportType">
-        <%
-            for(ReportType key : ReportType.values()){
-                out.print("<option value=\"" + key +"\">" + key.name() +"</option>");
-            }
-        %>
-    </select> <br/>
-        <button type="submit">Generate report</button>
-    </form><br/>
-  </body>
+            </select> <br/>
+            <button type="submit">Generate report</button>
+        </form>
+    </body>
 </html>

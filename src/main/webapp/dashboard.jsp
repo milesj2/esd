@@ -22,6 +22,11 @@
             out.print("<a href='userSearch'>Search Users</a>");
         }%>
     </div>
+    <div>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
+            out.print("<a href='reports'>AdminReports</a>");
+        }%>
+    </div>
 
     <div>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group

@@ -17,6 +17,6 @@
         response.sendRedirect("index.jsp");
     }%>
 
-    <nav><a href="reports">AdminReports</a><a href="dashboard.jsp">Dashboard</a> <a href="logout">Logout</a> </nav>
+    <nav><a href="dashboard.jsp">Dashboard</a> <a href="logout">Logout</a> </nav>
 </body>
 </html>
