@@ -17,12 +17,21 @@ import java.util.ArrayList;
 
 public class InvoiceDao {
 
+    private static InvoiceDao instance;
+
     private static final String GET_FILTERED_INVOICES = "SELECT * FROM INVOICE";
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
     private static final String MATCH = " = ?";
 
     private InvoiceDao() {
+    }
+
+    public synchronized static InvoiceDao getInstance(){
+        if(instance == null){
+            instance = new InvoiceDao();
+        }
+        return instance;
     }
 
     public static ArrayList<Invoice> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request){

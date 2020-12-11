@@ -46,7 +46,7 @@ public class UserDetailsService {
 
     public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(ArrayList<String> formKeys,
                                                                            HttpServletRequest request) {
-        ArrayList<UserDetails> userDetails = UserDetailsDao.getFilteredDetails(formKeys, request);
+        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(formKeys, request);
         return userDetails;
     }
 }

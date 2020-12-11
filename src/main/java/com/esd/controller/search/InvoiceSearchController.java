@@ -1,10 +1,10 @@
 package com.esd.controller.search;
 
 import com.esd.model.dao.DaoConsts;
-import com.esd.model.dao.InvoiceDao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.User;
+import com.esd.model.service.InvoiceService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,7 +58,7 @@ public class InvoiceSearchController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        ArrayList<Invoice> invoiceList = InvoiceDao.getFilteredDetails(invoiceFormsConst, request);
+        ArrayList<Invoice> invoiceList = InvoiceService.getInvoiceFromFilteredRequest(invoiceFormsConst, request);
 
         request.setAttribute("table", invoiceList);
 

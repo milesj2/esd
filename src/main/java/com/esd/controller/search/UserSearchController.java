@@ -1,10 +1,10 @@
 package com.esd.controller.search;
 
 import com.esd.model.dao.DaoConsts;
-import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.service.UserDetailsService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,7 +61,7 @@ public class UserSearchController extends HttpServlet {
             throws ServletException, java.io.IOException {
 
         // pass request with form keys and request (has post values)
-        ArrayList<UserDetails> userDetailsList = UserDetailsDao.getFilteredDetails(formValues, request);
+        ArrayList<UserDetails> userDetailsList = UserDetailsService.getInstance().getUserDetailsFromFilteredRequest(formValues, request);
 
         //return user details list
         request.setAttribute("table", userDetailsList);
