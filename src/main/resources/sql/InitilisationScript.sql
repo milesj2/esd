@@ -55,7 +55,6 @@ create table appointments
     slots INTEGER NOT NULL default 1,
     employeeId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
-
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
     constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id)
 );

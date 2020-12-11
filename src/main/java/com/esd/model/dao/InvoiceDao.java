@@ -4,17 +4,22 @@ import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 
 import javax.servlet.http.HttpServletRequest;
+import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.Invoice;
+import com.esd.model.data.persisted.User;
+import com.esd.model.exceptions.InvalidUserCredentialsException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Original Author: Trent Meier
  * Use: This class is a singleton, The use of this class is to all DAO operations in relation to invoices
  */
-
 public class InvoiceDao {
 
     private static InvoiceDao instance;
@@ -24,7 +29,46 @@ public class InvoiceDao {
     private static final String AND = " AND ";
     private static final String MATCH = " = ?";
 
+    private static String LOADCOMPLETEINVOICEDATERESTRICTIONWITHSTATUS = "select * from invoice\n" +
+            "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
+            "    where INVOICEDATE > ? AND INVOICEDATE < ? AND STATUS = ?";
+
     private InvoiceDao() {
+
+    }
+
+    public Invoice extractInvoiceFromResultSet(ResultSet resultSet){
+        Invoice invoice =  new Invoice();
+        invoice.setId(resultSet.getInt(DaoConsts.INVOICE_ID));
+        invoice.setInvoiceDate(resultSet.getDate(DaoConsts.INVOICE_DATE));
+        invoice.setInvoiceTime(resultSet.getTime(DaoConsts.INVOICE_TIME));
+        invoice.setInvoiceStatus(InvoiceStatus.valueOf(InvoiceStatus.class,
+                resultSet.getString(DaoConsts.INVOICE_STATUS).toUpperCase()));
+        invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID));
+        invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID));
+        invoice.setPrivatePatient(resultSet.getBoolean(DaoConsts.PRIVATE_PATIENT));
+        invoice.setAppointmentId(resultSet.getInt(DaoConsts.APPOINTMENT_ID));
+        return null;
+    }
+
+    public void getAllInvoicesAndItemsBetweenDatesAndWithStatus(Date start, Date end, InvoiceStatus status) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+
+        PreparedStatement statement = con.prepareStatement(LOADCOMPLETEINVOICEDATERESTRICTIONWITHSTATUS);
+        statement.setDate(1, new java.sql.Date(start.getTime()));
+        statement.setDate(2, new java.sql.Date(start.getTime()));
+        statement.setString(3, status.name());
+
+        ResultSet result = statement.executeQuery();
+        boolean resultFound;
+
+        while ((resultFound = result.next())){
+
+        }
+    }
+
+    public void getAllInvoiceItemsForInvoiceId(long id){
+
     }
 
     public synchronized static InvoiceDao getInstance(){
@@ -93,3 +137,4 @@ public class InvoiceDao {
         return invoiceLst;
     }
 }
+

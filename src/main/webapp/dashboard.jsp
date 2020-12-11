@@ -8,12 +8,7 @@
     <title>User Dashboard</title>
 </head>
 <body>
-    <% if(currentUser == null) {
-        response.sendRedirect("index.jsp");
-        return; //return is safe and stops further script execution
-    }%>
-
-    <nav><a href="logout">Logout</a> </nav>
+    <jsp:include page="includes/header.jsp" />
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
 	<br>
