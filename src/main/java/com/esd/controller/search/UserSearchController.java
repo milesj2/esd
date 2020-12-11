@@ -59,14 +59,18 @@ public class UserSearchController extends HttpServlet {
     //returns search form data
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
+        try {
+            // pass request with form keys and request (has post values)
+            ArrayList<UserDetails> userDetailsList = UserDetailsService.getInstance().getUserDetailsFromFilteredRequest(formValues, request);
 
-        // pass request with form keys and request (has post values)
-        ArrayList<UserDetails> userDetailsList = UserDetailsService.getInstance().getUserDetailsFromFilteredRequest(formValues, request);
+            //return user details list
+            request.setAttribute("table", userDetailsList);
 
-        //return user details list
-        request.setAttribute("table", userDetailsList);
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/userSearch.jsp");
-        requestDispatcher.forward(request, response);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/userSearch.jsp");
+            requestDispatcher.forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendRedirect("index.jsp?err=true"); //error page
+        }
     }
 }

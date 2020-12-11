@@ -58,11 +58,16 @@ public class InvoiceSearchController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        ArrayList<Invoice> invoiceList = InvoiceService.getInvoiceFromFilteredRequest(invoiceFormsConst, request);
+        try {
+            ArrayList<Invoice> invoiceList = InvoiceService.getInvoiceFromFilteredRequest(invoiceFormsConst, request);
 
-        request.setAttribute("table", invoiceList);
+            request.setAttribute("table", invoiceList);
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
-        requestDispatcher.forward(request, response);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
+            requestDispatcher.forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendRedirect("index.jsp?err=true"); //error page
+        }
     }
 }
