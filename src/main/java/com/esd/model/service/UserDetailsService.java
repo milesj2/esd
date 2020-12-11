@@ -1,12 +1,8 @@
 package com.esd.model.service;
 
-import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
-import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserDetailsIDException;
-import com.esd.model.exceptions.InvalidUserIDException;
+import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 
@@ -33,11 +29,11 @@ public class UserDetailsService {
     }
 
 
-    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidUserIDException {
+    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
         return UserDetailsDao.getInstance().getUserDetailsByUserId(userId);
     }
 
-    public boolean updateUserDetails(UserDetails userDetails) throws InvalidUserDetailsIDException, SQLException {
+    public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
         return UserDetailsDao.getInstance().updateUserDetails(userDetails);
     }
 

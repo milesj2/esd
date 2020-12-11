@@ -1,31 +1,11 @@
 <%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.esd.model.service.UserService" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="com.esd.model.exceptions.InvalidUserIDException" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
-<%@ page import="java.util.stream.Stream" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="java.sql.Struct" %>
-<%@ page import="com.esd.views.ViewsConsts" %>
-<%@ page import="com.esd.model.data.persisted.UserDetails" %>
-<%@ page import="com.esd.model.service.UserDetailsService" %>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    User currentUser = (User)(session.getAttribute("currentSessionUser"));
-    if(currentUser == null){
-        out.print(ViewsConsts.Error.REDIRECTS_DISABLED);
-        response.sendRedirect("../../index.jsp");
-        return;
-    } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    // String[] userGroups = Stream.of(UserGroup.values()).map(UserGroup::name).toArray(String[]::new);
+    User user = (User)(request.getAttribute("editUser"));
     String[] userGroups = Arrays.toString(UserGroup.class.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
-
 %>
 
 <!DOCTYPE html>
@@ -38,18 +18,15 @@
 <body>
 
 <%
-    try {
-        User user = UserService.getInstance().getUserByID(Integer.parseInt(request.getParameter("id")));
-        user.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(user.getId()));
-        if (user.getUserGroup() == UserGroup.ADMIN) { %>
-            <h1>Editing User is disabled for admin accounts from this page.</h1>
-            <a href="manage.jsp">Return to User Management</a>
-        <%    return;
-        }
+    if (user.getUserGroup() == UserGroup.ADMIN) { %>
+        <h1>Editing User is disabled for admin accounts from this page.</h1>
+        <a href="manage.jsp">Return to User Management</a>
+    <%  return;
+    }
     %>
     <h1>Editing User <% out.print(user.getUsername()); %></h1>
     <h2>Name: <% out.print(user.getUserDetails().getFirstName()); %></h2>
-    <button onclick="window.location = '${pageContext.request.contextPath}/admin/users/manage.jsp';">Cancel</button>
+    <button onclick="window.location = '${pageContext.request.contextPath}/user/manage';">Cancel</button>
     <form method="post" action="${pageContext.request.contextPath}/user/edit" id="userEdit">
         <input type="submit" name="saveEdit" value="Save">
         <br>
@@ -105,15 +82,6 @@
             <span class="switch-handle"></span>
         </label>
     </form>
-
-    <%
-        } catch (SQLException e){
-            out.print("SQL Error TODO");
-        }
-        catch (InvalidUserIDException e){
-            out.print(e.getMessage());
-        }
-    %>
 
 </body>
 </html>

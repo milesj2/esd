@@ -2,8 +2,8 @@ package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIDException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,11 +35,11 @@ public class UserService {
         throw new InvalidUserCredentialsException("Passwords don't match");
     }
 
-    public User getUserByID(int id) throws SQLException, InvalidUserIDException {
+    public User getUserByID(int id) throws SQLException, InvalidIdValueException {
         return userDao.getUserByID(id);
     }
 
-    public boolean updateUser(User user) throws SQLException, InvalidUserIDException {
+    public boolean updateUser(User user) throws SQLException, InvalidIdValueException {
         return userDao.updateUser(user);
     }
 

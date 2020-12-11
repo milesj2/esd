@@ -4,11 +4,11 @@ import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidUserDetailsIDException;
-import com.esd.model.exceptions.InvalidUserIDException;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.UserDetailsService;
 import com.esd.model.service.UserService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +24,28 @@ import java.sql.SQLException;
 @WebServlet("/user/edit")
 public class UserEditController extends HttpServlet {
 
+    // Needs filter
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, java.io.IOException {
+
+        User user;
+
+        try {
+            user = UserService.getInstance().getUserByID(Integer.parseInt(request.getParameter("id")));
+            user.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(user.getId()));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        } catch (InvalidIdValueException | NumberFormatException e){
+            response.sendRedirect("manage?errMsg=" + e.getMessage());
+            return;
+        }
+        request.setAttribute("editUser", user);
+        RequestDispatcher view = request.getRequestDispatcher("/admin/users/edit.jsp");
+        view.forward(request, response);
+    }
+
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException
     {
@@ -35,16 +57,16 @@ public class UserEditController extends HttpServlet {
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
         if(currentUser == null){
             // out.print("Redirects are disabled in your browser please enable them to continue");
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("../index.jsp");
             return;
         } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
             // out.print("Redirects are disabled in your browser please enable them to continue");
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("../index.jsp");
             return;
         }
 
-        // Parse post data
-        try {
+
+
             boolean active = false;
             if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)
                 active = true;
@@ -76,26 +98,19 @@ public class UserEditController extends HttpServlet {
                 updateUserDetailsResult = UserDetailsService.getInstance().updateUserDetails(userDetails);
 
                 if (updateUserResult && updateUserDetailsResult){
-                    response.sendRedirect("../admin/users/manage.jsp?errMsg=Success");
+                    response.sendRedirect("manage?errMsg=Success");
                 }
                 else {
-                    response.sendRedirect("../admin/users/manage.jsp?errMsg=Error updating user or user details.");
+                    response.sendRedirect("manage?errMsg=Error updating user or user details.");
                 }
 
-            } catch (SQLException e){
-                response.sendRedirect("../admin/users/manage.jsp?errMsg=" + e.getMessage());
+            }
+            catch (SQLException e){
+                response.sendRedirect("manage?errMsg=" + e.getMessage());
+                System.out.println(e.getMessage());
+            } catch (InvalidIdValueException e){
+                response.sendRedirect("manage?errMsg=" + "Invalid id user'" + user.getId() + "'");
                 System.out.println(e.getMessage());
             }
-
-
-        } catch (Throwable theException) {
-            System.out.println(theException.getMessage());
-            response.sendRedirect("../admin/users/manage.jsp?errMsg=" + theException.getMessage());
-            try {
-                throw theException;
-            } catch (InvalidUserIDException | InvalidUserDetailsIDException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
