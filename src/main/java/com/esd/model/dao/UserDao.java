@@ -2,9 +2,8 @@ package com.esd.model.dao;
 
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
-import com.esd.model.exceptions.DuplicateUserException;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIDException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,23 +35,9 @@ public class UserDao {
         PreparedStatement statement = con.prepareStatement(GET_USERS);
         ResultSet result = statement.executeQuery();
 
-        boolean resultFound = result.next();
-        if(!resultFound){
-            // throw database empty error or not?
-        }
-
-        while (resultFound)
+        while (result.next())
         {
-
-            User user = new User(
-                    result.getInt(DaoConsts.SYSTEMUSER_ID),
-                    result.getString(DaoConsts.SYSTEMUSER_USERNAME),
-                    result.getString(DaoConsts.SYSTEMUSER_PASSWORD),
-                    UserGroup.valueOf(result.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
-                    result.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
-            );
-            users.add(user);
-            resultFound = result.next();
+            users.add(getUserFromResults(result));
         }
 
         return users;
@@ -72,19 +57,13 @@ public class UserDao {
         if(!resultFound){
             throw new InvalidUserCredentialsException("No user found for username");
         }
-        return new User(
-                result.getInt(DaoConsts.SYSTEMUSER_ID),
-                result.getString(DaoConsts.SYSTEMUSER_USERNAME),
-                result.getString(DaoConsts.SYSTEMUSER_PASSWORD),
-                UserGroup.valueOf(result.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
-                result.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
-        );
+        return getUserFromResults(result);
     }
 
     /**
      * Gets a user by their id. Throws a null pointer exception if no user was found
      */
-    public User getUserByID(int id) throws SQLException, InvalidUserIDException {
+    public User getUserByID(int id) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_USER_BY_ID);
         statement.setInt(1, id);
@@ -92,19 +71,12 @@ public class UserDao {
 
         boolean resultFound = result.next();
         if(!resultFound){
-            throw new InvalidUserIDException(String.format("No user found for id '%d'", id));
+            throw new InvalidIdValueException(String.format("No user found for id '%d'", id));
         }
-        User user = new User(
-                result.getInt(DaoConsts.SYSTEMUSER_ID),
-                result.getString(DaoConsts.SYSTEMUSER_USERNAME),
-                result.getString(DaoConsts.SYSTEMUSER_PASSWORD),
-                UserGroup.valueOf(result.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
-                result.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
-        );
-        return user;
+        return getUserFromResults(result);
     }
 
-    public boolean updateUser(User user) throws SQLException, InvalidUserIDException{
+    public boolean updateUser(User user) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_USER);
 
@@ -120,7 +92,7 @@ public class UserDao {
         if (userResult == 1){
             return true;
         } else if (userResult == 0){
-            throw new InvalidUserIDException(String.format("No user found for id '%d'", user.getId()));
+            throw new InvalidIdValueException(String.format("No user found for id '%d'", user.getId()));
         } else{
             // Uknown Exception?
             return false;
@@ -197,6 +169,16 @@ public class UserDao {
         } catch(SQLException e) {
           System.err.println("Error: " + e);
         }        
+    }
+
+    public User getUserFromResults(ResultSet resultSet) throws SQLException {
+        return new User(
+                resultSet.getInt(DaoConsts.SYSTEMUSER_ID),
+                resultSet.getString(DaoConsts.SYSTEMUSER_USERNAME),
+                resultSet.getString(DaoConsts.SYSTEMUSER_PASSWORD),
+                UserGroup.valueOf(resultSet.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
+                resultSet.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
+        );
     }
 
     public synchronized static UserDao getInstance(){

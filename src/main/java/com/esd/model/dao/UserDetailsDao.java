@@ -62,7 +62,7 @@ public class UserDetailsDao {
         );
     }
 
-    public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidUserIDException {
+    public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_USER_BY_USER_ID);
         statement.setInt(1, id);
@@ -70,12 +70,12 @@ public class UserDetailsDao {
 
         boolean resultFound = result.next();
         if(!resultFound){
-            throw new InvalidUserIDException(String.format(InvalidUserIDException.DEFAULT_MESSAGE, id));
+            throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
         }
         return getUserDetailsFromResults(result);
     }
 
-    public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidUserDetailsIDException {
+    public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
         PreparedStatement statement = con.prepareStatement(UPDATE_USER_DETAILS);
@@ -95,9 +95,7 @@ public class UserDetailsDao {
         if (result == 1){
             return true;
         } else if (result == 0){
-            throw new InvalidUserDetailsIDException(
-                    String.format(InvalidUserDetailsIDException.DEFAULT_MESSAGE, userDetails.getUserId())
-            );
+            throw new InvalidIdValueException(String.format("No user details found for id '%d'", userDetails.getUserId()));
         } else {
             //throw custom error
             return false;
