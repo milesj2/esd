@@ -6,9 +6,9 @@ import java.util.List;
 public class ReportUtils {
 
     public static final String generateHTMLReportHeader(String reportName, List<String> details){
-        String genString = "<div><img src=\"#\" alt=\"logo\"/><span>" + reportName + "</span><br/>";
+        String genString = "<div><div><img src=\"images/logo.png\" alt=\"logo\"/><span></div>" + reportName + "</span><br/>";
         for(String detail : details){
-            genString += "<span>" + detail  + "</span>";
+            genString += "<div>" + detail  + "</div>";
         }
         genString += "</div>";
 

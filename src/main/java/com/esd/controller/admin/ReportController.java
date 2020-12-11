@@ -14,20 +14,29 @@ import java.io.IOException;
 public class ReportController extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher view = req.getRequestDispatcher("/admin/adminreports.jsp");
-        view.forward(req,resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            RequestDispatcher view = req.getRequestDispatcher("/admin/adminreports.jsp");
+            view.forward(req,resp);
+        }catch (ServletException | IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String reportTypeKey = req.getParameter("report");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp){
+        try {
+            String reportTypeKey = req.getParameter("report");
 
-        String generatedReport = SystemReports.availableReports.get(reportTypeKey).generateReport(req.getParameterMap());
-        req.setAttribute("generatedReport", generatedReport);
-        req.setAttribute("backLink", req.getHeader("referer"));
+            String generatedReport = SystemReports.availableReports.get(reportTypeKey).generateReport(req.getParameterMap());
+            req.setAttribute("generatedReport", generatedReport);
+            req.setAttribute("backLink", req.getHeader("referer"));
 
-        RequestDispatcher view = req.getRequestDispatcher("/admin/viewReport.jsp");
-        view.forward(req,resp);
+            RequestDispatcher view = req.getRequestDispatcher("/admin/viewReport.jsp");
+            view.forward(req,resp);
+        }catch (ServletException | IOException e){
+            e.printStackTrace();
+        }
+
     }
 }

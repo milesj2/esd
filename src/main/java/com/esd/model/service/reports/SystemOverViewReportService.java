@@ -48,8 +48,6 @@ public class SystemOverViewReportService {
     }
 
     public HashMap<String, String> getReportData(Date start, Date end) throws SQLException {
-
-
         int invoicesCreated = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.empty(), true).size();
         int invoicesUnpaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.UNPAID), true).size();
         int invoicesOverDue = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.OVERDUE), true).size();
@@ -82,8 +80,8 @@ public class SystemOverViewReportService {
         int madeAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.empty()).size();
         int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.of(AppointmentStatus.CANCELED)).size();
 
-        //I don't know why these need to be casted but java wants it.
-        int cancelRate = (int)((double)canceledAppointments/ (double)madeAppointments) * 100;
+        //Java likes casting for some reason
+        int cancelRate = (int)(((double)canceledAppointments/(double)madeAppointments )* 100);
 
         HashMap<String, String> reportData = new HashMap<>();
         reportData.put(APPOINTMENTSMADE, String.valueOf(madeAppointments));
