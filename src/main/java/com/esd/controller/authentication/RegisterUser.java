@@ -37,8 +37,11 @@ public class RegisterUser extends HttpServlet {
         String postCode = request.getParameter("postCode");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String active = "true";
+        String active = "false";
         
+        if ("NHS_PATIENT".equals(userGroup) || "PRIVATE_PATIENT".equals(userGroup)) {
+            active = "true";
+        }
 
         String notify = "";
         try {

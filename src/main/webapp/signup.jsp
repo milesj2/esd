@@ -12,9 +12,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Register</title>
-    <script type="text/javascript" src="jquery-1.2.6.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="css/master.css">
     <%
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
       String max_date = sdf.format(new Date());
@@ -73,6 +70,9 @@
             <select id="userGroup" name="userGroup">
               <option value="NHS_PATIENT">NHS Patient</option>
               <option value="PRIVATE_PATIENT">Private Patient</option>
+              <option value="DOCTOR">Doctor</option>
+              <option value="NURSE">Nurse</option>
+              <option value="RECEPTIONIST">Receptionist</option>
             </select><br><br>
 
             <h4>Login Details</h4>
