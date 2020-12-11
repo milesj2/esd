@@ -43,59 +43,47 @@ public class UserEditController extends HttpServlet {
             return;
         }
 
-        // Parse post data
+        boolean active = false;
+        if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)
+            active = true;
+
+        User user = new User(
+                Integer.parseInt(request.getParameter(DaoConsts.SYSTEMUSER_ID)),
+                request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
+                request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
+                UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)),
+                active
+        );
+
+        UserDetails userDetails = new UserDetails(
+                -1,
+                user.getId(),
+                request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
+                request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
+                request.getParameter(DaoConsts.USERDETAILS_TOWN),
+                request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
+                request.getParameter(DaoConsts.USERDETAILS_DOB)
+        );
+
+        // Try updating SQL
         try {
-            boolean active = false;
-            if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)
-                active = true;
+            updateUserResult = UserService.getInstance().updateUser(user);
+            updateUserDetailsResult = UserDetailsService.getInstance().updateUserDetails(userDetails);
 
-            User user = new User(
-                    Integer.parseInt(request.getParameter(DaoConsts.SYSTEMUSER_ID)),
-                    request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
-                    request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
-                    UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)),
-                    active
-            );
-
-            UserDetails userDetails = new UserDetails(
-                    -1,
-                    user.getId(),
-                    request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
-                    request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
-                    request.getParameter(DaoConsts.USERDETAILS_TOWN),
-                    request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
-                    request.getParameter(DaoConsts.USERDETAILS_DOB)
-            );
-
-            // Try updating SQL
-            try {
-                updateUserResult = UserService.getInstance().updateUser(user);
-                updateUserDetailsResult = UserDetailsService.getInstance().updateUserDetails(userDetails);
-
-                if (updateUserResult && updateUserDetailsResult){
-                    response.sendRedirect("../admin/users/manage.jsp?errMsg=Success");
-                }
-                else {
-                    response.sendRedirect("../admin/users/manage.jsp?errMsg=Error updating user or user details.");
-                }
-
-            } catch (SQLException e){
-                response.sendRedirect("../admin/users/manage.jsp?errMsg=" + e.getMessage());
-                System.out.println(e.getMessage());
+            if (updateUserResult && updateUserDetailsResult){
+                response.sendRedirect("../admin/users/manage.jsp?errMsg=Success");
+            }
+            else {
+                response.sendRedirect("../admin/users/manage.jsp?errMsg=Error updating user or user details.");
             }
 
-
-        } catch (Throwable theException) {
-            System.out.println(theException.getMessage());
-            response.sendRedirect("../admin/users/manage.jsp?errMsg=" + theException.getMessage());
-            try {
-                throw theException;
-            } catch (InvalidUserIDException | InvalidUserDetailsIDException e) {
-                e.printStackTrace();
-            }
+        } catch (SQLException | InvalidUserIDException | InvalidUserDetailsIDException e){
+            response.sendRedirect("../admin/users/manage.jsp?errMsg=" + e.getMessage());
+            System.out.println(e.getMessage());
         }
+
     }
 }
