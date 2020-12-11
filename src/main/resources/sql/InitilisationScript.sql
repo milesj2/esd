@@ -82,10 +82,19 @@ create table invoiceItem
 );
 
 
-/* create table prescription(
-id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+create table prescriptions
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+    employeeId INTEGER NOT NULL,
+    patientId INTEGER NOT NULL,
+    prescriptionDetails VARCHAR(500) NOT NULL,
+    appointmentId INTEGER NOT NULL,
+    issueDate DATE NOT NULL,
+
+    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id),
+    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id),
+    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id)
 );
- */
 
 --The order of these are important they link to the above records
 
