@@ -31,9 +31,11 @@
             <label for="consultationSlotTimeMins">Consultation slot time (mins): *</label>
             <input type="text" placeholder="Please enter slot time (mins)" name="consultationSlotTimeMins" id="consultationSlotTimeMins" required><br>
 
-            <button class="btn btn-update" value="Update" id="update" disabled>Update</button>
+            <button class="btn" value="Update" id="update" disabled>Update</button>
             <% if (request.getAttribute("success").equals("success")) { %>
-            	<div class="msg"><strong><%=request.getAttribute("failure")%></strong></div><br>
+            	<div class="msg"><strong>Success!</strong></div>
+            <% } else { %>
+            	<div class="msg"><strong>Error: failed to save.</strong></div>
             <% } %>
         </form>        
     </body>

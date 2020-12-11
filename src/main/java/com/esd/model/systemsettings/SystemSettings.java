@@ -1,5 +1,7 @@
 package com.esd.model.systemsettings;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -29,17 +31,18 @@ public class SystemSettings {
 		}
 	}
 
-	public String getProperty(String key) {
-		return null;
-	}
-
-	public void updatePropertyWithSave(String key) {
-	}
-
-	public void updatePropertyWithoutSave(String key) {
+	public void updateProperty(String key, String value) {
+		properties.setProperty(key, value);
 	}
 
 	public void save() {
+		try {
+			properties.store(new FileOutputStream(SETTINGS_PATH), null);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized static SystemSettings getInstance() {

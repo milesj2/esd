@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/systemSettings")
 public class SystemSettingsController extends HttpServlet {
 
-	private static final String SUCCESS_ATTRIBUTE = "Success!";
-
-	private static final String FAILURE_NOTIFY = "Save failed.";
+	private static final String SUCCESS = "success";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,13 +39,12 @@ public class SystemSettingsController extends HttpServlet {
 			throws ServletException, IOException {
 
 		SystemSettings sysSettings = SystemSettings.getInstance();
-		sysSettings.updatePropertyWithoutSave(request.getParameter("baseConsultationFeeDoctor"));
-		sysSettings.updatePropertyWithoutSave(request.getParameter("baseConsultationFeeNurse"));
-		sysSettings.updatePropertyWithoutSave(request.getParameter("consultationSlotTimeMins"));
+		sysSettings.updateProperty("baseConsultationFeeDoctor", request.getParameter("baseConsultationFeeDoctor"));
+		sysSettings.updateProperty("baseConsultationFeeNurse", request.getParameter("baseConsultationFeeNurse"));
+		sysSettings.updateProperty("consultationSlotTimeMins", request.getParameter("consultationSlotTimeMins"));
 		sysSettings.save();
 
-		request.setAttribute("success", SUCCESS_ATTRIBUTE);
-		request.setAttribute("failure", FAILURE_NOTIFY);
+		request.setAttribute(SUCCESS, SUCCESS);
 		RequestDispatcher view = request.getRequestDispatcher("/systemSettings");
 		response.setContentType("text/html;charset=UTF-8");
 		view.forward(request, response);
