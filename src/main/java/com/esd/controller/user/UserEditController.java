@@ -100,12 +100,11 @@ public class UserEditController extends HttpServlet {
             }
 
         }
-        catch (SQLException e){
+            } catch (SQLException e){
             response.sendRedirect("manage?errMsg=" + e.getMessage());
             System.out.println(e.getMessage());
         } catch (InvalidIdValueException e){
             response.sendRedirect("manage?errMsg=" + "Invalid id user'" + user.getId() + "'");
-            System.out.println(e.getMessage());
-        }
+            System.out.println(theException.getMessage());
     }
 }
