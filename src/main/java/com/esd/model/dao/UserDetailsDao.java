@@ -55,8 +55,8 @@ public class UserDetailsDao {
 
     private UserDetails getUserDetailsFromResults(ResultSet result) throws SQLException {
         return new UserDetails(
-                result.getInt(DaoConsts.USERDETAILS_ID),
-                result.getInt(DaoConsts.SYSTEMUSER_ID),
+                result.getInt(DaoConsts.ID),
+                result.getInt(DaoConsts.ID),
                 result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
                 result.getString(DaoConsts.USERDETAILS_LASTNAME),
                 result.getString(DaoConsts.USERDETAILS_ADDRESS1),
@@ -81,6 +81,7 @@ public class UserDetailsDao {
         return getUserDetailsFromResults(result);
     }
 
+
     public boolean validateUserDetailsExistByIdAndUserGroup(int id, UserGroup... userGroups) throws SQLException {
         String query = VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP;
         String inStatement = "";
@@ -102,6 +103,7 @@ public class UserDetailsDao {
         ResultSet result = statement.executeQuery();
         return result.next();
     }
+
 
     public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
@@ -165,7 +167,7 @@ public class UserDetailsDao {
            // add results to list of user to return
            while (result.next()) {
                UserDetails userDetails = new UserDetails(
-                       result.getInt(DaoConsts.USERDETAILS_ID),
+                       result.getInt(DaoConsts.ID),
                        result.getInt(DaoConsts.SYSTEMUSER_ID),
                        result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
                        result.getString(DaoConsts.USERDETAILS_LASTNAME),

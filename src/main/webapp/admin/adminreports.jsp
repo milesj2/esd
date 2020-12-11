@@ -17,7 +17,7 @@
     <jsp:include page="../includes/header.jsp" />
     this is the placeholder page for the admin reports
     <% out.print("<span style=\"color:red;\">This is some text</span>"); %>
-    <form method="POST" action="../viewReport">
+    <form method="POST" action="reports">
         Report: <select name="report">
                 <%
                     for(String key : SystemReports.availableReports.keySet()){
@@ -29,7 +29,6 @@
         Start Date: <input type="date" name="startDate"/><br/>
         End Date: <input type="date" name="endDate"/><br/>
         report type: <select name="reportType">
-        <%--        TODO make some java script to map applicableReport types to the selected report--%>
         <%
             for(ReportType key : ReportType.values()){
                 out.print("<option value=\"" + key +"\">" + key.name() +"</option>");
@@ -38,11 +37,5 @@
     </select> <br/>
         <button type="submit">Generate report</button>
     </form><br/>
-    <%--    iterator table--%>
-    <table>
-        <tr><th>ghweuh</th><th></th></tr>
-
-    </table>
-
-</body>
+  </body>
 </html>

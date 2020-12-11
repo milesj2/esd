@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class SystemOverviewReport implements Report {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-    private static final String ERROR_DIV = "<div class=\"report\" style=\"color: red;\">All form data is needed</div>";
+    private static final String ERROR_DIV = "<div class=\"report\" style=\"color: red;\">Failed to process report, check input data, if problmen persists contact admin</div>";
     private static String reportTemplate;
 
     static{
@@ -61,12 +62,21 @@ public class SystemOverviewReport implements Report {
             return ERROR_DIV;
         }
 
-        Map<String, String> reportData = SystemOverViewReportService.getInstance().getReportData();
+        Map<String, String> reportData = null;
+        try {
+            reportData = SystemOverViewReportService.getInstance().getReportData(startDate, endDate);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return ERROR_DIV;
+        }
 
         String report = reportTemplate;
+        String dateHeader = String.format("Date: %s TO %s", dateFormat.format(startDate), dateFormat.format(endDate));
+
+
         report = report.replace("$HEADER",
                 ReportUtils.generateHTMLReportHeader(getReportName(),
-                        Arrays.asList("Date: 2020-01-01 TO 2020-01-31")));
+                        Arrays.asList(dateHeader)));
         for(String key : reportData.keySet()){
             report = report.replace("$" + key, reportData.get(key));
         }

@@ -1,6 +1,6 @@
 package com.esd.model.data.persisted;
 
-import java.math.BigDecimal;
+import com.esd.model.data.InvoiceStatus;
 
 /**
  * Original Author: Jordan Hellier

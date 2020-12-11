@@ -1,17 +1,25 @@
 package com.esd.model.service.reports;
 
+import com.esd.model.dao.AppointmentDao;
+import com.esd.model.dao.InvoiceDao;
 import com.esd.model.dao.UserDao;
+import com.esd.model.data.AppointmentStatus;
+import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.Invoice;
+import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.reportgen.Report;
 import com.esd.model.service.UserService;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SystemOverViewReportService {
     private static SystemOverViewReportService instance;
+
 
     public static final String APPOINTMENTSMADE = "APPOINTMENTSMADE";
     public static final String APPOINTMENTSCANCELED = "APPOINTMENTSCANCELED";
@@ -24,6 +32,10 @@ public class SystemOverViewReportService {
     public static final String OUTSTANDINGINCOME = "OUTSTANDINGINCOME";
     public static final String OVERALLINVOICESUNPAID = "OVERALLINVOICESUNPAID";
     public static final String OVERALLINVOICESOVERDUE = "OVERALLINVOICESOVERDUE";
+    public static final String PAIDTHISPERIOD = "PAIDTHISPERIOD";
+
+    private InvoiceDao invoiceDao = InvoiceDao.getInstance();
+    private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 
     private SystemOverViewReportService() {
     }
@@ -35,23 +47,58 @@ public class SystemOverViewReportService {
         return instance;
     }
 
-    public HashMap<String, String> getReportData(){
+    public HashMap<String, String> getReportData(Date start, Date end) throws SQLException {
 
-        //TODO get the actual response data
-        HashMap<String, String> responseData = new HashMap<>();
 
-        responseData.put(APPOINTMENTSMADE, "0");
-        responseData.put(APPOINTMENTSCANCELED, "0");
-        responseData.put(APPOINTMENTSCANCELRATE, "1");
-        responseData.put(INVOICESMADE, "2");
-        responseData.put(INVOICESPAID, "3");
-        responseData.put(INVOICESUNPAID, "4");
-        responseData.put(INVOICESOVERDUE, "5");
-        responseData.put(OVERALLINVOICESUNPAID, "6");
-        responseData.put(OVERALLINVOICESOVERDUE, "7");
-        responseData.put(TOTALINCOME, "8");
-        responseData.put(OUTSTANDINGINCOME, "9");
-        return responseData;
+        int invoicesCreated = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.empty(), true).size();
+        int invoicesUnpaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.UNPAID), true).size();
+        int invoicesOverDue = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.OVERDUE), true).size();
+
+        List<Invoice> invoicesPaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.PAID), true);
+
+        List<Invoice> overallInvoicesUnpaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus.UNPAID, true);
+        List<Invoice> overallInvoicesOverDue = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus.OVERDUE, true);
+
+
+        //this is all the invoices paid this period, this can include elements from previous periods
+        List<Invoice> paidThisPeriod = invoiceDao.getInvoiceWithStatusChangeToThisPeriod(start, end, InvoiceStatus.PAID, true);
+
+        //Total the values from the streams, so we can work out the outstanding and total income.
+        double totalIncome = paidThisPeriod.stream()
+                .map(Invoice::getItems)
+                .flatMap(List::stream)
+                .mapToDouble(InvoiceItem::getCost)
+                .sum();
+
+        List<Invoice> toTotal = new ArrayList<>(overallInvoicesOverDue);
+        toTotal.addAll(overallInvoicesUnpaid);
+
+        double totalOutstanding = toTotal.stream()
+                .map(Invoice::getItems)
+                .flatMap(List::stream)
+                .mapToDouble(InvoiceItem::getCost)
+                .sum();
+
+        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.empty()).size();
+        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.of(AppointmentStatus.CANCELED)).size();
+
+        //I don't know why these need to be casted but java wants it.
+        int cancelRate = (int)((double)canceledAppointments/ (double)madeAppointments) * 100;
+
+        HashMap<String, String> reportData = new HashMap<>();
+        reportData.put(APPOINTMENTSMADE, String.valueOf(madeAppointments));
+        reportData.put(APPOINTMENTSCANCELED, String.valueOf(canceledAppointments));
+        reportData.put(APPOINTMENTSCANCELRATE, cancelRate + "%");
+        reportData.put(INVOICESMADE, String.valueOf(invoicesCreated));
+        reportData.put(INVOICESPAID, String.valueOf(invoicesPaid.size()));
+        reportData.put(INVOICESUNPAID, String.valueOf(invoicesUnpaid));
+        reportData.put(INVOICESOVERDUE, String.valueOf(invoicesOverDue));
+        reportData.put(OVERALLINVOICESUNPAID, String.valueOf(overallInvoicesUnpaid.size()));
+        reportData.put(OVERALLINVOICESOVERDUE, String.valueOf(overallInvoicesOverDue.size()));
+        reportData.put(PAIDTHISPERIOD, String.valueOf(paidThisPeriod.size() - invoicesPaid.size()));
+        reportData.put(TOTALINCOME, String.valueOf(totalIncome));
+        reportData.put(OUTSTANDINGINCOME, String.valueOf(totalOutstanding));
+        return reportData;
     }
 
     public int getAppointmentsCanceled(){
@@ -62,13 +109,7 @@ public class SystemOverViewReportService {
         return 0;
     }
 
-    public double calculateCancelationRate(int made, int canceled){
-        return canceled / made;
-    }
-
     public int getInvoicesMade(){
     return 0;
     }
-
-
 }

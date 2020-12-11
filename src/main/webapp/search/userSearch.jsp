@@ -27,7 +27,7 @@
                 <th>Actions</th>
             </tr>
             <tr>
-                <td><input type="text" name=<%=DaoConsts.USERDETAILS_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_FIRSTNAME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_LASTNAME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_ADDRESS1%> size="10" /></td>

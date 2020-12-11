@@ -15,6 +15,7 @@ public class Invoice {
     private int employeeId;
     private int patientId;
     private int appointmentId;
+    private Date invoiceStatusChangeDate;
 
     private boolean privatePatient;
     private Date invoiceDate;
@@ -97,7 +98,16 @@ public class Invoice {
         return invoiceStatus;
     }
 
+    public Date getInvoiceStatusChangeDate() {
+        return invoiceStatusChangeDate;
+    }
+
+    public void setInvoiceStatusChangeDate(Date invoiceStatusChangeDate) {
+        this.invoiceStatusChangeDate = invoiceStatusChangeDate;
+    }
+
     public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
+        this.invoiceStatusChangeDate = new Date();
     }
 }

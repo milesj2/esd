@@ -5,13 +5,15 @@ package com.esd.model.dao;
  * Use: This class is used for coding ease. It stores common strings associated with dao actions.
  */
 public class DaoConsts {
-    public final static String SYSTEMUSER_ID = "id";
+
+    public final static String ID = "id";
+
     public final static String SYSTEMUSER_USERNAME = "username";
     public final static String SYSTEMUSER_PASSWORD = "password";
     public final static String SYSTEMUSER_USERGROUP = "usergroup";
     public final static String SYSTEMUSER_ACTIVE = "active";
+    public static final String SYSTEMUSER_ID = "userid";
 
-    public final static String USERDETAILS_ID = "id";
     public final static String USERDETAILS_FIRSTNAME = "firstname";
     public final static String USERDETAILS_LASTNAME = "lastname";
     public final static String USERDETAILS_ADDRESS1 = "addressline1";
@@ -20,15 +22,18 @@ public class DaoConsts {
     public final static String USERDETAILS_TOWN = "town";
     public final static String USERDETAILS_POSTCODE = "postcode";
     public final static String USERDETAILS_USERGROUP = "usergroup";
+
+    public static final String INVOICE_STATUS_CHANGE_DATE = "statusChangeDate";
     public final static String USERDETAILS_DOB = "dob";
 
-    public final static String INVOICE_ID = "id";
+    public final static String INVOICE_ID = "invoiceId";
     public final static String INVOICE_DATE = "invoicedate";
     public final static String INVOICE_TIME = "invoicetime";
     public final static String INVOICE_STATUS = "invoicestatus";
+
     public final static String INVOICE_ITEM_COST = "itemcost";
-    public final static String INVOICE_QUANTITY = "quantity";
-    public final static String INVOICE_DESCRIPTION = "description";
+    public final static String INVOICE_ITEM_QUANTITY = "quantity";
+    public final static String INVOICE_ITEM_DESCRIPTION = "description";
 
     public final static String PATIENT_ID = "patientid";
     public final static String PRIVATE_PATIENT = "privatepatient";
@@ -41,4 +46,9 @@ public class DaoConsts {
     public final static String PRESCRIPTION_DETAILS = "prescriptiondetails";
     public final static String PRESCRIPTION_ISSUE_DATE = "issuedate";
 
+    public static final String APPOINTMENT_DATE = "appointmentdate";
+
+    public static final String APPOINTMENT_TIME = "appointmenttime";
+   public static final String APPOINTMENT_SLOTS = "slots";
+    public static final String APPOINTMENT_STATUS = "appointmentStatus";
 }

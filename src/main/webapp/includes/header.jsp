@@ -15,9 +15,8 @@
 <body>
     <% if(currentUser == null) {
         response.sendRedirect("index.jsp");
-        return; //return is safe and stops further script execution
     }%>
 
-    <nav><a href="admin/adminreports.jsp">AdminReports</a><a href="dashboard.jsp">Dashboard</a> <a href="logout">Logout</a> </nav>
+    <nav><a href="reports">AdminReports</a><a href="dashboard.jsp">Dashboard</a> <a href="logout">Logout</a> </nav>
 </body>
 </html>
