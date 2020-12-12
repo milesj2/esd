@@ -38,16 +38,21 @@ public class SystemSettingsController extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		try {
 		SystemSettings sysSettings = SystemSettings.getInstance();
 		sysSettings.updateProperty("baseConsultationFeeDoctor", request.getParameter("baseConsultationFeeDoctor"));
 		sysSettings.updateProperty("baseConsultationFeeNurse", request.getParameter("baseConsultationFeeNurse"));
 		sysSettings.updateProperty("consultationSlotTimeMins", request.getParameter("consultationSlotTimeMins"));
 		sysSettings.save();
 
-		request.setAttribute(SUCCESS, SUCCESS);
-		RequestDispatcher view = request.getRequestDispatcher("/systemSettings");
-		response.setContentType("text/html;charset=UTF-8");
-		view.forward(request, response);
+			request.setAttribute(SUCCESS, SUCCESS);
+			RequestDispatcher view = request.getRequestDispatcher("/systemSettings");
+			response.setContentType("text/html;charset=UTF-8");
+			view.forward(request, response);
+		} catch (Exception e){
+			e.printStackTrace();
+			response.sendRedirect("index.jsp?err=true"); //error page
+		}
 	}
 
 	@Override
