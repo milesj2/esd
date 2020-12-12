@@ -10,8 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e02a1803-8d55-4378-9336-c3747f07134f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/esd/model/dao/DaoConsts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/esd/model/dao/DaoConsts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +149,7 @@
       <workItem from="1607770544374" duration="1471000" />
       <workItem from="1607772437406" duration="784000" />
       <workItem from="1607775006123" duration="7433000" />
-      <workItem from="1607808472704" duration="5747000" />
+      <workItem from="1607808472704" duration="5989000" />
     </task>
     <servers />
   </component>
