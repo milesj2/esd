@@ -47,14 +47,13 @@ public class UserEditController extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException
-    {
+            throws ServletException, java.io.IOException {
         // Validate user is logged in and admin
-        User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
-        if(currentUser == null){
+        User currentUser = (User) (request.getSession().getAttribute("currentSessionUser"));
+        if (currentUser == null) {
             response.sendRedirect("../index.jsp");
             return;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
+        } else if (currentUser.getUserGroup() != UserGroup.ADMIN) {
             response.sendRedirect("../index.jsp");
             return;
         }
@@ -92,19 +91,18 @@ public class UserEditController extends HttpServlet {
             updateUserResult = UserService.getInstance().updateUser(user);
             updateUserDetailsResult = UserDetailsService.getInstance().updateUserDetails(userDetails);
 
-            if (updateUserResult && updateUserDetailsResult){
+            if (updateUserResult && updateUserDetailsResult) {
                 response.sendRedirect("manage?errMsg=Success");
-            }
-            else {
+            } else {
                 response.sendRedirect("manage?errMsg=Error updating user or user details.");
             }
 
-        }
-            } catch (SQLException e){
+        } catch (SQLException e) {
             response.sendRedirect("manage?errMsg=" + e.getMessage());
             System.out.println(e.getMessage());
-        } catch (InvalidIdValueException e){
+        } catch (InvalidIdValueException e) {
             response.sendRedirect("manage?errMsg=" + "Invalid id user'" + user.getId() + "'");
-            System.out.println(theException.getMessage());
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,6 @@
 <%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="com.esd.controller.authentication.LoginController" %>
 <%@ page import="com.esd.views.ViewsConsts" %>
+<%@ page import="com.esd.views.LoginErrors" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -26,20 +26,16 @@
                 <input type="password" placeholder="password" id="password" name="password" val=""/><br/>
                 <button type="submit">Login</button>
                 <span class="errMessage">
-                    <%  String err = request.getParameter("err");
-                        String errMsg;
-                        if(err != null){
-                            int errCode;
-                            try {
-                                errCode = Integer.parseInt(err);
-                            } catch (NumberFormatException e){
-                                errCode = -1;
-                            }
-                            switch (errCode){
-                                case 1:
+                    <%
+                        String errMsg, errCode;
+                        errCode = request.getParameter("err");
+                        if (errCode != null){
+                            LoginErrors err = LoginErrors.valueOf(errCode);
+                            switch (err){
+                                case IncorrectCredentials:
                                     errMsg = "Invalid username/password";
                                     break;
-                                case 2:
+                                case AccountDisabled:
                                     errMsg = "This account is locked. Please contact your admin to reactive the account.";
                                     break;
                                 default:
@@ -47,7 +43,9 @@
                                     break;
                             }
                             out.print(errMsg);
-                        } %>
+                        }
+
+                         %>
                 </span>
             </form>
             <div class="noAccount">
