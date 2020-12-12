@@ -19,7 +19,9 @@ import java.text.Format;
  */
 public class UserDetailsDao {
     private static UserDetailsDao instance;
-
+    
+    private static final String GET_USER_BY_NAME = "select * from userDetails where userDetails.firstName=? and userDetails.lastName=?";
+    private static final String GET_ID_BY_NAME = "select ID from userDetails where userDetails.firstName=? and userDetails.lastName=?";
     private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
 	private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
     private static final String WHERE = " WHERE ";
@@ -72,6 +74,41 @@ public class UserDetailsDao {
             throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
         }
         return getUserDetailsFromResults(result);
+    }
+    
+    public boolean verifyUserMatch(String firstName, String lastName) {
+        boolean matchFound = false;
+        try {        
+          Connection con = ConnectionManager.getInstance().getConnection();
+          PreparedStatement statement = con.prepareStatement(GET_USER_BY_NAME);
+          statement.setString(1, firstName);
+          statement.setString(2, lastName);
+          ResultSet result = statement.executeQuery();
+          matchFound = result.next();
+        }catch (SQLException e) {
+           System.err.println("Error: " + e);
+        }
+        return matchFound;
+    }
+    
+    public String getUserId(String firstName, String lastName) {
+        String userid = "";
+        
+        try {        
+          Connection con = ConnectionManager.getInstance().getConnection();
+          PreparedStatement statement = con.prepareStatement(GET_ID_BY_NAME);
+          statement.setString(1, firstName);
+          statement.setString(2, lastName);
+          ResultSet rs = statement.executeQuery();
+
+          while (rs.next()) {
+            userid = rs.getString(1);
+           }
+
+        }catch (SQLException e) {
+           System.err.println("Error: " + e);
+        }
+        return userid;
     }
 
     public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {

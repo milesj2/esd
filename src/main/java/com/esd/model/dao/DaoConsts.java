@@ -36,5 +36,9 @@ public class DaoConsts {
     public final static String APPOINTMENT_ID = "appointmentid";
 
     public final static String EMPLOYEE_ID = "employeeid";
+    
+    public final static String PRESCRIPTION_ID = "prescriptionid";
+    public final static String PRESCRIPTION_DETAILS = "prescriptiondetails";
+    public final static String PRESCRIPTION_ISSUE_DATE = "issuedate";
 
 }
