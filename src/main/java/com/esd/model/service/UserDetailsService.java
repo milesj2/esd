@@ -32,11 +32,11 @@ public class UserDetailsService {
 
 
     public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
-        return UserDetailsDao.getInstance().getUserDetailsByUserId(userId);
+        return userDetailsDao.getUserDetailsByUserId(userId);
     }
 
     public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
-        return UserDetailsDao.getInstance().updateUserDetails(userDetails);
+        return userDetailsDao.updateUserDetails(userDetails);
     }
 
     public static UserDetailsService getTestInstance(UserDetailsDao userDetailsDao){
