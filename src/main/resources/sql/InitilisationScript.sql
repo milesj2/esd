@@ -86,6 +86,10 @@ create table invoiceItem
     constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
 );
 
+create table systemSetting(
+    settingKey varchar(100) not null primary key,
+    value varchar(100) not null
+);
 
 create table prescriptions
 (
@@ -181,3 +185,8 @@ insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (6, 100.00, 1, 'Appointment Cost');
 insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (7, 100.00, 1, 'Appointment Cost');
+
+-- initialise system settings
+insert into systemSetting(settingKey, value) values ('baseConsultationFeeDoctor', '150');
+insert into systemSetting(settingKey, value) values ('baseConsultationFeeNurse', '100');
+insert into systemSetting(settingKey, value) values ('consultationSlotTime', '10');

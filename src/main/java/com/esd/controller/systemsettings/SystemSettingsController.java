@@ -2,7 +2,9 @@ package com.esd.controller.systemsettings;
 
 import java.io.IOException;
 
-import com.esd.model.systemsettings.SystemSettings;
+import com.esd.model.dao.DaoConsts;
+import com.esd.model.data.persisted.SystemSetting;
+import com.esd.model.service.SystemSettingService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,11 +41,15 @@ public class SystemSettingsController extends HttpServlet {
 			throws ServletException, IOException {
 
 		try {
-		SystemSettings sysSettings = SystemSettings.getInstance();
-		sysSettings.updateProperty("baseConsultationFeeDoctor", request.getParameter("baseConsultationFeeDoctor"));
-		sysSettings.updateProperty("baseConsultationFeeNurse", request.getParameter("baseConsultationFeeNurse"));
-		sysSettings.updateProperty("consultationSlotTimeMins", request.getParameter("consultationSlotTimeMins"));
-		sysSettings.save();
+			SystemSettingService sysSettingService = SystemSettingService.getInstance();
+
+			SystemSetting feeDoctorSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
+			SystemSetting feeNurseSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE));
+			SystemSetting slotTimeSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME));
+
+			sysSettingService.updateSystemSetting(feeDoctorSysSetting);
+			sysSettingService.updateSystemSetting(feeNurseSysSetting);
+			sysSettingService.updateSystemSetting(slotTimeSysSetting);
 
 			request.setAttribute(SUCCESS, SUCCESS);
 			RequestDispatcher view = request.getRequestDispatcher("/systemSettings");

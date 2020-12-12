@@ -28,8 +28,8 @@
             <input type="text" placeholder="Please enter fee (£/h)" name="baseConsultationFeeNurse" id="baseConsultationFeeNurse" required><br>
 
             <h4>Consultation slot time (default 10 mins)</h4>
-            <label for="consultationSlotTimeMins">Consultation slot time (mins): *</label>
-            <input type="text" placeholder="Please enter slot time (mins)" name="consultationSlotTimeMins" id="consultationSlotTimeMins" required><br>
+            <label for="consultationSlotTime">Consultation slot time (mins): *</label>
+            <input type="text" placeholder="Please enter slot time (mins)" name="consultationSlotTime" id="consultationSlotTime" required><br>
 
             <button class="btn" value="Update" id="update" disabled>Update</button>
             <% if (request.getAttribute("success").equals("success")) { %>

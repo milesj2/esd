@@ -50,7 +50,7 @@ public class UserDao {
     }
 
     /**
-     * Gets a user by there username throws a null pointer exception if no user was found
+     * Gets a user by their username throws a null pointer exception if no user was found
      */
     public User getUserByUsername(String username) throws SQLException, InvalidUserCredentialsException {
         Connection con = ConnectionManager.getInstance().getConnection();

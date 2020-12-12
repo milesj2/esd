@@ -19,7 +19,8 @@ public class DaoConsts {
     public final static String SYSTEMUSER_PASSWORD = "password";
     public final static String SYSTEMUSER_USERGROUP = "usergroup";
     public final static String SYSTEMUSER_ACTIVE = "active";
-    public static final String SYSTEMUSER_ID = "userid";
+
+    public final static String USERDETAILS_ID = "id";
 
     public final static String USERDETAILS_FIRSTNAME = "firstname";
     public final static String USERDETAILS_LASTNAME = "lastname";
@@ -33,7 +34,6 @@ public class DaoConsts {
 
     public static final String INVOICE_STATUS_CHANGE_DATE = "statusChangeDate";
 
-
     public final static String INVOICE_DATE = "invoicedate";
     public final static String INVOICE_TIME = "invoicetime";
     public final static String INVOICE_STATUS = "invoicestatus";
@@ -41,7 +41,6 @@ public class DaoConsts {
     public final static String INVOICE_ITEM_COST = "itemcost";
     public final static String INVOICE_ITEM_QUANTITY = "quantity";
     public final static String INVOICE_ITEM_DESCRIPTION = "description";
-
 
     public final static String PRESCRIPTION_ID = "prescriptionid";
     public final static String PRESCRIPTION_DETAILS = "prescriptiondetails";
@@ -53,4 +52,11 @@ public class DaoConsts {
     public static final String APPOINTMENT_TIME = "appointmenttime";
     public static final String APPOINTMENT_SLOTS = "slots";
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
+
+    public final static String INVOICE_QUANTITY = "quantity";
+    public final static String INVOICE_DESCRIPTION = "description";
+
+    public final static String SYSTEMSETTING_FEE_DOCTOR = "baseConsultationFeeDoctor";
+    public final static String SYSTEMSETTING_FEE_NURSE = "baseConsultationFeeNurse";
+    public final static String SYSTEMSETTING_SLOT_TIME = "consultationSlotTime";
 }
