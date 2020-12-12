@@ -8,7 +8,7 @@
     <title>User Dashboard</title>
 </head>
 <body>
-    <jsp:include page="includes/header.jsp" />
+    <nav><a href="logout">Logout</a> </nav>
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
 	<br>
@@ -24,7 +24,7 @@
     </div>
     <div>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='reports'>AdminReports</a>");
+            out.print("<a href='admin/reports'>AdminReports</a>");
         }%>
     </div>
 

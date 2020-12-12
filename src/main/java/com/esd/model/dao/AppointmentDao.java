@@ -18,10 +18,6 @@ public class AppointmentDao {
 
     private static AppointmentDao instance;
 
-
-    private static String LOADALLINVOICEWITHSTATUSRESTRICTION = "select * from appointments\n" +
-            "    where  appointmentStatus = ?";
-
     private static String APPOINTMENT_STATUS_RESTRICTION =   "AND appointmentStatus = ?";
 
     private static String LOADAPPOINTMENTSINPERIODWITHSTATUS =  "select * from appointments\n" +
