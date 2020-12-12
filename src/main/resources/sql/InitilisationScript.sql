@@ -1,5 +1,5 @@
---This script initilises the database, it starts by dropping the database, and then recreating the tables,
---it then initilises the basic users and there user details.
+--This script initialises the database, it starts by dropping the database, and then recreating the tables,
+--it then initialises the basic users and their user details.
 
 
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
