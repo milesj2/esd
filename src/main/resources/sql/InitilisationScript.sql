@@ -81,6 +81,10 @@ create table invoiceItem
     constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
 );
 
+create table systemSetting(
+    settingKey varchar(100) not null primary key,
+    value varchar(100) not null
+);
 
 /* create table prescription(
 id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
@@ -109,3 +113,7 @@ values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', 
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));
+
+insert into systemSetting(settingKey, value) values ('baseConsultationFeeDoctor', 150);
+insert into systemSetting(settingKey, value) values ('baseConsultationFeeNurse', 100);
+insert into systemSetting(settingKey, value) values ('consultationSlotTime', 10);
