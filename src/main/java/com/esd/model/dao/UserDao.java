@@ -22,8 +22,12 @@ public class UserDao {
     private static UserDao instance;
     private static final String GET_USERS = "select * from systemUser";
     private static final String GET_USER_BY_USERNAME = "select * from systemUser where systemUser.username=?";
+    private static final String GET_ID_BY_USERNAME = "select ID from systemUser where systemUser.username=?";
+    private static final String INSERT_INTO_SYSTEMUSER = "insert into systemUser (username, password, active, userGroup) values (?, ?, ?, ?)";
+    private static final String INSERT_INTO_USERDETAILS = "insert into userDetails (userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_USER_BY_ID = "select * from systemUser where systemUser.id=?";
     private static final String UPDATE_USER = "UPDATE SYSTEMUSER SET username=?,password=?,usergroup=?,active=? WHERE ID=?";
+
 
     private UserDao() {
     }

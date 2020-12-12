@@ -2,9 +2,8 @@ package com.esd.model.dao;
 
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserDetailsIDException;
-import com.esd.model.exceptions.InvalidUserIDException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -102,61 +101,62 @@ public class UserDetailsDao {
         }
     }
 
-   public static ArrayList<UserDetails> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request){
+   public static ArrayList<UserDetails> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request) {
 
-        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-        String STATEMENT_BUILDER = GET_FILTERED_USERS;
+       ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
+       String STATEMENT_BUILDER = GET_FILTERED_USERS;
 
-        try {
-            boolean first = true;
-            for(String key: formKey){
-                if(!request.getParameter(key).isEmpty()) {
-                    if(first){
-                        STATEMENT_BUILDER += WHERE+key+MATCH;
-                        first = false;
-                    } else {
-                        STATEMENT_BUILDER += AND+key+MATCH;
-                    }
-                }
-            }
+       try {
+           boolean first = true;
+           for (String key : formKey) {
+               if (!request.getParameter(key).isEmpty()) {
+                   if (first) {
+                       STATEMENT_BUILDER += WHERE + key + MATCH;
+                       first = false;
+                   } else {
+                       STATEMENT_BUILDER += AND + key + MATCH;
+                   }
+               }
+           }
 
-            //get connection
-            Connection con = ConnectionManager.getInstance().getConnection();
-            PreparedStatement statement = con.prepareStatement(STATEMENT_BUILDER);
+           //get connection
+           Connection con = ConnectionManager.getInstance().getConnection();
+           PreparedStatement statement = con.prepareStatement(STATEMENT_BUILDER);
 
-            int i=1;  //set statement values
-            for(String key: formKey){
-                if(!request.getParameter(key).isEmpty()) {
-                    statement.setString(i,(String)request.getParameter(key));
-                    i+=1;
-                }
-            }
+           int i = 1;  //set statement values
+           for (String key : formKey) {
+               if (!request.getParameter(key).isEmpty()) {
+                   statement.setString(i, (String) request.getParameter(key));
+                   i += 1;
+               }
+           }
 
-            ResultSet result = statement.executeQuery();
+           ResultSet result = statement.executeQuery();
 
-            // add results to list of user to return
-            while(result.next()){
-                UserDetails userDetails =  new UserDetails(
-                        result.getInt(DaoConsts.USERDETAILS_ID),
-                        result.getInt(DaoConsts.SYSTEMUSER_ID),
-                        result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
-                        result.getString(DaoConsts.USERDETAILS_LASTNAME),
-                        result.getString(DaoConsts.USERDETAILS_ADDRESS1),
-                        result.getString(DaoConsts.USERDETAILS_ADDRESS2),
-                        result.getString(DaoConsts.USERDETAILS_ADDRESS3),
-                        result.getString(DaoConsts.USERDETAILS_TOWN),
-                        result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                        result.getString(DaoConsts.USERDETAILS_DOB)
-                );
-                userDetailsList.add(userDetails);
-            }
+           // add results to list of user to return
+           while (result.next()) {
+               UserDetails userDetails = new UserDetails(
+                       result.getInt(DaoConsts.USERDETAILS_ID),
+                       result.getInt(DaoConsts.SYSTEMUSER_ID),
+                       result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
+                       result.getString(DaoConsts.USERDETAILS_LASTNAME),
+                       result.getString(DaoConsts.USERDETAILS_ADDRESS1),
+                       result.getString(DaoConsts.USERDETAILS_ADDRESS2),
+                       result.getString(DaoConsts.USERDETAILS_ADDRESS3),
+                       result.getString(DaoConsts.USERDETAILS_TOWN),
+                       result.getString(DaoConsts.USERDETAILS_POSTCODE),
+                       result.getString(DaoConsts.USERDETAILS_DOB)
+               );
+               userDetailsList.add(userDetails);
+           }
 
-            // close statement and result set
-            statement.close();
-            result.close();
+           // close statement and result set
+           statement.close();
+           result.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       return userDetailsList;
+   }
 }
