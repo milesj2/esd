@@ -26,7 +26,7 @@ import java.util.ArrayList;
 @WebServlet("/user/manage")
 public class UserManageController extends HttpServlet {
 
-    // Needs filter
+    // TODO Needs filter
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
