@@ -1,11 +1,13 @@
 package com.esd.controller.authentication;
 
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.service.UserService;
 import com.esd.views.LoginErrors;
 import com.esd.views.ViewsConsts;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +25,14 @@ import java.sql.SQLException;
 @WebServlet("/login")
 public class LoginController extends HttpServlet{
 
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, java.io.IOException {
+
+        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+        view.forward(request, response);
+
+    }
+
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
@@ -30,19 +40,19 @@ public class LoginController extends HttpServlet{
                     .validateCredentials(request.getParameter("username"), request.getParameter("password"));
 
             if (!user.isActive()){
-                response.sendRedirect("index.jsp?err=" + LoginErrors.AccountDisabled);
+                response.sendRedirect("login?err=" + LoginErrors.AccountDisabled);
                 return;
             }
             //create http session
             HttpSession session = request.getSession(true);
             session.setAttribute("currentSessionUser",user);
-            response.sendRedirect("dashboard.jsp"); //logged-in page
+            response.sendRedirect("dashboard"); //logged-in page
         } catch (SQLException e) {
-           e.printStackTrace();
-            response.sendRedirect("index.jsp?err=" + LoginErrors.Unknown);
+            System.out.println(e.getMessage());
+            response.sendRedirect("login?err=" + LoginErrors.Unknown);
         } catch (InvalidUserCredentialsException e){
-            e.printStackTrace();
-            response.sendRedirect("index.jsp?err=" + LoginErrors.IncorrectCredentials);
+            System.out.println(e.getMessage());
+            response.sendRedirect("login?err=" + LoginErrors.IncorrectCredentials);
         }
     }
 }
