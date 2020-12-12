@@ -33,5 +33,11 @@
             out.print("<a href='invoiceSearch'>Search Invoices</a>");
         }%>
     </div>
+
+    <div>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
+            out.print("<a href='systemSettings'>Manage System Settings</a>");
+        }%>
+    </div>
 </body>
 </html>
