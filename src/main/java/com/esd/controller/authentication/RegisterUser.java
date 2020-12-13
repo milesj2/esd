@@ -30,7 +30,22 @@ public class RegisterUser extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-          String notify = "";
+        response.setContentType("text/html;charset=UTF-8");
+        
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String dob = request.getParameter("dob");
+        String userGroup = request.getParameter("userGroup");
+        String addressLine1 = request.getParameter("addressLine1");
+        String addressLine2 = request.getParameter("addressLine2");
+        String addressLine3 = request.getParameter("addressLine3");
+        String town = request.getParameter("town");
+        String postCode = request.getParameter("postCode");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String active = "true";
+        
+        String notify = "";
         try {
             response.setContentType("text/html;charset=UTF-8");
             
@@ -55,9 +70,8 @@ public class RegisterUser extends HttpServlet {
                     .createUser(username, password, active, userGroup, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
             if (userRegisterd) {
                 notify = "Sucessfully Registered! Please Sign in with the link below.";
-            }
-            else {
-                notify = "Error: Username already exsists, please choose another username or sign in with the exsisting username";
+            } else {
+              notify = "Error: Username already exists, please choose another username or sign in with the existing username";
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -69,7 +83,6 @@ public class RegisterUser extends HttpServlet {
         view.forward(request, response);//endtry
        
     }
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
