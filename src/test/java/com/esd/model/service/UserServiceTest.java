@@ -1,4 +1,4 @@
-package com.esd.controller.authentication;
+package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;

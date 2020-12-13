@@ -3,7 +3,6 @@ package com.esd.model.dao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
-import com.esd.model.exceptions.InvalidUserCredentialsException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -19,9 +18,17 @@ import java.text.Format;
  */
 public class UserDetailsDao {
     private static UserDetailsDao instance;
-
+    
+    private static final String GET_USER_BY_NAME = "select * from userDetails where userDetails.firstName=? and userDetails.lastName=?";
+    private static final String GET_ID_BY_NAME = "select ID from userDetails where userDetails.firstName=? and userDetails.lastName=?";
     private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
 	private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
+
+    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
+            "join systemUser on systemUser.id=userDetails.userId" +
+            " where userDetails.id=? AND systemUser.userGroup in(?)";
+
+
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
     private static final String MATCH = " = ?";
@@ -72,6 +79,28 @@ public class UserDetailsDao {
             throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
         }
         return getUserDetailsFromResults(result);
+    }
+
+    public boolean validateUserDetailsExistByIdAndUserGroup(int id, UserGroup... userGroups) throws SQLException {
+        String query = VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP;
+        String inStatement = "";
+
+        //DERBY DB Lacks functionality to add an array to the query, for this reason the following code will be needed:
+        //thankfully this is an enum, so we can ensure it's safe.
+        for (UserGroup group: userGroups){
+            if(inStatement.equals("")){
+                inStatement += "'" + group.name() + "'";
+                continue;
+            }
+            inStatement += ", '"+group.name() + "'";
+        }
+        query = query.replace("(?)", "(" + inStatement + ")");
+
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        return result.next();
     }
 
     public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {
