@@ -27,7 +27,7 @@
                 <th>Actions</th>
             </tr>
             <tr>
-                <td><input type="text" name=<%=DaoConsts.INVOICE_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
                 <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
                 <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>

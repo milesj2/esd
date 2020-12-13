@@ -26,7 +26,7 @@ public class UserSearchController extends HttpServlet {
 
     //corresponds to user search form
     private ArrayList<String> formValues =  new ArrayList<String>(Arrays.asList(
-            DaoConsts.USERDETAILS_ID,
+            DaoConsts.ID,
             DaoConsts.USERDETAILS_FIRSTNAME,
             DaoConsts.USERDETAILS_LASTNAME ,
             DaoConsts.USERDETAILS_ADDRESS1,

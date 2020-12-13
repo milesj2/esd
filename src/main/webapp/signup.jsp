@@ -12,7 +12,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Register</title>
-    <script type="text/javascript" src="jquery-1.2.6.min.js"></script> 
+    <script type="text/javascript" src="jquery-1.2.6.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="css/master.css">
     <%

@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class InvoiceSearchController extends HttpServlet {
 
     private ArrayList<String> invoiceFormsConst = new ArrayList<String>(Arrays.asList(
-            DaoConsts.INVOICE_ID,
+            DaoConsts.ID,
             DaoConsts.INVOICE_DATE,
             DaoConsts.INVOICE_STATUS ,
             DaoConsts.INVOICE_TIME,
