@@ -43,6 +43,11 @@
     <div>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
             out.print("<a href='systemSettings'>Manage System Settings</a>");
+    </div>
+    
+    <div>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
+            out.print("<a href='appointments'>Appointments</a>");
         }%>
     </div>
 </body>
