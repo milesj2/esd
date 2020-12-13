@@ -21,9 +21,9 @@
 
             <button class="btn" value="Update" id="update" disabled>Update</button>
             <% if (request.getAttribute("success").equals("success")) { %>
-            	<div class="msg"><strong>Success!</strong></div>
+            	<div><strong>Success!</strong></div>
             <% } else { %>
-            	<div class="msg"><strong>Error: failed to save.</strong></div>
+            	<div><strong>Error: failed to save.</strong></div>
             <% } %>
         </form>        
     </body>

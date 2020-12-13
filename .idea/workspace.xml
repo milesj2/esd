@@ -10,12 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e02a1803-8d55-4378-9336-c3747f07134f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9ca32ce7-2836-481e-bcfa-72b30063f526.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/b72635a4-5c8c-40c9-b537-1dedf5c7e045.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/esd/controller/systemsettings/SystemSettingsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/esd/controller/systemsettings/SystemSettingsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/dashboard.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/dashboard.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/systemSettings.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/systemSettings/systemSettings.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/systemSettings/systemSettings.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/systemSettings/systemSettings.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +142,7 @@
       <workItem from="1607772437406" duration="784000" />
       <workItem from="1607775006123" duration="7433000" />
       <workItem from="1607808472704" duration="8780000" />
-      <workItem from="1607857067207" duration="687000" />
+      <workItem from="1607857067207" duration="2584000" />
     </task>
     <servers />
   </component>
