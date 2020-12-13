@@ -1,8 +1,11 @@
 package com.esd.model.service;
 
+import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
+import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidIdValueException;
+import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.exceptions.InvalidUserIDException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,8 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Original Author: Miles Jarvis
- * Use: This class is a singleton, The use of this class is to do any functionality needed for user details
+ * Original Author: Jordan Hellier
+ * Use: This class is a singleton, The use of this class is to do any functionality needed for user such as Authentication
  */
 public class UserDetailsService {
     private static UserDetailsService instance;
@@ -32,12 +35,9 @@ public class UserDetailsService {
     }
 
 
-    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
-        return UserDetailsDao.getInstance().getUserDetailsByUserId(userId);
-    }
-
-    public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
-        return UserDetailsDao.getInstance().updateUserDetails(userDetails);
+    public static UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidUserIDException {
+        UserDetails userDetails = UserDetailsDao.getInstance().getUserDetailsByUserId(userId);
+        return userDetails;
     }
 
     public static UserDetailsService getTestInstance(UserDetailsDao userDetailsDao){

@@ -1,5 +1,5 @@
---This script initialises the database, it starts by dropping the database, and then recreating the tables,
---it then initialises the basic users and their user details.
+--This script initilises the database, it starts by dropping the database, and then recreating the tables,
+--it then initilises the basic users and there user details.
 
 
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
@@ -81,10 +81,6 @@ create table invoiceItem
     constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
 );
 
-create table systemSetting(
-    settingKey varchar(100) not null primary key,
-    value varchar(100) not null
-);
 
 /* create table prescription(
 id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
@@ -105,15 +101,11 @@ values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DAT
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (2,'casandra', 'smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (3,'jake', 'docotor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
+values (3,'jake', 'doctor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
 
-insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, , dob)
+values (4,'sandra', 'johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));
-
-insert into systemSetting(settingKey, value) values ('baseConsultationFeeDoctor', '150');
-insert into systemSetting(settingKey, value) values ('baseConsultationFeeNurse', '100');
-insert into systemSetting(settingKey, value) values ('consultationSlotTime', '10');

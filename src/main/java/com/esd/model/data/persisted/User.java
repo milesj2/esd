@@ -18,8 +18,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String password, UserGroup userGroup, boolean active) {
-        this.id = id;
+    public User(String username, String password, UserGroup userGroup, boolean active) {
         this.username = username;
         this.password = password;
         this.userGroup = userGroup;

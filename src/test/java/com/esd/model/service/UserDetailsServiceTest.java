@@ -2,9 +2,9 @@ package com.esd.model.service;
 
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidIdValueException;
+import com.esd.model.exceptions.InvalidUserIDException;
 import org.junit.Before;
-
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -32,7 +32,7 @@ public class UserDetailsServiceTest {
     private UserDetails userDetails;
 
     @Before
-    public void setup() throws SQLException, InvalidIdValueException {
+    public void setup() throws SQLException, InvalidUserIDException {
         userDetails = new UserDetails(ID, USERID, FIRSTNAME, LASTNAME, ADDRESS_LINE_1, ADDRESS_LINE_2, ADDRESS_LINE_3, TOWN, POSTCODE, DOB);
         when(mockUserDetailsDao.getUserDetailsByUserId(USERID)).thenReturn(userDetails);
     }

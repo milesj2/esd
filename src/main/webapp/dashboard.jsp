@@ -13,13 +13,9 @@
         return; //return is safe and stops further script execution
     }%>
 
-    <nav><a href="logout">Logout</a></nav>
+    <nav><a href="logout">Logout</a> </nav>
     <div>
-        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
-	<br>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
-            out.print("<a href='user/manage'>Manage Users</a>");
-        }%>
+        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privalage level is <% out.print(currentUser.getUserGroup().name()); %>
     </div>
 
     <div>
@@ -31,12 +27,6 @@
     <div>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
             out.print("<a href='invoiceSearch'>Search Invoices</a>");
-        }%>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
-            out.print("<a href='systemSettings'>Manage System Settings</a>");
         }%>
     </div>
 </body>
