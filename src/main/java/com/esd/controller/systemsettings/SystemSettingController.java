@@ -3,11 +3,12 @@ package com.esd.controller.systemsettings;
 import java.io.IOException;
 
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.SystemSetting;
+import com.esd.model.data.persisted.User;
 import com.esd.model.service.SystemSettingService;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,24 +22,35 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 @WebServlet("/systemSettings")
-public class SystemSettingsController extends HttpServlet {
+public class SystemSettingController extends HttpServlet {
 
 	private static final String SUCCESS = "success";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		processRequest(request, response);
+			throws IOException {
+
+		// Validate user is logged in
+		User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
+		if(currentUser == null){
+			response.sendRedirect("../../index.jsp");
+			return;
+		} else if (currentUser.getUserGroup() != UserGroup.ADMIN){
+			response.sendRedirect("../../index.jsp");
+			return;
+		}
+
+		try {
+			response.sendRedirect("systemSettings/systemSettings.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendRedirect("index.jsp?err=true"); //error page
+		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		processRequest(request, response);
-	}
-
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws IOException {
 
 		try {
 			SystemSettingService sysSettingService = SystemSettingService.getInstance();
@@ -55,7 +67,7 @@ public class SystemSettingsController extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher("/systemSettings");
 			response.setContentType("text/html;charset=UTF-8");
 			view.forward(request, response);
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendRedirect("index.jsp?err=true"); //error page
 		}

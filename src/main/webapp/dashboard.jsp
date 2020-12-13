@@ -13,7 +13,7 @@
         return; //return is safe and stops further script execution
     }%>
 
-    <nav><a href="logout">Logout</a> </nav>
+    <nav><a href="logout">Logout</a></nav>
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
 	<br>

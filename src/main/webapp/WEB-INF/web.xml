@@ -6,7 +6,7 @@
 	
 	<servlet>
 		<servlet-name>SystemSettings</servlet-name>
-		<servlet-class>com.esd.controller.systemsettings.SystemSettingsController</servlet-class>
+		<servlet-class>com.esd.controller.systemsettings.SystemSettingController</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SystemSettings</servlet-name>
