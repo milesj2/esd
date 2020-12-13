@@ -31,22 +31,22 @@ public class InvoiceDao {
 
     private static String INVOICE_STATUS_RESTRICTION = "AND invoicestatus = ?";
 
-    private static String LOAD_ALL_INVOICE_WITH_STATUS_RESTRICTION = "select * from invoice\n" +
+    private static String GET_ALL_INVOICE_WITH_STATUS_RESTRICTION = "select * from invoice\n" +
             "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
             "    where  invoicestatus = ?";
 
-    private static String LOAD_COMPLETE_INVOICE_DATERESTRICTION = "select * from invoice\n" +
+    private static String GET_COMPLETE_INVOICE_DATERESTRICTION = "select * from invoice\n" +
             "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
             "    where INVOICEDATE >= ? AND INVOICEDATE <= ? ";
 
-    private static String LOAD_INVOICE_STATUS_CHANGE_THIS_PERIOD = "select * from invoice\n" +
+    private static String GET_INVOICE_STATUS_CHANGE_THIS_PERIOD = "select * from invoice\n" +
             "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
             "    where statusChangeDate >= ? AND statusChangeDate <= ? AND invoicestatus = ?";
 
-    private static String LOAD_INVOICE_DATE_RESTRICTION = "select * from invoice\n" +
+    private static String GET_INVOICE_DATE_RESTRICTION = "select * from invoice\n" +
             "    where INVOICEDATE >= ? AND INVOICEDATE <= ? ";
 
-    private static String LOAD_INVOICE_ITEM_FOR_INVOICE = "select * from invoiceitem\n" +
+    private static String GET_INVOICE_ITEM_FOR_INVOICE = "select * from invoiceitem\n" +
             "    where invoiceitem.invoiceID = ? ";
 
     private InvoiceDao() {}
@@ -54,7 +54,7 @@ public class InvoiceDao {
     public List<Invoice> getAllInvoicesAndItemsBetweenDatesAndWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
-        String query = loadItems ? LOAD_COMPLETE_INVOICE_DATERESTRICTION : LOAD_INVOICE_DATE_RESTRICTION;
+        String query = loadItems ? GET_COMPLETE_INVOICE_DATERESTRICTION : GET_INVOICE_DATE_RESTRICTION;
         if(status.isPresent()){
             query += INVOICE_STATUS_RESTRICTION;
         }
@@ -73,7 +73,7 @@ public class InvoiceDao {
     public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(Date start, Date end, InvoiceStatus status,boolean loadItems) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
-        PreparedStatement statement = con.prepareStatement(LOAD_INVOICE_STATUS_CHANGE_THIS_PERIOD);
+        PreparedStatement statement = con.prepareStatement(GET_INVOICE_STATUS_CHANGE_THIS_PERIOD);
         statement.setDate(1, new java.sql.Date(start.getTime()));
         statement.setDate(2, new java.sql.Date(start.getTime()));
         statement.setString(3, status.name());
@@ -83,7 +83,7 @@ public class InvoiceDao {
     public List<Invoice> getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus status, boolean loadItems) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
-        String query = LOAD_ALL_INVOICE_WITH_STATUS_RESTRICTION;
+        String query = GET_ALL_INVOICE_WITH_STATUS_RESTRICTION;
 
 
         PreparedStatement statement = con.prepareStatement(query);
@@ -111,7 +111,7 @@ public class InvoiceDao {
     public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
-        PreparedStatement statement = con.prepareStatement(LOAD_INVOICE_ITEM_FOR_INVOICE);
+        PreparedStatement statement = con.prepareStatement(GET_INVOICE_ITEM_FOR_INVOICE);
         statement.setInt(1, id);
 
         ResultSet result = statement.executeQuery();

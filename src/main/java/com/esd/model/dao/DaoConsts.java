@@ -14,6 +14,7 @@ public class DaoConsts {
     public final static String APPOINTMENT_ID = "appointmentid";
     public final static String EMPLOYEE_ID = "employeeid";
 
+    public final static String SYSTEMUSER_ID = "userId";
     public final static String SYSTEMUSER_USERNAME = "username";
     public final static String SYSTEMUSER_PASSWORD = "password";
     public final static String SYSTEMUSER_USERGROUP = "usergroup";
