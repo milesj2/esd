@@ -4,7 +4,10 @@ import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
+import com.esd.model.data.persisted.UserDetails;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +25,10 @@ public class AppointmentDao {
 
     private static String LOADAPPOINTMENTSINPERIODWITHSTATUS =  "select * from appointments\n" +
             "    where appointmentDate >= ? AND appointmentDate <= ? ";
+
+    private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
+
+    private static String UPDATE_SETCANCELLED = "update appointments set appointmentstatus = 'CANCELED' where id = ?";
 
     public List<Appointment> getAppointmentsInPeriodWithStatus(Date start, Date end, Optional<AppointmentStatus> status) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
@@ -63,5 +70,44 @@ public class AppointmentDao {
             instance = new AppointmentDao();
         }
         return instance;
+    }
+
+    public ArrayList<Appointment> getFilteredAppointmentsFromRequest(ArrayList<String> formKeys, HttpServletRequest request) throws SQLException {
+
+        ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
+        String SqlStatement = "SELECT * FROM APPOINTMENTS";
+
+        //todo figure out filtering
+        //get connection
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(SqlStatement);
+
+        ResultSet resultSet = statement.executeQuery();
+        while(resultSet.next()){
+            appointmentList.add(processResultSetForAppointment(resultSet));
+        }
+        return appointmentList;
+    }
+
+    public Appointment getAppointmentById(int appoinmentId) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(SELECT_APPOINTMENT);
+        statement.setInt(1, appoinmentId);
+        ResultSet result = statement.executeQuery();
+        if(!result.next()){
+            //todo some error
+        }
+        return processResultSetForAppointment(result);
+    }
+
+    public void updateAppointmentById(int appointmentId, HttpServletRequest request) {
+
+    }
+
+    public void cancelAppointmentById(int appointmentId) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_SETCANCELLED);
+        statement.setInt(1, appointmentId);
+        statement.executeUpdate();
     }
 }

@@ -14,12 +14,11 @@ public class DaoConsts {
     public final static String APPOINTMENT_ID = "appointmentid";
     public final static String EMPLOYEE_ID = "employeeid";
 
-    public final static String SYSTEMUSER_ID = "userId";
+    public final static String SYSTEMUSER_ID = "Id";
     public final static String SYSTEMUSER_USERNAME = "username";
     public final static String SYSTEMUSER_PASSWORD = "password";
     public final static String SYSTEMUSER_USERGROUP = "usergroup";
     public final static String SYSTEMUSER_ACTIVE = "active";
-    public static final String SYSTEMUSER_ID = "userid";
 
     public final static String USERDETAILS_FIRSTNAME = "firstname";
     public final static String USERDETAILS_LASTNAME = "lastname";
@@ -53,4 +52,6 @@ public class DaoConsts {
     public static final String APPOINTMENT_TIME = "appointmenttime";
     public static final String APPOINTMENT_SLOTS = "slots";
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
+    public static final String APPOINTMENT_FROMDATE = "appointmentfromdate";
+    public static final String APPOINTMENT_TODATE = "appointmenttodate";
 }
