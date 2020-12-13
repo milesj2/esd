@@ -3,9 +3,6 @@ package com.esd.controller.systemsettings;
 import java.io.IOException;
 
 import com.esd.model.dao.DaoConsts;
-import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.SystemSetting;
-import com.esd.model.data.persisted.User;
 import com.esd.model.service.SystemSettingService;
 
 import javax.servlet.RequestDispatcher;
@@ -31,16 +28,6 @@ public class SystemSettingController extends HttpServlet {
 
 		response.setContentType("text/html;charset=UTF-8");
 
-		// Validate user is logged in
-		User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
-		if(currentUser == null){
-			response.sendRedirect("../../index.jsp");
-			return;
-		} else if (currentUser.getUserGroup() != UserGroup.ADMIN){
-			response.sendRedirect("../../index.jsp");
-			return;
-		}
-
 		try {
 			response.sendRedirect("systemSettings/systemSettings.jsp");
 		} catch (Exception e) {
@@ -55,20 +42,24 @@ public class SystemSettingController extends HttpServlet {
 
 		response.setContentType("text/html;charset=UTF-8");
 		String result = "";
+		SystemSettingService sysSettingService = SystemSettingService.getInstance();
 
 		try {
-			SystemSettingService sysSettingService = SystemSettingService.getInstance();
+			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_DOCTOR,sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
+			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_NURSE,sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_NURSE));
+			request.setAttribute(DaoConsts.SYSTEMSETTING_SLOT_TIME,sysSettingService.getIntegerSettingValueByKey(DaoConsts.SYSTEMSETTING_SLOT_TIME));
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendRedirect("index.jsp?err=true"); //error page
+		}
 
-			SystemSetting feeDoctorSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
-			SystemSetting feeNurseSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE));
-			SystemSetting slotTimeSysSetting = new SystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME));
-
-			if (sysSettingService.updateSystemSetting(feeDoctorSysSetting)
-				&& sysSettingService.updateSystemSetting(feeNurseSysSetting)
-				&& sysSettingService.updateSystemSetting(slotTimeSysSetting)){
+		try {
+			if (sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_DOCTOR))
+				|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_NURSE, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE))
+				|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME))) {
 				result = "Settings successfully updated.";
 			} else {
-				result = "Error: please enter valid numerical values.";
+				result = "Error: none updated, or valid numerical values (require integer for minutes, decimal for fees).";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

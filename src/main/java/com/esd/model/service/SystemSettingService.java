@@ -1,8 +1,7 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.SystemSettingDao;
-import com.esd.model.dao.UserDetailsDao;
-import com.esd.model.data.persisted.SystemSetting;
+import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 
@@ -22,8 +21,20 @@ public class SystemSettingService {
         this.systemSettingDao = systemSettingDao;
     }
 
-    public boolean updateSystemSetting(SystemSetting systemSetting) throws SQLException {
-        return systemSettingDao.getInstance().updateSetting(systemSetting);
+    public int getIntegerSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getIntegerSettingValueByKey(key);
+    }
+
+    public double getDoubleSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getDoubleSettingValueByKey(key);
+    }
+
+    public String getSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getSettingValueByKey(key);
+    }
+
+    public boolean updateSystemSetting(String key, String value) throws SQLException {
+        return systemSettingDao.getInstance().updateSetting(key, value);
     }
 
     public synchronized static SystemSettingService getInstance() {
