@@ -1,12 +1,7 @@
-<%-- 
-    Document   : signup
-    Created on : 02-Dec-2020, 22:39:21
-    Author     : angela
---%>
-
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import = "java.util.Date" %>
 <%@ page import = "java.text.SimpleDateFormat" %>
+<%@ page import="com.esd.model.data.UserGroup" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +33,7 @@
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
-        <form action="RegisterUser" name="register" method="post">
+        <form action="registerUser" name="register" method="post">
 
             <h4>Personal Details</h4>
 
@@ -48,7 +43,7 @@
             <label for="lastName">Last Name: *</label>
             <input type="text" placeholder="Enter your Last Name" name="lastName" id="lastName" required><br>
 
-            <label for="dob">Date of Birth: *</label>
+            <label for="dob">Date of Birth: (YYYY-MM-DD) *</label>
             <input id="dob" name="dob" type="date" min="1900-01-01" max="<%=max_date%>" required><br>
 
             <label for="addressLine1">Street Address: *</label>
@@ -68,11 +63,11 @@
             
             <label for="userGroup">Patient Group:</label>
             <select id="userGroup" name="userGroup">
-              <option value="NHS_PATIENT">NHS Patient</option>
-              <option value="PRIVATE_PATIENT">Private Patient</option>
-              <option value="DOCTOR">Doctor</option>
-              <option value="NURSE">Nurse</option>
-              <option value="RECEPTIONIST">Receptionist</option>
+              <option value="<%=UserGroup.NHS_PATIENT%>">NHS Patient</option>
+              <option value="<%=UserGroup.PRIVATE_PATIENT%>">Private Patient</option>
+              <option value="<%=UserGroup.DOCTOR%>">Doctor</option>
+              <option value="<%=UserGroup.NURSE%>">Nurse</option>
+              <option value="<%=UserGroup.RECEPTIONIST%>">Receptionist</option>
             </select><br><br>
 
             <h4>Login Details</h4>

@@ -50,7 +50,7 @@
             </form>
             <div class="noAccount">
                 <h1>Don't have an account?</h1>
-                <a href="signup.jsp">Create account</a>
+                <a href='registerUser'>Create account</a>
             </div>
         </div>
     </div>
