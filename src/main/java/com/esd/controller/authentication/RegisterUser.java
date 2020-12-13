@@ -44,10 +44,10 @@ public class RegisterUser extends HttpServlet {
             boolean userRegisterd = UserService.getInstance()
                 .createUser(username, password, active, userGroup, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
             if (userRegisterd) {
-              notify = "Sucessfully Registered! Please Sign in with the link below.";
+              notify = "Successfully Registered! Please Sign in with the link below.";
             }
             else {
-              notify = "Error: Username already exsists, please choose another username or sign in with the exsisting username";
+              notify = "Error: Username already exists, please choose another username or sign in with the existing username";
             }
         }//endtry
         catch (Exception e) {
