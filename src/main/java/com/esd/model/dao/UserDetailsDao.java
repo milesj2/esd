@@ -3,7 +3,6 @@ package com.esd.model.dao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
-import com.esd.model.exceptions.InvalidUserCredentialsException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -24,6 +23,12 @@ public class UserDetailsDao {
     private static final String GET_ID_BY_NAME = "select ID from userDetails where userDetails.firstName=? and userDetails.lastName=?";
     private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
 	private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
+
+    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
+            "join systemUser on systemUser.id=userDetails.userId" +
+            " where userDetails.id=? AND systemUser.userGroup in(?)";
+
+    private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
     private static final String MATCH = " = ?";
@@ -75,42 +80,85 @@ public class UserDetailsDao {
         }
         return getUserDetailsFromResults(result);
     }
-    
-    public boolean verifyUserMatch(String firstName, String lastName) {
-        boolean matchFound = false;
-        try {        
-          Connection con = ConnectionManager.getInstance().getConnection();
-          PreparedStatement statement = con.prepareStatement(GET_USER_BY_NAME);
-          statement.setString(1, firstName);
-          statement.setString(2, lastName);
-          ResultSet result = statement.executeQuery();
-          matchFound = result.next();
-        }catch (SQLException e) {
-           System.err.println("Error: " + e);
-        }
-        return matchFound;
-    }
-    
-    public String getUserId(String firstName, String lastName) {
-        String userid = "";
-        
-        try {        
-          Connection con = ConnectionManager.getInstance().getConnection();
-          PreparedStatement statement = con.prepareStatement(GET_ID_BY_NAME);
-          statement.setString(1, firstName);
-          statement.setString(2, lastName);
-          ResultSet rs = statement.executeQuery();
 
-          while (rs.next()) {
-            userid = rs.getString(1);
-           }
+    public boolean validateUserDetailsExistByIdAndUserGroup(int id, UserGroup... userGroups) throws SQLException {
+        String query = VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP;
+        String inStatement = "";
 
-        }catch (SQLException e) {
-           System.err.println("Error: " + e);
+        //DERBY DB Lacks functionality to add an array to the query, for this reason the following code will be needed:
+        //thankfully this is an enum, so we can ensure it's safe.
+        for (UserGroup group: userGroups){
+            if(inStatement.equals("")){
+                inStatement += "'" + group.name() + "'";
+                continue;
+            }
+            inStatement += ", '"+group.name() + "'";
         }
-        return userid;
+        query = query.replace("(?)", "(" + inStatement + ")");
+
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        return result.next();
     }
 
+    public ArrayList<UserDetails> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request){
+
+        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
+        String STATEMENT_BUILDER = GET_FILTERED_USERS;
+
+        try {
+            boolean first = true;
+            for(String key: formKey){
+                if(!request.getParameter(key).isEmpty()) {
+                    if(first){
+                        STATEMENT_BUILDER += WHERE+key+MATCH;
+                        first = false;
+                    } else {
+                        STATEMENT_BUILDER += AND+key+MATCH;
+                    }
+                }
+            }
+
+            //get connection
+            Connection con = ConnectionManager.getInstance().getConnection();
+            PreparedStatement statement = con.prepareStatement(STATEMENT_BUILDER);
+
+            int i=1;  //set statement values
+            for(String key: formKey){
+                if(!request.getParameter(key).isEmpty()) {
+                    statement.setString(i,(String)request.getParameter(key));
+                    i+=1;
+                }
+            }
+
+            ResultSet result = statement.executeQuery();
+
+            // add results to list of user to return
+            while(result.next()){
+                UserDetails userDetails =  new UserDetails(
+                        result.getInt(DaoConsts.USERDETAILS_ID),
+                        result.getInt(DaoConsts.SYSTEMUSER_ID),
+                        result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
+                        result.getString(DaoConsts.USERDETAILS_LASTNAME),
+                        result.getString(DaoConsts.USERDETAILS_ADDRESS1),
+                        result.getString(DaoConsts.USERDETAILS_ADDRESS2),
+                        result.getString(DaoConsts.USERDETAILS_ADDRESS3),
+                        result.getString(DaoConsts.USERDETAILS_TOWN),
+                        result.getString(DaoConsts.USERDETAILS_POSTCODE),
+                        result.getString(DaoConsts.USERDETAILS_DOB)
+                );
+                userDetailsList.add(userDetails);
+            }
+
+            // close statement and result set
+            statement.close();
+            result.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
 

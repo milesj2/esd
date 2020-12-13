@@ -33,17 +33,5 @@
             out.print("<a href='invoiceSearch'>Search Invoices</a>");
         }%>
     </div>
-    
-    <div>
-        <% if (currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='createPrescription'>Create Prescriptions</a>");
-        }%>
-    </div>
-    
-    <div>
-        <% if (currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='prescriptionSearch'>Search Prescriptions</a>");
-        }%>
-    </div>
 </body>
 </html>

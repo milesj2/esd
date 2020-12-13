@@ -1,10 +1,13 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.PrescriptionDao;
+import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Prescription;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -15,43 +18,23 @@ import javax.servlet.http.HttpServletRequest;
 public class PrescriptionService {
     
     private static PrescriptionService instance;
-    private PrescriptionDao prescriptionDao;
+    private PrescriptionDao prescriptionDao = PrescriptionDao.getInstance();
+    private UserDetailsDao userDetailsDao = UserDetailsDao.getInstance();
 
-    private PrescriptionService(PrescriptionDao prescriptionDao) {
-        if(prescriptionDao == null){
-            throw new IllegalArgumentException("prescriptionDao must not be null");
-        }
-        this.prescriptionDao = prescriptionDao;
+    private PrescriptionService() {
     }
 
-    public synchronized static PrescriptionService getInstance(){
-        if(instance == null){
-            instance = new PrescriptionService(PrescriptionDao.getInstance());
-        }
-        return instance;
-    }
-    
+    public boolean createPrescription(int employeeId, int patientId, String prescriptionDetails, int appointmentId,
+                                      Date issueDate) throws SQLException {
 
-    public boolean createPrescription(String doctorFirstName, String doctorLastName, String patientFirstName, String patientLastName,
-            String prescriptionDetails, String appointmentId, String issueDate) 
-        throws SQLException {
+        boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeId, UserGroup.DOCTOR, UserGroup.NURSE);
+        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientId, UserGroup.PATIENT);
         
-        //check if doctor and patient exsists with the names provided and get id.
-        UserDetailsDao db = UserDetailsDao.getInstance();
-        boolean doctorFound = db.verifyUserMatch(doctorFirstName, doctorLastName);
-        boolean patientFound = db.verifyUserMatch(patientFirstName, patientLastName);
-        
-        if (doctorFound && patientFound) {
-        
-            String doctorId =  db.getUserId(doctorFirstName, doctorLastName); //get doctote id
-            String patientId =  db.getUserId(patientFirstName, patientLastName); //get patient id
-
-            PrescriptionDao db2 = PrescriptionDao.getInstance();
-            db2.addPrescription(doctorId, patientId, prescriptionDetails, appointmentId, issueDate);
+        if (employeeFound && patientFound) {
+            prescriptionDao.addPrescription(employeeId, patientId, prescriptionDetails, appointmentId, issueDate);
             return true;
         }
         return false;
-
     }
     
     public static ArrayList<Prescription> getPrescriptionFromFilteredRequest(ArrayList<String> formKeys,
@@ -60,4 +43,10 @@ public class PrescriptionService {
         return prescription;
     }
 
+    public synchronized static PrescriptionService getInstance(){
+        if(instance == null){
+            instance = new PrescriptionService();
+        }
+        return instance;
+    }
 }

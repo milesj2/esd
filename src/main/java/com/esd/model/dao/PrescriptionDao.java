@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -107,22 +108,18 @@ public class PrescriptionDao {
     
     
     //For creating new prescription     
-    public void addPrescription(String employeeId, String patientId, String prescriptionDetails, String appointmentId, String issueDate){
+    public void addPrescription(int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate) throws SQLException {
 
         Connection con = ConnectionManager.getInstance().getConnection();
-        
-        try {
+
         PreparedStatement statement = con.prepareStatement(INSERT_INTO_PRESCRIPTIONS);
-        statement.setString(1, employeeId);
-        statement.setString(2, patientId);
+        statement.setInt(1, employeeId);
+        statement.setInt(2, patientId);
         statement.setString(3, prescriptionDetails);
-        statement.setString(4, appointmentId);
-        statement.setString(5, issueDate);
-        int resultAdded = statement.executeUpdate();
-        
-        } catch(SQLException e) {
-          System.err.println("Error: " + e);
-        }
+        statement.setInt(4, appointmentId);
+        statement.setDate(5, new java.sql.Date(issueDate.getTime()));
+        statement.executeUpdate();
+
     }
     
     

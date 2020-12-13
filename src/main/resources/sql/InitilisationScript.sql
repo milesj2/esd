@@ -91,7 +91,7 @@ create table prescriptions
     id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
     employeeId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
-    prescriptionDetails LONG VARCHAR NOT NULL,
+    prescriptionDetails  LONG VARCHAR NOT NULL,
     appointmentId INTEGER NOT NULL,
     issueDate DATE NOT NULL,
 
