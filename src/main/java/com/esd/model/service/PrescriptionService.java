@@ -24,14 +24,14 @@ public class PrescriptionService {
     private PrescriptionService() {
     }
 
-    public boolean createPrescription(int employeeId, int patientId, String prescriptionDetails, int appointmentId,
+    public boolean createPrescription(int employeeDetailsId, int patientDetailsId, String prescriptionDetails, int appointmentId,
                                       Date issueDate) throws SQLException {
 
-        boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeId, UserGroup.DOCTOR, UserGroup.NURSE);
-        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientId, UserGroup.PATIENT);
+        boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeDetailsId, UserGroup.DOCTOR, UserGroup.NURSE);
+        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientDetailsId, UserGroup.PATIENT);
         
         if (employeeFound && patientFound) {
-            prescriptionDao.addPrescription(employeeId, patientId, prescriptionDetails, appointmentId, issueDate);
+            prescriptionDao.addPrescription(employeeDetailsId, patientDetailsId, prescriptionDetails, appointmentId, issueDate);
             return true;
         }
         return false;
