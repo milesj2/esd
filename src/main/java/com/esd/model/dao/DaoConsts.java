@@ -52,6 +52,4 @@ public class DaoConsts {
     public static final String APPOINTMENT_TIME = "appointmenttime";
     public static final String APPOINTMENT_SLOTS = "slots";
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
-    public static final String APPOINTMENT_FROMDATE = "appointmentfromdate";
-    public static final String APPOINTMENT_TODATE = "appointmenttodate";
 }

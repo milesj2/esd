@@ -75,6 +75,8 @@
             </tr>
             <% } catch (Exception e) {
             } %>
+            <input name="option" type="radio" value="1" />Update
+            <input name="option" type="radio" value="1" />Create
             <input type="submit"/>Submit
         </table>
     </form>

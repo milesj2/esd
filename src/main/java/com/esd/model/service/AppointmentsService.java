@@ -41,28 +41,15 @@ public class AppointmentsService {
         return appointmentDao.getInstance().getAppointmentById(AppoinmentId);
     }
 
-    public void updateAppointmentInstanceById(int AppointmentId, HttpServletRequest request) throws SQLException {
-        appointmentDao.getInstance().updateAppointmentById(AppointmentId, request);
+    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate, Map<String, String> args) throws SQLException {
+        return appointmentDao.getInstance().getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
-    public void cancelAppointmentById(int AppointmentId) throws SQLException {
-        appointmentDao.getInstance().cancelAppointmentById(AppointmentId);
+    public void createNewAppointment(Appointment appointment) throws SQLException {
+        appointmentDao.getInstance().createAppointment(appointment);
     }
 
-    public void createNewAppointment(HttpServletRequest request) throws SQLException {
-        Appointment appointment = new Appointment();
-        appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID)));
-        appointment.setAppointmentDate(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE))));
-        appointment.setAppointmentTime(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))));
-        appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
-        appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
-        appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
-        appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
-
-        appointmentDao.getInstance().createAppointmentFromRequest(appointment);
-    }
-
-    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate) throws SQLException {
-        return appointmentDao.getInstance().getAppointmentsInPeriodWithStatus(fromDate, toDate, Optional.empty());
+    public void updateAppointmentById(Appointment appointment) throws SQLException {
+        appointmentDao.getInstance().updateAppointment(appointment);
     }
 }
