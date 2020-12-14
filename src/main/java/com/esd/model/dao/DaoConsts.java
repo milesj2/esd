@@ -31,11 +31,9 @@ public class DaoConsts {
     public static final String TABLE_USERDETAILS_REFERENCE = TABLE_USERDETAILS + ".";
 
     //foreign_keys
-    public final static String INVOICE_ID_FK = "invoiceId";
-    public final static String PATIENT_ID_FK = "patientid";
-    public final static String APPOINTMENT_ID_FK = "appointmentid";
-    public final static String EMPLOYEE_ID_FK = "employeeid";
-    public final static String SYSTEMUSER_ID_FK = "userId";
+    public final static String INVOICE_ID = "invoiceId";
+    public final static String PATIENT_ID = "patientid";
+    public final static String EMPLOYEE_ID = "employeeid";
 
     public final static String SYSTEMUSER_ID = "Id";
     public final static String SYSTEMUSER_USERNAME = "username";

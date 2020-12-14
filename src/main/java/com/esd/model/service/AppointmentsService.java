@@ -49,7 +49,7 @@ public class AppointmentsService {
         appointmentDao.getInstance().createAppointment(appointment);
     }
 
-    public void updateAppointmentById(Appointment appointment) throws SQLException {
+    public void updateAppointment(Appointment appointment) throws SQLException {
         appointmentDao.getInstance().updateAppointment(appointment);
     }
 }

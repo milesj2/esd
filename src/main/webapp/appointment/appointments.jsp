@@ -41,7 +41,7 @@
                 <td><%=appointment.getSlots()%></td>
                 <td><%=appointment.getStatus()%></td>
                 <td><%=appointment.getPatientId()%></td>
-                <td><a href='appointment?<%=DaoConsts.APPOINTMENT_ID%>=<%=appointment.getId()%>'>Search Invoice</a></td>
+                <td><a href='appointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Search Invoice</a></td>
             </tr>
             <% }
             } catch(Exception e){
