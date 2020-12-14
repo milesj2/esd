@@ -1,6 +1,7 @@
 package com.esd.model.service.reports;
 
 import com.esd.model.dao.AppointmentDao;
+import com.esd.model.dao.DaoConsts;
 import com.esd.model.dao.InvoiceDao;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.InvoiceStatus;
@@ -70,8 +71,10 @@ public class SystemOverViewReportService {
                 .mapToDouble(InvoiceItem::getCost)
                 .sum();
 
-        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.empty()).size();
-        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end, Optional.of(AppointmentStatus.CANCELED)).size();
+        Map<String, String> args = null;
+        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
+        args.put(DaoConsts.APPOINTMENT_STATUS, AppointmentStatus.CANCELED.toString());
+        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
 
         //Java likes casting for some reason
         int cancelRate = (int)(((double)canceledAppointments/(double)madeAppointments )* 100);

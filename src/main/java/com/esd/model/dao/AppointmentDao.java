@@ -14,37 +14,27 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
+/**
+ * Original Author: Trent Meier
+ * Use: Dao class to handle CRU(d) operations for Appointments
+ */
+
 public class AppointmentDao {
 
     private static AppointmentDao instance;
 
-    private static String APPOINTMENT_STATUS_RESTRICTION =   "AND appointmentStatus = ?";
-    private static String LOADAPPOINTMENTSINPERIODWITHSTATUS =  "select * from appointments\n" +
-            "    where appointmentDate >= ? AND appointmentDate <= ? ";
-    private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
-    private static String UPDATE_SETCANCELLED = "update appointments set appointmentstatus = 'CANCELED' where id = ?";
-    private static String UPDATE_BY_REQUEST = "update appointments set ";
     private static String INSERT_APPOINTMENT = "insert into appointments " +
             "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
             " values (?,?,?,?,?,?,?)";
 
-    public List<Appointment> getAppointmentsInPeriodWithStatus(Date start, Date end, Optional<AppointmentStatus> status) throws SQLException {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
-                .and(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, start))
-                .and(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, end));
+    private static String UPDATE_APPOINTMENT = "update appointments set values" +
+            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
+            " values (?,?,?,?,?,?) where id = ?";
 
-        if(status.isPresent()){
-            queryBuilder.and(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_STATUS, status.get()));
-        }
+    private static String SELECT_APPOINTMENTS_WITHIN_RANGE =  "select * from appointments\n" +
+            " where appointmentDate >= ? and appointmentDate <= ? ";
 
-        ResultSet result = queryBuilder.createStatement().executeQuery();
-        List<Appointment> appointments = new ArrayList<>();
-
-        while (result.next()){
-            appointments.add(processResultSetForAppointment(result));
-        }
-        return appointments;
-    }
+    private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
 
     private Appointment processResultSetForAppointment(ResultSet resultSet) throws SQLException {
         Appointment appointment =  new Appointment();
@@ -65,62 +55,27 @@ public class AppointmentDao {
         return instance;
     }
 
-    public Appointment getAppointmentById(int appoinmentId) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(SELECT_APPOINTMENT);
-        statement.setInt(1, appoinmentId);
-        ResultSet result = statement.executeQuery();
-        if(!result.next()){
-            //todo some error
+    public void updateAppointment(Appointment appointment) throws SQLException {
+        if(appointment.getId()==0){
+            throw new IllegalArgumentException("appointment must have id");
         }
-        return processResultSetForAppointment(result);
-    }
-
-    public void updateAppointmentById(int appointmentId, HttpServletRequest request) throws SQLException {
-        Enumeration<String> params = request.getParameterNames();
-        String UPDATE_APPOINTMENT = UPDATE_BY_REQUEST;
-
-        boolean first = true;
-        while(params.hasMoreElements()){
-            String key = params.nextElement();
-            if(first){
-                if(!request.getParameter(key).isEmpty()) {
-                    UPDATE_APPOINTMENT += key + " = ? ";
-                }
-                first = false;
-            } else {
-                if(!request.getParameter(key).isEmpty()) {
-                    UPDATE_APPOINTMENT += ", " + key + " = ? ";
-                }
-            }
-        }
-
-        UPDATE_APPOINTMENT += " where id = ?";
-
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
+        statement.setDate(1, (java.sql.Date) appointment.getAppointmentDate());
+        statement.setTime(2, (Time) appointment.getAppointmentTime());
+        statement.setInt(3, appointment.getSlots());
+        statement.setInt(4, appointment.getEmployeeId());
+        statement.setInt(5, appointment.getPatientId());
+        statement.setString(6, appointment.getStatus().toString());
+        //where id
+        statement.setInt(7, appointment.getId());
+        statement.executeQuery();
+    }
 
-        int i = 1;
-        while(params.hasMoreElements()){
-            String key = params.nextElement();
-            if(!request.getParameter(key).isEmpty()) {
-                statement.setString(i, request.getParameter(key));
-                i++;
-            }
+    public void createAppointment(Appointment appointment) throws SQLException {
+        if(appointment.getId()!=0){
+            throw new IllegalArgumentException("new appointment cannot have prepopulate id");
         }
-
-        statement.setInt(i, appointmentId);
-        statement.executeUpdate();
-    }
-
-    public void cancelAppointmentById(int appointmentId) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(UPDATE_SETCANCELLED);
-        statement.setInt(1, appointmentId);
-        statement.executeUpdate();
-    }
-
-    public void createAppointmentFromRequest(Appointment appointment) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(INSERT_APPOINTMENT);
         statement.setInt(1, appointment.getId());
@@ -129,6 +84,49 @@ public class AppointmentDao {
         statement.setInt(4, appointment.getSlots());
         statement.setInt(5, appointment.getEmployeeId());
         statement.setInt(6, appointment.getPatientId());
-        statement.setString(6, appointment.getStatus().toString());
+        statement.setString(7, appointment.getStatus().toString());
+        statement.executeQuery();
+    }
+
+    public List<Appointment> getAppointmentsInPeriodWithArgs(Date start, Date end, Map<String, String> args)
+            throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        String query = SELECT_APPOINTMENTS_WITHIN_RANGE;
+
+        //iterate though args
+        Iterator it = args.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            query += " and " + pair.getKey() + " = ?";
+        }
+
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setDate(1, new java.sql.Date(start.getTime()));
+        statement.setDate(2, new java.sql.Date(end.getTime()));
+
+        int i = 3;
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            statement.setString(i, (String) pair.getValue());
+        }
+
+        ResultSet result = statement.executeQuery();
+        List<Appointment> appointments = new ArrayList<>();
+
+        while (result.next()){
+            appointments.add(processResultSetForAppointment(result));
+        }
+        return appointments;
+    }
+
+    public Appointment getAppointmentById(int appointmentId) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(SELECT_APPOINTMENT);
+        statement.setInt(1, appointmentId);
+        ResultSet result = statement.executeQuery();
+        if(!result.next()){
+            throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
+        }
+        return processResultSetForAppointment(result);
     }
 }

@@ -1,6 +1,7 @@
 package com.esd.controller.appointments;
 
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.User;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.util.Date;
 
 /**
  * Original Author: Trent meier
@@ -66,17 +69,29 @@ public class AppointmentController extends HttpServlet {
             int choice = Integer.parseInt(request.getParameter("option"));
             int idVal = Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID));
 
+            Appointment appointment = new Appointment();
+            appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID)));
+            appointment.setAppointmentDate(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE))));
+            appointment.setAppointmentTime(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))));
+            appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
+            appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
+            appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
+            appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
+
             if(choice == 0) {
                 //update user with request val
-                AppointmentsService.getInstance().updateAppointmentInstanceById(idVal, request);
+                AppointmentsService.getInstance().updateAppointmentById(appointment);
 
                 //success and get updated appointment
                 request.setAttribute("message", "Success");
-                Appointment appointment = AppointmentsService.getInstance().getAppointmentById(idVal);
+                appointment = AppointmentsService.getInstance().getAppointmentById(idVal);
             } else {
-                // delete
-                AppointmentsService.getInstance().cancelAppointmentById(idVal);
+                // create
+                AppointmentsService.getInstance().createNewAppointment(appointment);
+
+                //success and get updated appointment
                 request.setAttribute("message", "Success");
+                appointment = AppointmentsService.getInstance().getAppointmentById(idVal);
             }
 
             // dispatch

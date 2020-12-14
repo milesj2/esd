@@ -20,10 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Original Author: Trent meier
@@ -36,6 +33,12 @@ public class AppointmentsController extends HttpServlet {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    private static final ArrayList<String> AppointmentKeys = new ArrayList<String>(Arrays.asList(
+            DaoConsts.APPOINTMENT_ID,
+            DaoConsts.APPOINTMENT_DATE,
+            DaoConsts.APPOINTMENT_SLOTS,
+            DaoConsts.EMPLOYEE_ID,
+            DaoConsts.PATIENT_ID));
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
@@ -61,10 +64,18 @@ public class AppointmentsController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
+        Map<String, String> args = null;
+        for(String key: AppointmentKeys) {
+            if(!request.getParameter(key).isEmpty()){
+                args.put(key, request.getParameter(key));
+            }
+        }
+
         try {
             List<Appointment> appointmentList = AppointmentsService.getInstance().getAppointmentsInRange(
                     dateFormat.parse(request.getParameter("fromDate")),
-                    dateFormat.parse(request.getParameter("fromDate")));
+                    dateFormat.parse(request.getParameter("fromDate")),
+                    args);
 
             request.setAttribute("table", appointmentList);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("appointment/appointments.jsp");
