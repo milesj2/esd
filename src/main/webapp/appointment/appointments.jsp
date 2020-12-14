@@ -23,9 +23,8 @@
                 <th>Actions</th>
             </tr>
             <tr>
-                <td><input type="date" name=<%=DaoConsts.APPOINTMENT_FROMDATE%> size="10" /></td>
-                <td><input type="date" name=<%=DaoConsts.APPOINTMENT_TODATE%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_STATUS%> size="10" /></td>
+                <td><input type="date" name="fromDate" size="10" /></td>
+                <td><input type="date" name="toDate" size="10" /></td>
                 <td>
                 </td>
             </tr>

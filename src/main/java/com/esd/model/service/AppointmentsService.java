@@ -1,15 +1,17 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.AppointmentDao;
+import com.esd.model.dao.ConnectionManager;
+import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 /**
  * Original Author: Trent Meier
@@ -39,16 +41,28 @@ public class AppointmentsService {
         return appointmentDao.getInstance().getAppointmentById(AppoinmentId);
     }
 
-    public List<Appointment> getAppointments(ArrayList<String> formKeys, HttpServletRequest request) throws SQLException {
-        return appointmentDao.getInstance().getFilteredAppointmentsFromRequest(formKeys,request);
-
-    }
-
-    public void updateAppointmentInstanceById(int AppointmentId, HttpServletRequest request) {
+    public void updateAppointmentInstanceById(int AppointmentId, HttpServletRequest request) throws SQLException {
         appointmentDao.getInstance().updateAppointmentById(AppointmentId, request);
     }
 
     public void cancelAppointmentById(int AppointmentId) throws SQLException {
         appointmentDao.getInstance().cancelAppointmentById(AppointmentId);
+    }
+
+    public void createNewAppointment(HttpServletRequest request) throws SQLException {
+        Appointment appointment = new Appointment();
+        appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID)));
+        appointment.setAppointmentDate(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE))));
+        appointment.setAppointmentTime(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))));
+        appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
+        appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
+        appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
+        appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
+
+        appointmentDao.getInstance().createAppointmentFromRequest(appointment);
+    }
+
+    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate) throws SQLException {
+        return appointmentDao.getInstance().getAppointmentsInPeriodWithStatus(fromDate, toDate, Optional.empty());
     }
 }

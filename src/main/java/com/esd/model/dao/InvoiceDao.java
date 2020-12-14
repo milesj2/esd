@@ -106,7 +106,6 @@ public class InvoiceDao {
         return invoice;
     }
 
-
     private InvoiceItem extractInvoiceItemFromResultSet(ResultSet resultSet) throws SQLException {
         InvoiceItem invoiceItem =  new InvoiceItem();
         invoiceItem.setId(resultSet.getInt(DaoConsts.ID));

@@ -10,27 +10,23 @@ import com.esd.model.data.persisted.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public class AppointmentDao {
 
     private static AppointmentDao instance;
 
     private static String APPOINTMENT_STATUS_RESTRICTION =   "AND appointmentStatus = ?";
-
     private static String LOADAPPOINTMENTSINPERIODWITHSTATUS =  "select * from appointments\n" +
             "    where appointmentDate >= ? AND appointmentDate <= ? ";
-
     private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
-
     private static String UPDATE_SETCANCELLED = "update appointments set appointmentstatus = 'CANCELED' where id = ?";
+    private static String UPDATE_BY_REQUEST = "update appointments set ";
+    private static String INSERT_APPOINTMENT = "insert into appointments " +
+            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
+            " values (?,?,?,?,?,?,?)";
 
     public List<Appointment> getAppointmentsInPeriodWithStatus(Date start, Date end, Optional<AppointmentStatus> status) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
@@ -69,23 +65,6 @@ public class AppointmentDao {
         return instance;
     }
 
-    public ArrayList<Appointment> getFilteredAppointmentsFromRequest(ArrayList<String> formKeys, HttpServletRequest request) throws SQLException {
-
-        ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
-        String SqlStatement = "SELECT * FROM APPOINTMENTS";
-
-        //todo figure out filtering
-        //get connection
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(SqlStatement);
-
-        ResultSet resultSet = statement.executeQuery();
-        while(resultSet.next()){
-            appointmentList.add(processResultSetForAppointment(resultSet));
-        }
-        return appointmentList;
-    }
-
     public Appointment getAppointmentById(int appoinmentId) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(SELECT_APPOINTMENT);
@@ -97,8 +76,41 @@ public class AppointmentDao {
         return processResultSetForAppointment(result);
     }
 
-    public void updateAppointmentById(int appointmentId, HttpServletRequest request) {
+    public void updateAppointmentById(int appointmentId, HttpServletRequest request) throws SQLException {
+        Enumeration<String> params = request.getParameterNames();
+        String UPDATE_APPOINTMENT = UPDATE_BY_REQUEST;
 
+        boolean first = true;
+        while(params.hasMoreElements()){
+            String key = params.nextElement();
+            if(first){
+                if(!request.getParameter(key).isEmpty()) {
+                    UPDATE_APPOINTMENT += key + " = ? ";
+                }
+                first = false;
+            } else {
+                if(!request.getParameter(key).isEmpty()) {
+                    UPDATE_APPOINTMENT += ", " + key + " = ? ";
+                }
+            }
+        }
+
+        UPDATE_APPOINTMENT += " where id = ?";
+
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
+
+        int i = 1;
+        while(params.hasMoreElements()){
+            String key = params.nextElement();
+            if(!request.getParameter(key).isEmpty()) {
+                statement.setString(i, request.getParameter(key));
+                i++;
+            }
+        }
+
+        statement.setInt(i, appointmentId);
+        statement.executeUpdate();
     }
 
     public void cancelAppointmentById(int appointmentId) throws SQLException {
@@ -106,5 +118,17 @@ public class AppointmentDao {
         PreparedStatement statement = con.prepareStatement(UPDATE_SETCANCELLED);
         statement.setInt(1, appointmentId);
         statement.executeUpdate();
+    }
+
+    public void createAppointmentFromRequest(Appointment appointment) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(INSERT_APPOINTMENT);
+        statement.setInt(1, appointment.getId());
+        statement.setDate(2, (java.sql.Date) appointment.getAppointmentDate());
+        statement.setTime(3, (Time) appointment.getAppointmentTime());
+        statement.setInt(4, appointment.getSlots());
+        statement.setInt(5, appointment.getEmployeeId());
+        statement.setInt(6, appointment.getPatientId());
+        statement.setString(6, appointment.getStatus().toString());
     }
 }
