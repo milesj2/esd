@@ -13,8 +13,8 @@ import java.sql.ResultSet;
  */
 public class SystemSettingDao {
 
-    private static final String GET_SYSTEMSETTING = "SELECT value FROM systemsetting WHERE settingKey=?";
-    private static final String UPDATE_SYSTEMSETTING = "UPDATE systemsetting SET value=? WHERE settingKey=?";
+    private static final String GET_SYSTEMSETTING = "SELECT settingValue FROM systemSetting WHERE settingKey=?";
+    private static final String UPDATE_SYSTEMSETTING = "UPDATE systemSetting SET settingValue=? WHERE settingKey=?";
     private static SystemSettingDao instance;
 
     private SystemSettingDao() {
@@ -23,69 +23,69 @@ public class SystemSettingDao {
     /**
      * Get an Integer system setting by its key
      */
-    public int getIntegerSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+    public int getIntegerSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
 
-        statement.setString(1, key);
+        statement.setString(1, settingKey);
 
         ResultSet result = statement.executeQuery();
 
         boolean resultFound = result.next();
         if (!resultFound) {
-            throw new InvalidIdValueException("No system setting key " + key);
+            throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
         }
 
-        return result.getInt(key);
+        return result.getInt(settingKey);
     }
 
     /**
      * Get a Double system setting by its key
      */
-    public double getDoubleSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+    public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
 
-        statement.setString(1, key);
+        statement.setString(1, settingKey);
 
         ResultSet result = statement.executeQuery();
 
         boolean resultFound = result.next();
         if (!resultFound) {
-            throw new InvalidIdValueException("No system setting key " + key);
+            throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
         }
 
-        return result.getDouble(key);
+        return result.getDouble(settingKey);
     }
 
     /**
      * Get a String system setting by its key
      */
-    public String getSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
+    public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
 
-        statement.setString(1, key);
+        statement.setString(1, settingKey);
 
         ResultSet result = statement.executeQuery();
 
         boolean resultFound = result.next();
         if (!resultFound) {
-            throw new InvalidIdValueException("No system setting key " + key);
+            throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
         }
 
-        return result.getString(key);
+        return result.getString(settingKey);
     }
 
     /**
      * Update a system setting
      */
-    public boolean updateSetting(String key, String value) throws SQLException {
+    public boolean updateSetting(String settingKey, String settingValue) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_SYSTEMSETTING);
 
-        statement.setString(1, value);
-        statement.setString(2, key);
+        statement.setString(1, settingValue);
+        statement.setString(2, settingKey);
 
         int result = statement.executeUpdate();
 

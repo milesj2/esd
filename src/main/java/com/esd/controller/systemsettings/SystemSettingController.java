@@ -23,49 +23,50 @@ import javax.servlet.http.HttpServletResponse;
 public class SystemSettingController extends HttpServlet {
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-
-		response.setContentType("text/html;charset=UTF-8");
-
-		try {
-			response.sendRedirect("systemSettings/systemSettings.jsp");
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.sendRedirect("index.jsp?err=true"); //error page
-		}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		populateForm(request, response);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		processRequest(request, response);
+	}
 
+	private void populateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html;charset=UTF-8");
-		String result = "";
 		SystemSettingService sysSettingService = SystemSettingService.getInstance();
 
 		try {
-			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_DOCTOR,sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
-			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_NURSE,sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_NURSE));
-			request.setAttribute(DaoConsts.SYSTEMSETTING_SLOT_TIME,sysSettingService.getIntegerSettingValueByKey(DaoConsts.SYSTEMSETTING_SLOT_TIME));
+			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
+			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_NURSE, sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_NURSE));
+			request.setAttribute(DaoConsts.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(DaoConsts.SYSTEMSETTING_SLOT_TIME));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendRedirect("index.jsp?err=true"); //error page
 		}
 
+		RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
+		view.forward(request, response);
+	}
+
+	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		response.setContentType("text/html;charset=UTF-8");
+		String notification = "";
+		SystemSettingService sysSettingService = SystemSettingService.getInstance();
+
 		try {
 			if (sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_DOCTOR))
-				|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_NURSE, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE))
-				|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME))) {
-				result = "Settings successfully updated.";
+					|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_NURSE, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE))
+					|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME))) {
+				notification = "Settings successfully updated.";
 			} else {
-				result = "Error: none updated, or valid numerical values (require integer for minutes, decimal for fees).";
+				notification = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		request.setAttribute("result", result);
+		request.setAttribute("notification", notification);
 		RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
 		view.forward(request, response);
 	}

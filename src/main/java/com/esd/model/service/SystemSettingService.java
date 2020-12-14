@@ -21,20 +21,20 @@ public class SystemSettingService {
         this.systemSettingDao = systemSettingDao;
     }
 
-    public int getIntegerSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
-        return systemSettingDao.getInstance().getIntegerSettingValueByKey(key);
+    public int getIntegerSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getIntegerSettingValueByKey(settingKey);
     }
 
-    public double getDoubleSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
-        return systemSettingDao.getInstance().getDoubleSettingValueByKey(key);
+    public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getDoubleSettingValueByKey(settingKey);
     }
 
-    public String getSettingValueByKey(String key) throws SQLException, InvalidIdValueException {
-        return systemSettingDao.getInstance().getSettingValueByKey(key);
+    public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
+        return systemSettingDao.getInstance().getSettingValueByKey(settingKey);
     }
 
-    public boolean updateSystemSetting(String key, String value) throws SQLException {
-        return systemSettingDao.getInstance().updateSetting(key, value);
+    public boolean updateSystemSetting(String settingKey, String settingValue) throws SQLException {
+        return systemSettingDao.getInstance().updateSetting(settingKey, settingValue);
     }
 
     public synchronized static SystemSettingService getInstance() {
