@@ -32,7 +32,7 @@ public class InvoiceSearchController extends HttpServlet {
             DaoConsts.INVOICE_STATUS,
             DaoConsts.EMPLOYEE_ID,
             DaoConsts.PATIENT_ID,
-            DaoConsts.APPOINTMENT_ID));
+            DaoConsts.ID));
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {

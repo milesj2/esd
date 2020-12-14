@@ -11,7 +11,6 @@ public class DaoConsts {
     //foreign_keys
     public final static String INVOICE_ID = "invoiceId";
     public final static String PATIENT_ID = "patientid";
-    public final static String APPOINTMENT_ID = "appointmentid";
     public final static String EMPLOYEE_ID = "employeeid";
 
     public final static String SYSTEMUSER_ID = "Id";

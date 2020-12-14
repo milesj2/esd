@@ -22,7 +22,7 @@
             <tr>
                 <td>Appointment Id</td>
                 <td>
-                    <input type="text" name=<%=DaoConsts.APPOINTMENT_ID%> size="10" />
+                    <input type="text" name=<%=DaoConsts.ID%> size="10" />
                 </td>
                 <td>
                     <%=appointment.getId()%>
@@ -75,7 +75,7 @@
             </tr>
             <% } catch (Exception e) {
             } %>
-            <input name="option" type="radio" value="1" />Update
+            <input name="option" type="radio" value="0" />Update
             <input name="option" type="radio" value="1" />Create
             <input type="submit"/>Submit
         </table>

@@ -43,7 +43,7 @@ public class PrescriptionDao {
             result.getInt(DaoConsts.EMPLOYEE_ID),
             result.getInt(DaoConsts.PATIENT_ID),
             result.getString(DaoConsts.PRESCRIPTION_DETAILS), 
-            result.getInt(DaoConsts.APPOINTMENT_ID),
+            result.getInt(DaoConsts.ID),
             result.getDate(DaoConsts.PRESCRIPTION_ISSUE_DATE)
         );
     }
@@ -88,7 +88,7 @@ public class PrescriptionDao {
                     result.getInt(DaoConsts.EMPLOYEE_ID),
                     result.getInt(DaoConsts.PATIENT_ID),
                     result.getString(DaoConsts.PRESCRIPTION_DETAILS), 
-                    result.getInt(DaoConsts.APPOINTMENT_ID),
+                    result.getInt(DaoConsts.ID),
                     result.getDate(DaoConsts.PRESCRIPTION_ISSUE_DATE)
                 );
                 

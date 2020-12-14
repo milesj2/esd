@@ -134,7 +134,7 @@ public class InvoiceDao {
         invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID));
         invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID));
         invoice.setPrivatePatient(resultSet.getBoolean(DaoConsts.PRIVATE_PATIENT));
-        invoice.setAppointmentId(resultSet.getInt(DaoConsts.APPOINTMENT_ID));
+        invoice.setAppointmentId(resultSet.getInt(DaoConsts.ID));
         return invoice;
     }
 

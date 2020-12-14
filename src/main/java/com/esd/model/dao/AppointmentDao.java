@@ -29,7 +29,7 @@ public class AppointmentDao {
             "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
             " values (?,?,?,?,?,?) where id = ?";
 
-    private static String SELECT_APPOINTMENTS_WITHIN_RANGE =  "select * from appointments\n" +
+    private static String SELECT_APPOINTMENTS_WITHIN_RANGE =  "select * from appointments" +
             " where appointmentDate >= ? and appointmentDate <= ? ";
 
     private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
@@ -91,7 +91,7 @@ public class AppointmentDao {
         Connection con = ConnectionManager.getInstance().getConnection();
         String query = SELECT_APPOINTMENTS_WITHIN_RANGE;
 
-        //iterate though args
+        //iterate and build query
         Iterator it = args.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
@@ -102,10 +102,11 @@ public class AppointmentDao {
         statement.setDate(1, new java.sql.Date(start.getTime()));
         statement.setDate(2, new java.sql.Date(end.getTime()));
 
-        int i = 3;
+        int NextStatementIndex  = 3;
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
-            statement.setString(i, (String) pair.getValue());
+            statement.setString(NextStatementIndex, (String) pair.getValue());
+            NextStatementIndex++;
         }
 
         ResultSet result = statement.executeQuery();
