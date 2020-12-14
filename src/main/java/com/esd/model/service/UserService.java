@@ -4,7 +4,7 @@ import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIDException;
+import com.esd.model.exceptions.InvalidUserIdException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,21 +37,14 @@ public class UserService {
     
     public boolean createUser(String username, String password, String active, String userGroup, 
         String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, Date dob) 
-        throws SQLException {
-         try {
-                
+        throws SQLException, InvalidUserIdException {
         boolean matchFound = userDao.verifyUsernameIsUnique(username);
-        
         if (!matchFound) {
-          userDao.addUser2SystemUser(username, password, active, userGroup);
-          int userId = userDao.getUserId(username);           
-          userDao.addUserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
-          return true;
+            userDao.addUser2SystemUser(username, password, active, userGroup);
+            int userId = userDao.getUserId(username);
+            userDao.addUserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+            return true;
         }
-         }catch (InvalidUserIDException ex) {
-            System.out.println("User creation failed, ");
-                ex.printStackTrace();
-            }
         return false;
     }
 

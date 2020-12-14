@@ -4,7 +4,7 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIDException;
+import com.esd.model.exceptions.InvalidUserIdException;
 import java.util.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -135,7 +135,7 @@ public class UserDao {
         }
     }
     
-     public int getUserId(String dataUserName) throws InvalidUserIDException, SQLException{
+     public int getUserId(String dataUserName) throws InvalidUserIdException, SQLException{
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_ID_BY_USERNAME);
         statement.setString(1, dataUserName);
@@ -144,7 +144,7 @@ public class UserDao {
         if(rs.next()){  
             return rs.getInt(1);
         }else{
-            throw new InvalidUserIDException("No user found for id");
+            throw new InvalidUserIdException("No user found for id");
         }
     }
     
