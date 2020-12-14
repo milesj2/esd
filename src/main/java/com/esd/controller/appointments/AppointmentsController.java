@@ -16,9 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,11 +34,8 @@ import java.util.List;
 @WebServlet("/appointments")
 public class AppointmentsController extends HttpServlet {
 
-    private ArrayList<String> formValues =  new ArrayList<String>(Arrays.asList(
-            DaoConsts.APPOINTMENT_ID,
-            DaoConsts.APPOINTMENT_FROMDATE,
-            DaoConsts.APPOINTMENT_TODATE,
-            DaoConsts.APPOINTMENT_STATUS));
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
@@ -64,15 +62,15 @@ public class AppointmentsController extends HttpServlet {
             throws ServletException, java.io.IOException {
 
         try {
-
-            List<Appointment> appointmentList = AppointmentsService.getInstance().getAppointments(
-                           formValues, request);
+            List<Appointment> appointmentList = AppointmentsService.getInstance().getAppointmentsInRange(
+                    dateFormat.parse(request.getParameter("fromDate")),
+                    dateFormat.parse(request.getParameter("fromDate")));
 
             request.setAttribute("table", appointmentList);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("appointment/appointments.jsp");
             requestDispatcher.forward(request, response);
 
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
     }

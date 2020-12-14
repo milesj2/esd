@@ -11,7 +11,7 @@
 <h2>Appointment View Page</h2>
 <h3>Perform Appointment Actions below</h3>
 <div>
-    <div color="red">
+    <div>
         <%try {request.getParameter("message");} catch(Exception e) { } %>
     </div>
     <form method="post" action="${pageContext.request.contextPath}/appointment">

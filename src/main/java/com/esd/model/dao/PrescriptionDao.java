@@ -105,8 +105,7 @@ public class PrescriptionDao {
 
         return prescriptionList;
     }
-    
-    
+
     //For creating new prescription     
     public void addPrescription(int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate) throws SQLException {
 
@@ -121,7 +120,5 @@ public class PrescriptionDao {
         statement.executeUpdate();
 
     }
-    
-    
-    
+
 }
