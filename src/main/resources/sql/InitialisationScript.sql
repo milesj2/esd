@@ -1,5 +1,5 @@
---This script initilises the database, it starts by dropping the database, and then recreating the tables,
---it then initilises the basic users and there user details.
+--This script initialises the database, it starts by dropping the database, and then recreating the tables,
+--it then initialises the basic users and their user details.
 
 
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
@@ -22,6 +22,7 @@ DROP TABLE INVOICE;
 DROP TABLE INVOICEITEM;
 DROP TABLE SYSTEMUSER;
 DROP TABLE USERDETAILS;
+DROP TABLE SYSTEMSETTING;
 
 
 create table systemUser(
@@ -86,6 +87,10 @@ create table invoiceItem
     constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
 );
 
+create table systemSetting(
+    settingKey varchar(100) not null primary key,
+    settingValue varchar(100) not null
+);
 
 create table prescriptions
 (
@@ -107,23 +112,26 @@ insert into systemUser(username, password, usergroup, active) values('admin', 'a
 insert into systemUser(username, password, usergroup, active) values('receptionist', 'receptionist', 'RECEPTIONIST', true);
 insert into systemUser(username, password, usergroup) values('doctor', 'doctor', 'DOCTOR');
 insert into systemUser(username, password, usergroup) values('nurse', 'nurse', 'NURSE');
-insert into systemUser(username, password, usergroup, active) values('patient', 'patient', 'PATIENT', true);
+insert into systemUser(username, password, usergroup, active) values('patient', 'patient', 'NHS_PATIENT', true);
+insert into systemUser(username, password, usergroup, active) values('patient2', 'patient2', 'PRIVATE_PATIENT', true);
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DATE('1982-05-13'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (2,'casandra', 'smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
+values (2,'Casandra', 'Smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (3,'jake', 'docotor', '52 john Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
+values (3,'Jake', 'Docotor', '52 John Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (4,'sandra', 'johnson', '64 Albert Stree', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
+values (4,'Sandra', 'Johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (5,'jim', 'smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));
+values (5,'Jim', 'Smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01'));
 
+insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
+values (6,'Jane', 'Jones', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DATE('2001-07-11'));
 
 --create 2 days of appointments
 
@@ -178,3 +186,9 @@ insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (6, 100.00, 1, 'Appointment Cost');
 insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (7, 100.00, 1, 'Appointment Cost');
+
+-- initialise system settings
+insert into systemSetting(settingKey, settingValue) values ('baseConsultationFeeDoctor', '150');
+insert into systemSetting(settingKey, settingValue) values ('baseConsultationFeeNurse', '100');
+insert into systemSetting(settingKey, settingValue) values ('consultationSlotTime', '10');
+

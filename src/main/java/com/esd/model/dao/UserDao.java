@@ -1,16 +1,21 @@
 package com.esd.model.dao;
 
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-
+import com.esd.model.exceptions.InvalidUserIdException;
+import java.util.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Original Author: Jordan Hellier
@@ -32,52 +37,39 @@ public class UserDao {
     private UserDao() {
     }
 
-    public ArrayList<User> getUsers() throws SQLException {
-        ArrayList<User> users = new ArrayList<User>();
+    public List<User> getUsers() throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER);
 
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_USERS);
-        ResultSet result = statement.executeQuery();
-
-        while (result.next())
-        {
-            users.add(getUserFromResults(result));
-        }
-
-        return users;
-
+        return extractUsersFromResultSet(queryBuilder.createStatement());
     }
 
     /**
-     * Gets a user by there username throws a null pointer exception if no user was found
+     * Gets a user by their username throws a null pointer exception if no user was found
      */
     public User getUserByUsername(String username) throws SQLException, InvalidUserCredentialsException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_USER_BY_USERNAME);
-        statement.setString(1, username);
-        ResultSet result = statement.executeQuery();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMUSER_USERNAME, username));
 
-        boolean resultFound = result.next();
-        if(!resultFound){
+        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
+        if(users.size() != 1){
             throw new InvalidUserCredentialsException("No user found for username");
         }
-        return getUserFromResults(result);
+        return users.get(0);
     }
 
     /**
      * Gets a user by their id. Throws a null pointer exception if no user was found
      */
     public User getUserByID(int id) throws SQLException, InvalidIdValueException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_USER_BY_ID);
-        statement.setInt(1, id);
-        ResultSet result = statement.executeQuery();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
-        boolean resultFound = result.next();
-        if(!resultFound){
+        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
+        if(users.size() != 1){
             throw new InvalidIdValueException(String.format("No user found for id '%d'", id));
         }
-        return getUserFromResults(result);
+        return users.get(0);
+
     }
 
     public boolean updateUser(User user) throws SQLException, InvalidIdValueException {
@@ -103,30 +95,25 @@ public class UserDao {
         }
     }
     
-    public boolean verifyUsernameIsUnique(String username) {
-        boolean matchFound = false;
-        try {        
-          Connection con = ConnectionManager.getInstance().getConnection();
-          PreparedStatement statement = con.prepareStatement(GET_USER_BY_USERNAME);
-          statement.setString(1, username);
-          ResultSet result = statement.executeQuery();
-          matchFound = result.next();
-        }catch (SQLException e) {
-           System.err.println("Error: " + e);
-        }
-        return matchFound;
+    public boolean verifyUsernameIsUnique(String username) throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMUSER_USERNAME, username));
+
+        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
+
+        return users.size() == 0;
     }
     
-    public void addUser2SystemUser(String username, String password, String active, String userGroup){
+    public void createSystemUser(User user){
 
         Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
         PreparedStatement statement = con.prepareStatement(INSERT_INTO_SYSTEMUSER);
-        statement.setString(1, username);
-        statement.setString(2, password);
-        statement.setString(3, active);
-        statement.setString(4, userGroup);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, user.getPassword());
+        statement.setBoolean(3, user.isActive());
+        statement.setString(4, user.getUserGroup().name());
         int resultAdded = statement.executeUpdate();
         
         } catch(SQLException e) {
@@ -134,57 +121,53 @@ public class UserDao {
         }
     }
     
-     public String getUserId(String dataUserName) {
-        String userid = "";
-        
-        try {        
-          Connection con = ConnectionManager.getInstance().getConnection();
-          PreparedStatement statement = con.prepareStatement(GET_ID_BY_USERNAME);
-          statement.setString(1, dataUserName);
-          ResultSet rs = statement.executeQuery();
-
-          while (rs.next()) {
-            userid = rs.getString(1);
-           }
-
-        }catch (SQLException e) {
-           System.err.println("Error: " + e);
-        }
-        return userid;
+     public int getUserIdFromUserName(String userName) throws SQLException, InvalidUserCredentialsException {
+        return getUserByUsername(userName).getId();
     }
     
-    public void addUser2UserDetails(String userId, String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob){
+    public void addUserDetailsToSystemUser(int userId, UserDetails userDetails){
 
         Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
         PreparedStatement statement = con.prepareStatement(INSERT_INTO_USERDETAILS);
-        statement.setString(1, userId);
-        statement.setString(2, firstName);
-        statement.setString(3, lastName);
-        statement.setString(4, addressLine1);
-        statement.setString(5, addressLine2);
-        statement.setString(6, addressLine3);
-        statement.setString(7, town);
-        statement.setString(8, postCode);
-        statement.setString(9, dob);
-        int checkUserAddedToUserDetails = statement.executeUpdate();
+        statement.setInt(1, userId);
+        statement.setString(2, userDetails.getFirstName());
+        statement.setString(3, userDetails.getLastName());
+        statement.setString(4, userDetails.getAddressLine1());
+        statement.setString(5, userDetails.getAddressLine2());
+        statement.setString(6, userDetails.getAddressLine3());
+        statement.setString(7, userDetails.getTown());
+        statement.setString(8, userDetails.getPostCode());
+        statement.setDate(9, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+
+        statement.executeUpdate();
         
         } catch(SQLException e) {
           System.err.println("Error: " + e);
         }        
     }
 
+    private List<User> extractUsersFromResultSet(PreparedStatement statement) throws SQLException {
+        List<User> returnValue = new ArrayList<>();
+        ResultSet result = statement.executeQuery();
+        while(result.next()){
+            returnValue.add(getUserFromResults(result));
+        }
+        return returnValue;
+    }
+
     public User getUserFromResults(ResultSet resultSet) throws SQLException {
+        User user = new User();
         return new User(
-                resultSet.getInt(DaoConsts.SYSTEMUSER_ID),
+                resultSet.getInt(DaoConsts.ID),
                 resultSet.getString(DaoConsts.SYSTEMUSER_USERNAME),
                 resultSet.getString(DaoConsts.SYSTEMUSER_PASSWORD),
                 UserGroup.valueOf(resultSet.getString(DaoConsts.SYSTEMUSER_USERGROUP)),
                 resultSet.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
         );
     }
-
+    
     public synchronized static UserDao getInstance(){
         if(instance == null){
             instance = new UserDao();

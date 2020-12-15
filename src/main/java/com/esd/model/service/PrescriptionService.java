@@ -28,7 +28,7 @@ public class PrescriptionService {
                                       Date issueDate) throws SQLException {
 
         boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeDetailsId, UserGroup.DOCTOR, UserGroup.NURSE);
-        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientDetailsId, UserGroup.PATIENT);
+        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientDetailsId, UserGroup.NHS_PATIENT, UserGroup.PRIVATE_PATIENT);
         
         if (employeeFound && patientFound) {
             prescriptionDao.addPrescription(employeeDetailsId, patientDetailsId, prescriptionDetails, appointmentId, issueDate);

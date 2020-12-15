@@ -31,9 +31,9 @@
                 <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
                 <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.PATIENT_ID%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID_FK%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.PATIENT_ID_FK%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID_FK%> size="10" /></td>
                 <td>
                 </td>
             </tr>

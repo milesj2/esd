@@ -52,7 +52,7 @@
                         <%=userDetails.getAddressLine3()%></td>
                     <td><%=userDetails.getTown()%></td>
                     <td><%=userDetails.getPostCode()%></td>
-                    <td><%=userDetails.getDOB()%></td>
+                    <td><%=userDetails.getDateOfBirth()%></td>
                     <td><a href='userpage?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
                 </tr>
                 <% }

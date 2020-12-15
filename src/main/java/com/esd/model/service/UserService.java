@@ -2,11 +2,13 @@ package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.exceptions.InvalidUserIdException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Original Author: Jordan Hellier
@@ -15,16 +17,15 @@ import java.util.ArrayList;
  */
 public class UserService {
     private static UserService instance;
-    private UserDao userDao;
 
-    private UserService(UserDao userDao) {
-        if(userDao == null){
-            throw new IllegalArgumentException("userdao must not be null");
-        }
-        this.userDao = userDao;
+    
+    private UserDao userDao = UserDao.getInstance();
+
+    private UserService() {   
+
     }
 
-    public ArrayList<User> getUsers() throws SQLException {
+    public List<User> getUsers() throws SQLException {
         return userDao.getUsers();
     }
 
@@ -36,20 +37,14 @@ public class UserService {
         throw new InvalidUserCredentialsException("Passwords don't match");
     }
     
-    public boolean createUser(String username, String password, String active, String userGroup, 
-        String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob) 
-        throws SQLException {
-        
-        UserDao db = UserDao.getInstance();
-        boolean matchFound = db.verifyUsernameIsUnique(username);
-        
-        if (!matchFound) {
-          db.addUser2SystemUser(username, password, active, userGroup);
-          String userId =  db.getUserId(username);
-          db.addUser2UserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
-          return true;
+    public boolean createUser(User user, UserDetails userDetails) throws SQLException, InvalidUserCredentialsException {
+        boolean usernameUnique = userDao.verifyUsernameIsUnique(user.getUsername());
+        if (usernameUnique) {
+            userDao.createSystemUser(user);
+            int userId = userDao.getUserIdFromUserName(user.getUsername());
+            userDao.addUserDetailsToSystemUser(userId, userDetails);
+            return true;
         }
-        
         return false;
     }
 
@@ -63,12 +58,8 @@ public class UserService {
 
     public synchronized static UserService getInstance(){
         if(instance == null){
-            instance = new UserService(UserDao.getInstance());
+            instance = new UserService();
         }
         return instance;
-    }
-
-    public static UserService getTestInstance(UserDao userdao){
-        return new UserService(userdao);
     }
 }

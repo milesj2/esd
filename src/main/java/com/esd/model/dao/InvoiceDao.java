@@ -1,5 +1,7 @@
 package com.esd.model.dao;
 
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 
@@ -29,68 +31,33 @@ public class InvoiceDao {
 
     private static final String GET_FILTERED_INVOICES = "SELECT * FROM INVOICE";
 
-    private static String INVOICE_STATUS_RESTRICTION = "AND invoicestatus = ?";
-
-    private static String GET_ALL_INVOICE_WITH_STATUS_RESTRICTION = "select * from invoice\n" +
-            "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
-            "    where  invoicestatus = ?";
-
-    private static String GET_COMPLETE_INVOICE_DATERESTRICTION = "select * from invoice\n" +
-            "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
-            "    where INVOICEDATE >= ? AND INVOICEDATE <= ? ";
-
-    private static String GET_INVOICE_STATUS_CHANGE_THIS_PERIOD = "select * from invoice\n" +
-            "    left outer join INVOICEITEM on INVOICEITEM.invoiceID = invoice.id\n" +
-            "    where statusChangeDate >= ? AND statusChangeDate <= ? AND invoicestatus = ?";
-
-    private static String GET_INVOICE_DATE_RESTRICTION = "select * from invoice\n" +
-            "    where INVOICEDATE >= ? AND INVOICEDATE <= ? ";
-
-    private static String GET_INVOICE_ITEM_FOR_INVOICE = "select * from invoiceitem\n" +
-            "    where invoiceitem.invoiceID = ? ";
-
     private InvoiceDao() {}
 
-    public List<Invoice> getAllInvoicesAndItemsBetweenDatesAndWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-
-        String query = loadItems ? GET_COMPLETE_INVOICE_DATERESTRICTION : GET_INVOICE_DATE_RESTRICTION;
-        if(status.isPresent()){
-            query += INVOICE_STATUS_RESTRICTION;
-        }
-
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setDate(1, new java.sql.Date(start.getTime()));
-        statement.setDate(2, new java.sql.Date(start.getTime()));
+    public List<Invoice> getAllInvoicesWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end));
 
         if(status.isPresent()){
-            statement.setString(3, status.get().name());
+            queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.get().name()));
         }
-
-        return processResultSetForInvoices(loadItems, statement);
+        return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
     }
 
     public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(Date start, Date end, InvoiceStatus status,boolean loadItems) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
-        PreparedStatement statement = con.prepareStatement(GET_INVOICE_STATUS_CHANGE_THIS_PERIOD);
-        statement.setDate(1, new java.sql.Date(start.getTime()));
-        statement.setDate(2, new java.sql.Date(start.getTime()));
-        statement.setString(3, status.name());
-        return processResultSetForInvoices(loadItems, statement);
+        return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
     }
 
-    public List<Invoice> getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus status, boolean loadItems) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
+    public List<Invoice> getAllInvoicesWithStatus(InvoiceStatus status, boolean loadItems) throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
-        String query = GET_ALL_INVOICE_WITH_STATUS_RESTRICTION;
-
-
-        PreparedStatement statement = con.prepareStatement(query);
-
-        statement.setString(1, status.name());
-
-        return processResultSetForInvoices(loadItems, statement);
+        return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
     }
 
     private List<Invoice> processResultSetForInvoices(boolean loadItems, PreparedStatement statement) throws SQLException {
@@ -109,9 +76,10 @@ public class InvoiceDao {
     }
 
     public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICEITEM)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
-        PreparedStatement statement = con.prepareStatement(GET_INVOICE_ITEM_FOR_INVOICE);
+        PreparedStatement statement = queryBuilder.createStatement();
         statement.setInt(1, id);
 
         ResultSet result = statement.executeQuery();
@@ -131,25 +99,25 @@ public class InvoiceDao {
         invoice.setInvoiceTime(resultSet.getTime(DaoConsts.INVOICE_TIME));
         invoice.setInvoiceStatus(InvoiceStatus.valueOf(InvoiceStatus.class,
                 resultSet.getString(DaoConsts.INVOICE_STATUS).toUpperCase()));
-        invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID));
-        invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID));
+        invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID_FK));
+        invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID_FK));
         invoice.setPrivatePatient(resultSet.getBoolean(DaoConsts.PRIVATE_PATIENT));
-        invoice.setAppointmentId(resultSet.getInt(DaoConsts.ID));
+        invoice.setAppointmentId(resultSet.getInt(DaoConsts.APPOINTMENT_ID_FK));
+
         return invoice;
     }
 
     private InvoiceItem extractInvoiceItemFromResultSet(ResultSet resultSet) throws SQLException {
         InvoiceItem invoiceItem =  new InvoiceItem();
         invoiceItem.setId(resultSet.getInt(DaoConsts.ID));
-        invoiceItem.setInvoiceId(resultSet.getInt(DaoConsts.INVOICE_ID));
-        invoiceItem.setCost(resultSet.getDouble(DaoConsts.INVOICE_ITEM_COST));
-        invoiceItem.setQuantity(resultSet.getInt(DaoConsts.INVOICE_ITEM_QUANTITY));
-        invoiceItem.setDescription(resultSet.getString(DaoConsts.INVOICE_ITEM_DESCRIPTION));
+        invoiceItem.setInvoiceId(resultSet.getInt(DaoConsts.INVOICE_ID_FK));
+        invoiceItem.setCost(resultSet.getDouble(DaoConsts.INVOICEITEM_COST));
+        invoiceItem.setQuantity(resultSet.getInt(DaoConsts.INVOICEITEM_QUANTITY));
+        invoiceItem.setDescription(resultSet.getString(DaoConsts.INVOICEITEM_DESCRIPTION));
         return invoiceItem;
     }
 
     public ArrayList<Invoice> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request){
-
         ArrayList<Invoice> invoiceLst = new ArrayList<Invoice>();
         String STATEMENT_BUILDER = GET_FILTERED_INVOICES;
 

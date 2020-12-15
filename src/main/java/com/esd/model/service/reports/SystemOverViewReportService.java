@@ -3,20 +3,13 @@ package com.esd.model.service.reports;
 import com.esd.model.dao.AppointmentDao;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.dao.InvoiceDao;
-import com.esd.model.dao.UserDao;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.InvoiceStatus;
-import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
-import com.esd.model.data.persisted.User;
-import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.reportgen.Report;
-import com.esd.model.service.UserService;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SystemOverViewReportService {
     private static SystemOverViewReportService instance;
@@ -49,15 +42,14 @@ public class SystemOverViewReportService {
     }
 
     public HashMap<String, String> getReportData(Date start, Date end) throws SQLException {
-        int invoicesCreated = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.empty(), true).size();
-        int invoicesUnpaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.UNPAID), true).size();
-        int invoicesOverDue = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.OVERDUE), true).size();
+        int invoicesCreated = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.empty(), true).size();
+        int invoicesUnpaid = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.of(InvoiceStatus.UNPAID), true).size();
+        int invoicesOverDue = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.of(InvoiceStatus.OVERDUE), true).size();
 
-        List<Invoice> invoicesPaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(start, end, Optional.of(InvoiceStatus.PAID), true);
+        List<Invoice> invoicesPaid = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.of(InvoiceStatus.PAID), true);
 
-        List<Invoice> overallInvoicesUnpaid = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus.UNPAID, true);
-        List<Invoice> overallInvoicesOverDue = invoiceDao.getAllInvoicesAndItemsBetweenDatesAndWithStatus(InvoiceStatus.OVERDUE, true);
-
+        List<Invoice> overallInvoicesUnpaid = invoiceDao.getAllInvoicesWithStatus(InvoiceStatus.UNPAID, true);
+        List<Invoice> overallInvoicesOverDue = invoiceDao.getAllInvoicesWithStatus(InvoiceStatus.OVERDUE, true);
 
         //this is all the invoices paid this period, this can include elements from previous periods
         List<Invoice> paidThisPeriod = invoiceDao.getInvoiceWithStatusChangeToThisPeriod(start, end, InvoiceStatus.PAID, true);
@@ -78,10 +70,10 @@ public class SystemOverViewReportService {
                 .mapToDouble(InvoiceItem::getCost)
                 .sum();
 
-        Map<String, String> args = null;
-        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
-        args.put(DaoConsts.APPOINTMENT_STATUS, AppointmentStatus.CANCELED.toString());
-        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
+        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end,
+                Optional.empty()).size();
+        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end,
+                Optional.of(AppointmentStatus.CANCELED)).size();
 
         //Java likes casting for some reason
         int cancelRate = (int)(((double)canceledAppointments/(double)madeAppointments )* 100);

@@ -38,10 +38,10 @@ public class LoginController extends HttpServlet{
             session.setAttribute("currentSessionUser",user);
             response.sendRedirect("dashboard.jsp"); //logged-in page
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+           e.printStackTrace();
             response.sendRedirect("index.jsp?err=" + LoginErrors.Unknown);
         } catch (InvalidUserCredentialsException e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             response.sendRedirect("index.jsp?err=" + LoginErrors.IncorrectCredentials);
         }
     }

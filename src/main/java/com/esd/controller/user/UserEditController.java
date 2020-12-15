@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Miles Jarvis
@@ -23,6 +25,10 @@ import java.sql.SQLException;
  */
 @WebServlet("/user/edit")
 public class UserEditController extends HttpServlet {
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+
 
     // Needs filter
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -63,25 +69,31 @@ public class UserEditController extends HttpServlet {
             active = true;
 
         User user = new User(
-                Integer.parseInt(request.getParameter(DaoConsts.SYSTEMUSER_ID)),
+                Integer.parseInt(request.getParameter(DaoConsts.ID)),
                 request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
                 request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
                 UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)),
                 active
         );
 
-        UserDetails userDetails = new UserDetails(
-                -1,
-                user.getId(),
-                request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
-                request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
-                request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
-                request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
-                request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
-                request.getParameter(DaoConsts.USERDETAILS_TOWN),
-                request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
-                request.getParameter(DaoConsts.USERDETAILS_DOB)
-        );
+        UserDetails userDetails = null;
+        try {
+            userDetails = new UserDetails(
+                    -1,
+                    user.getId(),
+                    request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
+                    request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
+                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
+                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
+                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
+                    request.getParameter(DaoConsts.USERDETAILS_TOWN),
+                    request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
+                    dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB))
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
 
         // Try updating SQL
         try {
