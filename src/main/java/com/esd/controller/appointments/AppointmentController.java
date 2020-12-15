@@ -36,7 +36,7 @@ public class AppointmentController extends HttpServlet {
         if (currentUser == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN) { //todo add user group validation
+        } else if (currentUser.getUserGroup() != UserGroup.ADMIN) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
@@ -72,7 +72,7 @@ public class AppointmentController extends HttpServlet {
                 Appointment appointment = new Appointment();
                 appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 appointment.setAppointmentDate(dateFormat.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
-                appointment.setAppointmentTime(dateFormat.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))); //todo figure out time format
+                appointment.setAppointmentTime(dateFormat.parse("14:15:00")); //todo figure out time format
                 appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
                 appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
                 appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));

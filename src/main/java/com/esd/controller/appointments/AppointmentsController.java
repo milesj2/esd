@@ -73,7 +73,7 @@ public class AppointmentsController extends HttpServlet {
             }
 
             try {
-                // default of today
+                // default of today todo get today
                 Date fromDate = dateFormat.parse("2020-11-01");
                 Date toDate = dateFormat.parse("2020-12-31");
 

@@ -2,6 +2,7 @@ package com.esd.model.service;
 
 import com.esd.model.dao.AppointmentDao;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -23,6 +24,19 @@ public class AppointmentsService {
         this.appointmentDao = appointmentDao;
     }
 
+    private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
+        //check if there are conflicting appointments
+        // todo update to include time and working day check
+        List<Appointment> conflictingApts = appointmentDao.getAppointmentsInPeriodWithStatus(
+                appointment.getAppointmentDate(),
+                appointment.getAppointmentDate(),
+                Optional.empty());
+        if(conflictingApts.size() > 0){
+            return false;
+        }
+        return true;
+    }
+
     public synchronized static AppointmentsService getInstance(){
         if(instance == null){
             instance = new AppointmentsService(AppointmentDao.getInstance());
@@ -38,11 +52,17 @@ public class AppointmentsService {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
-    public void createNewAppointment(Appointment appointment) throws SQLException {
+    public void createNewAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
+        if(!checkIfAptConflicts(appointment)){
+            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
+        }
         appointmentDao.createAppointment(appointment);
     }
 
-    public void updateAppointment(Appointment appointment) throws SQLException {
+    public void updateAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
+        if(!checkIfAptConflicts(appointment)){
+            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
+        }
         appointmentDao.updateAppointment(appointment);
     }
 }

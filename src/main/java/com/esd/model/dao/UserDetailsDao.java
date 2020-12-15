@@ -62,9 +62,6 @@ public class UserDetailsDao {
                 result.getDate(DaoConsts.USERDETAILS_DOB)
         );
     }
-//    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
-//            "join systemUser on systemUser.id=userDetails.userId" +
-//            " where userDetails.id=? AND systemUser.userGroup in(?)";
 
     public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)

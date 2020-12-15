@@ -23,6 +23,7 @@ import java.util.*;
 @WebServlet("/invoiceSearch")
 public class InvoiceSearchController extends HttpServlet {
 
+    private InvoiceService invoiceService = InvoiceService.getInstance();
     private ArrayList<String> invoiceFormsConst = new ArrayList<String>(Arrays.asList(
             DaoConsts.ID,
             DaoConsts.INVOICE_DATE,
@@ -33,6 +34,13 @@ public class InvoiceSearchController extends HttpServlet {
             DaoConsts.PATIENT_ID,
             DaoConsts.ID));
 
+    private boolean checkRequestContains(HttpServletRequest request, String key){
+        if(request.getParameterMap().containsKey(key) && !request.getParameter(key).isEmpty() && request.getParameter(key) != ""){
+            return true;
+        }
+        return false;
+    }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
@@ -41,7 +49,7 @@ public class InvoiceSearchController extends HttpServlet {
         if(currentUser == null){
             response.sendRedirect("../../index.jsp");
             return;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){ //todo add user group validation
+        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
             response.sendRedirect("../../index.jsp");
             return;
         }
@@ -68,11 +76,16 @@ public class InvoiceSearchController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
+        Map<String, Object> args =  new HashMap<>();
+        for(String key: invoiceFormsConst) {
+            if(checkRequestContains(request, key)){
+                args.put(key, request.getParameter(key));
+            }
+        }
+
         try {
-            ArrayList<Invoice> invoiceList = InvoiceService.getInvoiceFromFilteredRequest(invoiceFormsConst, request);
-
+            List<Invoice> invoiceList = invoiceService.getInvoiceFromFilteredRequest(args);
             request.setAttribute("table", invoiceList);
-
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {

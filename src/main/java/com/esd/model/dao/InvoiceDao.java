@@ -3,6 +3,7 @@ package com.esd.model.dao;
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.InvoiceStatus;
+import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,10 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Original Author: Trent Meier
@@ -80,7 +78,6 @@ public class InvoiceDao {
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
         PreparedStatement statement = queryBuilder.createStatement();
-        statement.setInt(1, id);
 
         ResultSet result = statement.executeQuery();
         List<InvoiceItem> allItems = new ArrayList<>();
@@ -117,51 +114,23 @@ public class InvoiceDao {
         return invoiceItem;
     }
 
-    public ArrayList<Invoice> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request){
-        ArrayList<Invoice> invoiceLst = new ArrayList<Invoice>();
-        String STATEMENT_BUILDER = GET_FILTERED_INVOICES;
+    public List<Invoice> getFilteredDetails(Map<String, Object> args) throws SQLException {
+        ArrayList<Invoice> invoiceList = new ArrayList<Invoice>();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
 
-        try {
-            boolean first = true;
-            for(String key: formKey){
-                if(!request.getParameter(key).isEmpty()) {
-                    if(first){
-                        STATEMENT_BUILDER += WHERE+key+MATCH;
-                        first = false;
-                    } else {
-                        STATEMENT_BUILDER += AND+key+MATCH;
-                    }
-                }
-            }
-
-            //get connection
-            Connection con = ConnectionManager.getInstance().getConnection();
-            PreparedStatement statement = con.prepareStatement(STATEMENT_BUILDER);
-
-            int i=1;  //set statement values
-            for(String key: formKey){
-                if(!request.getParameter(key).isEmpty()) {
-                    statement.setString(i,(String)request.getParameter(key));
-                    i+=1;
-                }
-            }
-
-            ResultSet result = statement.executeQuery();
-
-            // add results to list of user to return
-            while(result.next()){
-                invoiceLst.add(extractInvoiceFromResultSet(result));
-            }
-
-            // close statement and result set
-            statement.close();
-            result.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Iterator mapIter = args.entrySet().iterator();
+        while(mapIter.hasNext()) {
+            Map.Entry pair = (Map.Entry)mapIter.next();
+            queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
         }
 
-        return invoiceLst;
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            invoiceList.add(extractInvoiceFromResultSet(result));
+        }
+        return invoiceList;
     }
 
     public synchronized static InvoiceDao getInstance(){

@@ -27,7 +27,6 @@ public class AppointmentDao {
             " appointmentstatus = ? " +
             "where id = ?";
 
-
     public void updateAppointment(Appointment appointment) throws SQLException {
         if(appointment.getId()==0){
             throw new IllegalArgumentException("appointment must have id");

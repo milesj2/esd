@@ -36,7 +36,7 @@ public class PrescriptionDao {
         }
         return instance;
     }
-    
+
     private Prescription getPrescriptionDetailsFromResults(ResultSet result) throws SQLException {
         return new Prescription(
             result.getInt(DaoConsts.PRESCRIPTION_ID),
@@ -118,7 +118,6 @@ public class PrescriptionDao {
         statement.setInt(4, appointmentId);
         statement.setDate(5, new java.sql.Date(issueDate.getTime()));
         statement.executeUpdate();
-
     }
 
 }

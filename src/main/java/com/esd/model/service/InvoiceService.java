@@ -1,12 +1,11 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.InvoiceDao;
-import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.Invoice;
-import com.esd.model.data.persisted.UserDetails;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Original Author: Trent Meier
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 public class InvoiceService {
 
     private static InvoiceService instance;
-    private InvoiceDao invoiceDao;
+    private InvoiceDao invoiceDao = InvoiceDao.getInstance();
 
     private InvoiceService(InvoiceDao invoiceDao) {
         if(invoiceDao == null){
@@ -32,10 +31,7 @@ public class InvoiceService {
         return instance;
     }
 
-    public static ArrayList<Invoice> getInvoiceFromFilteredRequest(ArrayList<String> formKeys,
-                                                                   HttpServletRequest request) {
-        ArrayList<Invoice> invoices = InvoiceDao.getInstance().getFilteredDetails(formKeys, request);
-        return invoices;
+    public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) throws SQLException {
+        return invoiceDao.getFilteredDetails(args);
     }
-
 }
