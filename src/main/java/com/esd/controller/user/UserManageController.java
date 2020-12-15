@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Original Author: Miles Jarvis
@@ -30,7 +31,7 @@ public class UserManageController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        ArrayList<User> users;
+        List<User> users;
 
         try {
             users = UserService.getInstance().getUsers();

@@ -3,12 +3,18 @@ package com.esd.controller.authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import javax.servlet.annotation.WebServlet;
+
+import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.UserService;
 import com.esd.model.dao.UserDao;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -34,28 +40,14 @@ public class RegisterUser extends HttpServlet {
         String notify = "";
         try {
             response.setContentType("text/html;charset=UTF-8");
+            User user = createUserFromRequest(request);
+            UserDetails userDetails = createUserDetailsFromRequest(request);
 
-            String firstName = request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME);
-            String lastName = request.getParameter(DaoConsts.USERDETAILS_LASTNAME);
-            Date dob = dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB));
-            String userGroup = request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP);
-            String addressLine1 = request.getParameter(DaoConsts.USERDETAILS_ADDRESS1);
-            String addressLine2 = request.getParameter(DaoConsts.USERDETAILS_ADDRESS2);
-            String addressLine3 = request.getParameter(DaoConsts.USERDETAILS_ADDRESS3);
-            String town = request.getParameter(DaoConsts.USERDETAILS_TOWN);
-            String postCode = request.getParameter(DaoConsts.USERDETAILS_POSTCODE);
-            String username = request.getParameter(DaoConsts.SYSTEMUSER_USERNAME);
-            String password = request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD);
-            String active = "false";
-
-
-            
-            if (UserGroup.valueOf(userGroup) == UserGroup.NHS_PATIENT || UserGroup.valueOf(userGroup) == UserGroup.PRIVATE_PATIENT) {
-                active = "true";
+            if (user.getUserGroup() == UserGroup.NHS_PATIENT || user.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
+                user.setActive(true);
             }
             
-            boolean userRegisterd = UserService.getInstance()
-                    .createUser(username, password, active, userGroup, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+            boolean userRegisterd = UserService.getInstance().createUser(user, userDetails);
             if (userRegisterd) {
                 notify = "Sucessfully Registered! Please Sign in with the link below.";
             } else {
@@ -72,6 +64,27 @@ public class RegisterUser extends HttpServlet {
        
     }
 
+    private User createUserFromRequest(HttpServletRequest request) throws ParseException {
+        User user = new User();
+        user.setPassword(request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD));
+        user.setUserGroup(UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)));
+        user.setUsername(request.getParameter(DaoConsts.SYSTEMUSER_USERNAME));
+        return user;
+    }
+
+    private UserDetails createUserDetailsFromRequest(HttpServletRequest request) throws ParseException {
+        UserDetails userDetails = new UserDetails();
+        userDetails.setFirstName(request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME));
+        userDetails.setLastName(request.getParameter(DaoConsts.USERDETAILS_LASTNAME));
+
+        userDetails.setDateOfBirth(dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB)));
+        userDetails.setAddressLine1(request.getParameter(DaoConsts.USERDETAILS_ADDRESS1));
+        userDetails.setAddressLine2(request.getParameter(DaoConsts.USERDETAILS_ADDRESS2));
+        userDetails.setAddressLine3(request.getParameter(DaoConsts.USERDETAILS_ADDRESS3));
+        userDetails.setTown(request.getParameter(DaoConsts.USERDETAILS_TOWN));
+        userDetails.setPostCode(request.getParameter(DaoConsts.USERDETAILS_POSTCODE));
+        return userDetails;
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {

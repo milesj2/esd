@@ -1,5 +1,7 @@
 package com.esd.model.dao;
 
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.Connection;
@@ -13,7 +15,6 @@ import java.sql.ResultSet;
  */
 public class SystemSettingDao {
 
-    private static final String GET_SYSTEMSETTING = "SELECT settingValue FROM systemSetting WHERE settingKey=?";
     private static final String UPDATE_SYSTEMSETTING = "UPDATE systemSetting SET settingValue=? WHERE settingKey=?";
     private static SystemSettingDao instance;
 
@@ -24,37 +25,36 @@ public class SystemSettingDao {
      * Get an Integer system setting by its key
      */
     public int getIntegerSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createBasicStatement(settingKey);
+        ResultSet result = createAndExecuteBasicStatement(settingKey);
 
-        return Integer.parseInt(result.getString(DaoConsts.SETTING_SETTINGVALUE));
+        return Integer.parseInt(result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE));
     }
 
     /**
      * Get a Double system setting by its key
      */
     public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createBasicStatement(settingKey);
+        ResultSet result = createAndExecuteBasicStatement(settingKey);
 
-        return Double.parseDouble(result.getString(DaoConsts.SETTING_SETTINGVALUE));
+        return Double.parseDouble(result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE));
     }
 
     /**
      * Get a String system setting by its key
      */
     public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createBasicStatement(settingKey);
+        ResultSet result = createAndExecuteBasicStatement(settingKey);
 
-        return result.getString(DaoConsts.SETTING_SETTINGVALUE);
+        return result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE);
     }
 
-    private ResultSet createBasicStatement(String settingKey) throws SQLException, InvalidIdValueException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
+    private ResultSet createAndExecuteBasicStatement(String settingKey) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMSETTING)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMSETTING_SETTINGKEY, settingKey));
 
-        statement.setString(1, settingKey);
+        PreparedStatement statement = queryBuilder.createStatement();
 
         ResultSet result = statement.executeQuery();
-
         boolean resultFound = result.next();
         if (!resultFound) {
             throw new InvalidIdValueException("No system setting key '" + settingKey + "'");

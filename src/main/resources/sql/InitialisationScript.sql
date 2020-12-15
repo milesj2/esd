@@ -112,8 +112,8 @@ insert into systemUser(username, password, usergroup, active) values('admin', 'a
 insert into systemUser(username, password, usergroup, active) values('receptionist', 'receptionist', 'RECEPTIONIST', true);
 insert into systemUser(username, password, usergroup) values('doctor', 'doctor', 'DOCTOR');
 insert into systemUser(username, password, usergroup) values('nurse', 'nurse', 'NURSE');
-insert into systemUser(username, password, usergroup, active) values('patient', 'patient', 'PATIENT_NHS', true);
-insert into systemUser(username, password, usergroup, active) values('patient2', 'patient2', 'PATIENT_PRIVATE', true);
+insert into systemUser(username, password, usergroup, active) values('patient', 'patient', 'NHS_PATIENT', true);
+insert into systemUser(username, password, usergroup, active) values('patient2', 'patient2', 'PRIVATE_PATIENT', true);
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DATE('1982-05-13'));

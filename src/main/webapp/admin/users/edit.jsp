@@ -59,7 +59,7 @@
         <input id="postcode" name="postcode" type="text" value="<% out.print(user.getUserDetails().getPostCode()); %>">
         <br>
         <label for="dob">Date of Birth</label>
-        <input id="dob" name="dob" type="date" value="<% out.print(user.getUserDetails().getDOB()); %>">
+        <input id="dob" name="dob" type="date" value="<% out.print(user.getUserDetails().getDateOfBirth()); %>">
         <br>
         <label for="usergroup">User Group</label>
         <select name="usergroup" id="usergroup" form="userEdit">

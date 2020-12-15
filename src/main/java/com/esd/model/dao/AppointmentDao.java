@@ -1,12 +1,10 @@
 package com.esd.model.dao;
 
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.Invoice;
-import com.esd.model.data.persisted.InvoiceItem;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,26 +16,16 @@ public class AppointmentDao {
 
     private static AppointmentDao instance;
 
-    private static String APPOINTMENT_STATUS_RESTRICTION =   "AND appointmentStatus = ?";
-
-    private static String LOADAPPOINTMENTSINPERIODWITHSTATUS =  "select * from appointments\n" +
-            "    where appointmentDate >= ? AND appointmentDate <= ? ";
-
     public List<Appointment> getAppointmentsInPeriodWithStatus(Date start, Date end, Optional<AppointmentStatus> status) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
+                .and(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, start))
+                .and(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, end));
 
-        String query = LOADAPPOINTMENTSINPERIODWITHSTATUS;
         if(status.isPresent()){
-            query += APPOINTMENT_STATUS_RESTRICTION;
-        }
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setDate(1, new java.sql.Date(start.getTime()));
-        statement.setDate(2, new java.sql.Date(start.getTime()));
-        if(status.isPresent()){
-            statement.setString(3, status.get().name());
+            queryBuilder.and(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_STATUS, status.get()));
         }
 
-        ResultSet result = statement.executeQuery();
+        ResultSet result = queryBuilder.createStatement().executeQuery();
         List<Appointment> appointments = new ArrayList<>();
 
         while (result.next()){
@@ -49,8 +37,8 @@ public class AppointmentDao {
     private Appointment processResultSetForAppointment(ResultSet resultSet) throws SQLException {
         Appointment appointment =  new Appointment();
         appointment.setId(resultSet.getInt(DaoConsts.ID));
-        appointment.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID));
-        appointment.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID));
+        appointment.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID_FK));
+        appointment.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID_FK));
         appointment.setAppointmentDate(resultSet.getDate(DaoConsts.APPOINTMENT_DATE));
         appointment.setAppointmentTime(resultSet.getTime(DaoConsts.APPOINTMENT_TIME));
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
