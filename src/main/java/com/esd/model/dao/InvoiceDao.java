@@ -36,7 +36,7 @@ public class InvoiceDao {
     public List<Invoice> getAllInvoicesWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
-                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, end));
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end));
 
         if(status.isPresent()){
             queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.get().name()));
@@ -47,7 +47,7 @@ public class InvoiceDao {
     public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(Date start, Date end, InvoiceStatus status,boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
-                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, end))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end))
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
         return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
