@@ -24,44 +24,30 @@ public class SystemSettingDao {
      * Get an Integer system setting by its key
      */
     public int getIntegerSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
+        ResultSet result = createBasicStatement(settingKey);
 
-        statement.setString(1, settingKey);
-
-        ResultSet result = statement.executeQuery();
-
-        boolean resultFound = result.next();
-        if (!resultFound) {
-            throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
-        }
-
-        return result.getInt(settingKey);
+        return Integer.parseInt(result.getString(DaoConsts.SETTING_SETTINGVALUE));
     }
 
     /**
      * Get a Double system setting by its key
      */
     public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
+        ResultSet result = createBasicStatement(settingKey);
 
-        statement.setString(1, settingKey);
-
-        ResultSet result = statement.executeQuery();
-
-        boolean resultFound = result.next();
-        if (!resultFound) {
-            throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
-        }
-
-        return result.getDouble(settingKey);
+        return Double.parseDouble(result.getString(DaoConsts.SETTING_SETTINGVALUE));
     }
 
     /**
      * Get a String system setting by its key
      */
     public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
+        ResultSet result = createBasicStatement(settingKey);
+
+        return result.getString(DaoConsts.SETTING_SETTINGVALUE);
+    }
+
+    private ResultSet createBasicStatement(String settingKey) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(GET_SYSTEMSETTING);
 
@@ -73,8 +59,7 @@ public class SystemSettingDao {
         if (!resultFound) {
             throw new InvalidIdValueException("No system setting key '" + settingKey + "'");
         }
-
-        return result.getString(settingKey);
+        return result;
     }
 
     /**

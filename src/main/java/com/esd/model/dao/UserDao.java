@@ -172,7 +172,7 @@ public class UserDao {
 
     public User getUserFromResults(ResultSet resultSet) throws SQLException {
         return new User(
-                resultSet.getInt(DaoConsts.SYSTEMUSER_ID),
+                resultSet.getInt(DaoConsts.ID),
                 resultSet.getString(DaoConsts.SYSTEMUSER_USERNAME),
                 resultSet.getString(DaoConsts.SYSTEMUSER_PASSWORD),
                 UserGroup.valueOf(resultSet.getString(DaoConsts.SYSTEMUSER_USERGROUP)),

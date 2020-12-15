@@ -1,8 +1,10 @@
 package com.esd.controller.systemsettings;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemSettingService;
 
 import javax.servlet.RequestDispatcher;
@@ -22,42 +24,51 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/systemSettings")
 public class SystemSettingController extends HttpServlet {
 
+	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		populateForm(request, response);
+		try {
+			response.setContentType("text/html;charset=UTF-8");
+			populateForm(request, response);
+			RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
+			view.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		processRequest(request, response);
-	}
-
-	private void populateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		response.setContentType("text/html;charset=UTF-8");
-		SystemSettingService sysSettingService = SystemSettingService.getInstance();
-
 		try {
-			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_DOCTOR));
-			request.setAttribute(DaoConsts.SYSTEMSETTING_FEE_NURSE, sysSettingService.getDoubleSettingValueByKey(DaoConsts.SYSTEMSETTING_FEE_NURSE));
-			request.setAttribute(DaoConsts.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(DaoConsts.SYSTEMSETTING_SLOT_TIME));
+			processRequest(request, response);
+			populateForm(request, response);
+			RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
+			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect("index.jsp?err=true"); //error page
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
 		}
+	}
 
-		RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
-		view.forward(request, response);
+	private void populateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InvalidIdValueException, SQLException {
+			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
+			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_NURSE, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
+			request.setAttribute(SystemSettingService.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
 	}
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html;charset=UTF-8");
 		String notification = "";
-		SystemSettingService sysSettingService = SystemSettingService.getInstance();
 
 		try {
-			if (sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_DOCTOR))
-					|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_FEE_NURSE, request.getParameter(DaoConsts.SYSTEMSETTING_FEE_NURSE))
-					|| sysSettingService.updateSystemSetting(DaoConsts.SYSTEMSETTING_SLOT_TIME, request.getParameter(DaoConsts.SYSTEMSETTING_SLOT_TIME))) {
+			if (sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
+					|| sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
+					|| sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
 				notification = "Settings successfully updated.";
 			} else {
 				notification = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
@@ -67,8 +78,7 @@ public class SystemSettingController extends HttpServlet {
 		}
 
 		request.setAttribute("notification", notification);
-		RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
-		view.forward(request, response);
+
 	}
 
 	@Override

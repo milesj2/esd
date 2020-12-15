@@ -63,7 +63,7 @@ public class UserEditController extends HttpServlet {
             active = true;
 
         User user = new User(
-                Integer.parseInt(request.getParameter(DaoConsts.SYSTEMUSER_ID)),
+                Integer.parseInt(request.getParameter(DaoConsts.ID)),
                 request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
                 request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
                 UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)),

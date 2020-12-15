@@ -14,6 +14,11 @@ public class SystemSettingService {
     private static SystemSettingService instance;
     private SystemSettingDao systemSettingDao;
 
+    public final static String SYSTEMSETTING_FEE_DOCTOR = "baseConsultationFeeDoctor";
+    public final static String SYSTEMSETTING_FEE_NURSE = "baseConsultationFeeNurse";
+    public final static String SYSTEMSETTING_SLOT_TIME = "consultationSlotTime";
+
+
     private SystemSettingService(SystemSettingDao systemSettingDao){
         if (systemSettingDao == null){
             throw new IllegalArgumentException("systemSettingDao must not be null");

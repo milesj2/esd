@@ -27,6 +27,10 @@ public class UserService {
 
     }
 
+    public ArrayList<User> getUsers() throws SQLException {
+        return userDao.getUsers();
+    }
+
     public User validateCredentials(String username, String password) throws SQLException, InvalidUserCredentialsException {
         User user = userDao.getUserByUsername(username);
         if(user.getPassword().equals(password)){

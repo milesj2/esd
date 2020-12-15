@@ -31,24 +31,10 @@ public class RegisterUser extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String dob = request.getParameter("dob");
-        String userGroup = request.getParameter("userGroup");
-        String addressLine1 = request.getParameter("addressLine1");
-        String addressLine2 = request.getParameter("addressLine2");
-        String addressLine3 = request.getParameter("addressLine3");
-        String town = request.getParameter("town");
-        String postCode = request.getParameter("postCode");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String active = "true";
-        
         String notify = "";
         try {
             response.setContentType("text/html;charset=UTF-8");
-            
+
             String firstName = request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME);
             String lastName = request.getParameter(DaoConsts.USERDETAILS_LASTNAME);
             Date dob = dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB));
@@ -61,6 +47,8 @@ public class RegisterUser extends HttpServlet {
             String username = request.getParameter(DaoConsts.SYSTEMUSER_USERNAME);
             String password = request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD);
             String active = "false";
+
+
             
             if (UserGroup.valueOf(userGroup) == UserGroup.NHS_PATIENT || UserGroup.valueOf(userGroup) == UserGroup.PRIVATE_PATIENT) {
                 active = "true";

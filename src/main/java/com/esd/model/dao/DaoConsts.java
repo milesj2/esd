@@ -56,7 +56,7 @@ public class DaoConsts {
     public final static String INVOICE_QUANTITY = "quantity";
     public final static String INVOICE_DESCRIPTION = "description";
 
-    public final static String SYSTEMSETTING_FEE_DOCTOR = "baseConsultationFeeDoctor";
-    public final static String SYSTEMSETTING_FEE_NURSE = "baseConsultationFeeNurse";
-    public final static String SYSTEMSETTING_SLOT_TIME = "consultationSlotTime";
+    public final static String SETTING_SETTINGKEY = "settingKey";
+    public final static String SETTING_SETTINGVALUE= "settingValue";
+
 }
