@@ -1,11 +1,11 @@
 package com.esd.controller.appointments;
 
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.data.AppointmentOptions;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.User;
-import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
 
 import javax.servlet.RequestDispatcher;
@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Trent meier
@@ -27,6 +26,8 @@ import java.util.Date;
 @WebServlet("/appointment")
 public class AppointmentController extends HttpServlet {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
 
     private boolean getAuthorisationState(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -66,36 +67,27 @@ public class AppointmentController extends HttpServlet {
 
         if(getAuthorisationState(request,response)) {
             try {
-                boolean newAppointment = Integer.parseInt(request.getParameter("option")) == 0;
                 int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
 
                 Appointment appointment = new Appointment();
                 appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-                appointment.setAppointmentDate(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE))));
-                appointment.setAppointmentTime(Date.from(Instant.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))));
+                appointment.setAppointmentDate(dateFormat.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
+                appointment.setAppointmentTime(dateFormat.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME))); //todo figure out time format
                 appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
                 appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
                 appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
                 appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
 
-                if(!newAppointment) {
-                    //update user with request val
+                if(request.getParameter("option") == AppointmentOptions.UPDATE.toString()) {
                     appointmentsService.updateAppointment(appointment);
-
-                    //success and get updated appointment
-                    request.setAttribute("message", "Success");
-                    appointment = appointmentsService.getAppointmentById(idVal);
                 } else {
-                    // create
                     appointmentsService.createNewAppointment(appointment);
-
-                    //success and get updated appointment
-                    request.setAttribute("message", "Success");
-                    appointment = appointmentsService.getAppointmentById(idVal);
-                    request.setAttribute("appointment", appointment);
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+
+                request.setAttribute("message", "Success");
+                appointment = appointmentsService.getAppointmentById(idVal);
+                request.setAttribute("appointment", appointment);
+
             } catch (Exception e){
                 e.printStackTrace();
             }

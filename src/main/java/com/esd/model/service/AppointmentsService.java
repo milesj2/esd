@@ -1,16 +1,9 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.AppointmentDao;
-import com.esd.model.dao.ConnectionManager;
-import com.esd.model.dao.DaoConsts;
-import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -21,7 +14,7 @@ import java.util.*;
 public class AppointmentsService {
 
     private static AppointmentsService instance;
-    private AppointmentDao appointmentDao;
+    private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 
     private AppointmentsService(AppointmentDao appointmentDao){
         if(appointmentDao == null){
@@ -37,19 +30,19 @@ public class AppointmentsService {
         return instance;
     }
 
-    public Appointment getAppointmentById(int AppoinmentId) throws SQLException {
-        return appointmentDao.getInstance().getAppointmentById(AppoinmentId);
+    public Appointment getAppointmentById(int AppointmentId) throws SQLException {
+        return appointmentDao.getAppointmentById(AppointmentId);
     }
 
-    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate, Map<String, String> args) throws SQLException {
-        return appointmentDao.getInstance().getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
+    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate, Optional<Map<String, Object>> args) throws SQLException {
+        return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
     public void createNewAppointment(Appointment appointment) throws SQLException {
-        appointmentDao.getInstance().createAppointment(appointment);
+        appointmentDao.createAppointment(appointment);
     }
 
     public void updateAppointment(Appointment appointment) throws SQLException {
-        appointmentDao.getInstance().updateAppointment(appointment);
+        appointmentDao.updateAppointment(appointment);
     }
 }

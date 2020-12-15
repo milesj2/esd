@@ -1,6 +1,7 @@
 <%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.esd.model.data.AppointmentOptions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,63 +22,33 @@
             %>
             <tr>
                 <td>Appointment Id</td>
-                <td>
-                    <input type="text" name=<%=DaoConsts.ID%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getId()%>
-                </td>
+                <td><input type="text" name=<%=DaoConsts.ID%> value="<%out.print(appointment.getId());%>" size="10" /></td>
             </tr>
             <tr>
                 <td>Appointment Date</td>
-                <td>
-                    <input type="date" name=<%=DaoConsts.APPOINTMENT_DATE%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getAppointmentDate()%>
-                </td>
+                <td><input type="date" name=<%=DaoConsts.APPOINTMENT_DATE%> value="<%out.print(appointment.getAppointmentDate());%>" size="10" /></td>
             </tr>
             <tr>
                 <td>Appointment Slot</td>
-                <td>
-                    <input type="time" name=<%=DaoConsts.APPOINTMENT_TIME%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getAppointmentTime()%>
-                </td>
+                <td><input type="time" name=<%=DaoConsts.APPOINTMENT_TIME%> value="<%out.print(appointment.getAppointmentTime());%>" size="10" /></td>
             </tr>
             <tr>
                 <td>Appointment Slots</td>
-                <td>
-                    <input type="text" name=<%=DaoConsts.APPOINTMENT_SLOTS%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getSlots()%>
-                </td>
+                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_SLOTS%> value="<%out.print(appointment.getSlots());%>" size="10" /></td>
             </tr>
             <tr>
                 <td>Appointment Slots</td>
-                <td>
-                    <input type="text" name=<%=DaoConsts.APPOINTMENT_STATUS%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getStatus()%>
-                </td>
+                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_STATUS%> value="<%out.print(appointment.getStatus());%>" size="10" /></td>
             </tr>
             <tr>
                 <td>Patient Id</td>
-                <td>
-                    <input type="text" name=<%=DaoConsts.PATIENT_ID%> size="10" />
-                </td>
-                <td>
-                    <%=appointment.getPatientId()%>
-                </td>
+                <td><input type="text" name=<%=DaoConsts.PATIENT_ID%> value="<%out.print(appointment.getPatientId());%>" size="10" /></td>
             </tr>
             <% } catch (Exception e) {
             } %>
-            <input name="option" type="radio" value="0" />Update
-            <input name="option" type="radio" value="1" />Create
-            <input type="submit"/>Submit
+            <input name="option" type="radio" value=<%=AppointmentOptions.UPDATE%> />Update
+            <input name="option" type="radio" value=<%=AppointmentOptions.CREATE%> />Create
+            <input type="submit"/>
         </table>
     </form>
 </div>

@@ -17,14 +17,15 @@ public class AppointmentDao {
             "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
             " values (?,?,?,?,?,?,?)";
 
-    private static String UPDATE_APPOINTMENT = "update appointments set values" +
-            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
-            " values (?,?,?,?,?,?) where id = ?";
-
-    private static String SELECT_APPOINTMENTS_WITHIN_RANGE =  "select * from appointments" +
-            " where appointmentDate >= ? and appointmentDate <= ? ";
-
-    private static String SELECT_APPOINTMENT = "select * from appointments where id = ?";
+    private static String UPDATE_APPOINTMENT = "update appointments set" +
+            " id = ?," +
+            " appointmentdate = ?," +
+            " appointmenttime = ?," +
+            " slots = ?," +
+            " employeeid = ?," +
+            " patientid = ?," +
+            " appointmentstatus = ? " +
+            "where id = ?";
 
 
     public void updateAppointment(Appointment appointment) throws SQLException {
@@ -91,9 +92,9 @@ public class AppointmentDao {
     }
 
     public Appointment getAppointmentById(int appointmentId) throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(SELECT_APPOINTMENT);
-        statement.setInt(1, appointmentId);
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+        queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, appointmentId));
+        PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         if(!result.next()){
             throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
@@ -101,31 +102,24 @@ public class AppointmentDao {
         return processResultSetForAppointment(result);
     }
 
-    public List<Appointment> getAppointmentsInPeriodWithArgs(Date start, Date end, Map<String, String> args)
+    public List<Appointment> getAppointmentsInPeriodWithArgs(Date start, Date end,  Optional<Map<String, Object>> args)
             throws SQLException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        String query = SELECT_APPOINTMENTS_WITHIN_RANGE;
-
-        //iterate and build query
-        Iterator it = args.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            query += " and " + pair.getKey() + " = ?";
-        }
-
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setDate(1, new java.sql.Date(start.getTime()));
-        statement.setDate(2, new java.sql.Date(end.getTime()));
-
-        int NextStatementIndex  = 3;
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            statement.setString(NextStatementIndex, (String) pair.getValue());
-            NextStatementIndex++;
-        }
-
-        ResultSet result = statement.executeQuery();
         List<Appointment> appointments = new ArrayList<>();
+
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+        queryBuilder.and(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, start))
+                .and(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, end));
+
+        if(args.isPresent()){
+            Iterator mapIter = args.get().entrySet().iterator();
+            while(mapIter.hasNext()) {
+                Map.Entry pair = (Map.Entry)mapIter.next();
+                queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+            }
+        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
 
         while (result.next()){
             appointments.add(processResultSetForAppointment(result));
