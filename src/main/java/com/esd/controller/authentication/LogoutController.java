@@ -22,7 +22,7 @@ public class LogoutController extends HttpServlet{
             session.invalidate();
             response.sendRedirect("index.jsp");
         } catch (Throwable theException) {
-            System.out.println(theException);
+            theException.printStackTrace();
             throw theException;
         }
     }

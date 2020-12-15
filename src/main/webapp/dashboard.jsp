@@ -8,7 +8,13 @@
     <title>User Dashboard</title>
 </head>
 <body>
-    <nav><a href="logout">Logout</a> </nav>
+    <% if(currentUser == null) {
+        response.sendRedirect("index.jsp");
+        return; //return is safe and stops further script execution
+    }%>
+
+    <nav><a href="logout">Logout</a></nav>
+
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
 	<br>
@@ -31,6 +37,12 @@
     <div>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
             out.print("<a href='invoiceSearch'>Search Invoices</a>");
+        }%>
+    </div>
+
+    <div>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
+            out.print("<a href='systemSettings'>Manage System Settings</a>");
         }%>
     </div>
 </body>

@@ -1,5 +1,5 @@
---This script initilises the database, it starts by dropping the database, and then recreating the tables,
---it then initilises the basic users and there user details.
+--This script initialises the database, it starts by dropping the database, and then recreating the tables,
+--it then initialises the basic users and their user details.
 
 
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
@@ -22,6 +22,7 @@ DROP TABLE INVOICE;
 DROP TABLE INVOICEITEM;
 DROP TABLE SYSTEMUSER;
 DROP TABLE USERDETAILS;
+DROP TABLE SYSTEMSETTING;
 
 
 create table systemUser(
@@ -86,6 +87,10 @@ create table invoiceItem
     constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
 );
 
+create table systemSetting(
+    settingKey varchar(100) not null primary key,
+    settingValue varchar(100) not null
+);
 
 create table prescriptions
 (
@@ -181,3 +186,9 @@ insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (6, 100.00, 1, 'Appointment Cost');
 insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
 VALUES (7, 100.00, 1, 'Appointment Cost');
+
+-- initialise system settings
+insert into systemSetting(settingKey, settingValue) values ('baseConsultationFeeDoctor', '150');
+insert into systemSetting(settingKey, settingValue) values ('baseConsultationFeeNurse', '100');
+insert into systemSetting(settingKey, settingValue) values ('consultationSlotTime', '10');
+
