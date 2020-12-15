@@ -38,7 +38,25 @@ public class SystemSettingService {
         return systemSettingDao.getInstance().getSettingValueByKey(settingKey);
     }
 
-    public boolean updateSystemSetting(String settingKey, String settingValue) throws SQLException {
+    public boolean updateSystemSettingDouble(String settingKey, String settingValue) throws SQLException {
+        try {
+            Double.parseDouble(settingValue);
+        }catch (NumberFormatException e){
+            return false;
+        }
+        return systemSettingDao.getInstance().updateSetting(settingKey, settingValue);
+    }
+
+    public boolean updateSystemSettingInteger(String settingKey, String settingValue) throws SQLException {
+        try {
+            Integer.parseInt(settingValue);
+        }catch (NumberFormatException e){
+            return false;
+        }
+        return systemSettingDao.getInstance().updateSetting(settingKey, settingValue);
+    }
+
+    public boolean updateSystemSettingString(String settingKey, String settingValue) throws SQLException {
         return systemSettingDao.getInstance().updateSetting(settingKey, settingValue);
     }
 

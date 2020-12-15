@@ -66,9 +66,9 @@ public class SystemSettingController extends HttpServlet {
 		String notification = "";
 
 		try {
-			if (sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
-					|| sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
-					|| sysSettingService.updateSystemSetting(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
+			if (sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
+					|| sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
+					|| sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
 				notification = "Settings successfully updated.";
 			} else {
 				notification = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
