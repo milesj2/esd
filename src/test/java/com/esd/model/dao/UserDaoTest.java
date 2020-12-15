@@ -19,7 +19,7 @@ public class UserDaoTest {
 
     private static final String VALID_USERNAME = "testusername";
     private static final String VALID_PASSWORD = "testpass";
-    private static final UserGroup VALID_USERGROUP = UserGroup.PATIENT;
+    private static final UserGroup VALID_USERGROUP = UserGroup.NHS_PATIENT;
     private static final String INVALID_USERNAME = "sdfsdf";
 
     private UserDao target = UserDao.getInstance();

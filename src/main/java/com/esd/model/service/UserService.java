@@ -4,9 +4,13 @@ import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
+import com.esd.model.exceptions.InvalidUserIdException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Original Author: Jordan Hellier
@@ -15,17 +19,12 @@ import java.util.ArrayList;
  */
 public class UserService {
     private static UserService instance;
-    private UserDao userDao;
 
-    private UserService(UserDao userDao) {
-        if(userDao == null){
-            throw new IllegalArgumentException("userdao must not be null");
-        }
-        this.userDao = userDao;
-    }
+    
+    private UserDao userDao = UserDao.getInstance();
 
-    public ArrayList<User> getUsers() throws SQLException {
-        return userDao.getUsers();
+    private UserService() {   
+
     }
 
     public User validateCredentials(String username, String password) throws SQLException, InvalidUserCredentialsException {
@@ -37,19 +36,15 @@ public class UserService {
     }
     
     public boolean createUser(String username, String password, String active, String userGroup, 
-        String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob) 
-        throws SQLException {
-        
-        UserDao db = UserDao.getInstance();
-        boolean matchFound = db.verifyUsernameIsUnique(username);
-        
+        String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, Date dob) 
+        throws SQLException, InvalidUserIdException {
+        boolean matchFound = userDao.verifyUsernameIsUnique(username);
         if (!matchFound) {
-          db.addUser2SystemUser(username, password, active, userGroup);
-          String userId =  db.getUserId(username);
-          db.addUser2UserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
-          return true;
+            userDao.addUser2SystemUser(username, password, active, userGroup);
+            int userId = userDao.getUserId(username);
+            userDao.addUserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+            return true;
         }
-        
         return false;
     }
 
@@ -63,12 +58,8 @@ public class UserService {
 
     public synchronized static UserService getInstance(){
         if(instance == null){
-            instance = new UserService(UserDao.getInstance());
+            instance = new UserService();
         }
         return instance;
-    }
-
-    public static UserService getTestInstance(UserDao userdao){
-        return new UserService(userdao);
     }
 }

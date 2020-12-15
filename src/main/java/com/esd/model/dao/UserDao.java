@@ -4,7 +4,8 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-
+import com.esd.model.exceptions.InvalidUserIdException;
+import java.util.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -134,32 +135,26 @@ public class UserDao {
         }
     }
     
-     public String getUserId(String dataUserName) {
-        String userid = "";
-        
-        try {        
-          Connection con = ConnectionManager.getInstance().getConnection();
-          PreparedStatement statement = con.prepareStatement(GET_ID_BY_USERNAME);
-          statement.setString(1, dataUserName);
-          ResultSet rs = statement.executeQuery();
-
-          while (rs.next()) {
-            userid = rs.getString(1);
-           }
-
-        }catch (SQLException e) {
-           System.err.println("Error: " + e);
+     public int getUserId(String dataUserName) throws InvalidUserIdException, SQLException{
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(GET_ID_BY_USERNAME);
+        statement.setString(1, dataUserName);
+        ResultSet rs = statement.executeQuery();
+           
+        if(rs.next()){  
+            return rs.getInt(1);
+        }else{
+            throw new InvalidUserIdException("No user found for id");
         }
-        return userid;
     }
     
-    public void addUser2UserDetails(String userId, String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, String dob){
+    public void addUserDetails(int userId, String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, Date dob){
 
         Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
         PreparedStatement statement = con.prepareStatement(INSERT_INTO_USERDETAILS);
-        statement.setString(1, userId);
+        statement.setInt(1, userId);
         statement.setString(2, firstName);
         statement.setString(3, lastName);
         statement.setString(4, addressLine1);
@@ -167,7 +162,7 @@ public class UserDao {
         statement.setString(6, addressLine3);
         statement.setString(7, town);
         statement.setString(8, postCode);
-        statement.setString(9, dob);
+        statement.setDate(9, new java.sql.Date(dob.getTime()));
         int checkUserAddedToUserDetails = statement.executeUpdate();
         
         } catch(SQLException e) {
@@ -184,7 +179,7 @@ public class UserDao {
                 resultSet.getBoolean(DaoConsts.SYSTEMUSER_ACTIVE)
         );
     }
-
+    
     public synchronized static UserDao getInstance(){
         if(instance == null){
             instance = new UserDao();
