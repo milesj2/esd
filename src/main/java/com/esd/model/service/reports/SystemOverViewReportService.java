@@ -51,7 +51,6 @@ public class SystemOverViewReportService {
         List<Invoice> overallInvoicesUnpaid = invoiceDao.getAllInvoicesWithStatus(InvoiceStatus.UNPAID, true);
         List<Invoice> overallInvoicesOverDue = invoiceDao.getAllInvoicesWithStatus(InvoiceStatus.OVERDUE, true);
 
-
         //this is all the invoices paid this period, this can include elements from previous periods
         List<Invoice> paidThisPeriod = invoiceDao.getInvoiceWithStatusChangeToThisPeriod(start, end, InvoiceStatus.PAID, true);
 
@@ -71,10 +70,10 @@ public class SystemOverViewReportService {
                 .mapToDouble(InvoiceItem::getCost)
                 .sum();
 
-        Map<String, String> args = null;
-        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
-        args.put(DaoConsts.APPOINTMENT_STATUS, AppointmentStatus.CANCELED.toString());
-        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithArgs(start, end, args).size();
+        int madeAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end,
+                Optional.empty()).size();
+        int canceledAppointments = appointmentDao.getAppointmentsInPeriodWithStatus(start, end,
+                Optional.of(AppointmentStatus.CANCELED)).size();
 
         //Java likes casting for some reason
         int cancelRate = (int)(((double)canceledAppointments/(double)madeAppointments )* 100);
