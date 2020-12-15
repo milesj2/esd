@@ -102,11 +102,8 @@ public class InvoiceDao {
         invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID_FK));
         invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID_FK));
         invoice.setPrivatePatient(resultSet.getBoolean(DaoConsts.PRIVATE_PATIENT));
-<<<<<<< HEAD
         invoice.setAppointmentId(resultSet.getInt(DaoConsts.APPOINTMENT_ID_FK));
-=======
-        invoice.setAppointmentId(resultSet.getInt(DaoConsts.ID));
->>>>>>> 66ead26 (feature/22-appointment-backend update to reflect comments)
+
         return invoice;
     }
 

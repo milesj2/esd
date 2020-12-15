@@ -7,7 +7,11 @@ package com.esd.model.dao;
 public class DaoConsts {
 
     public final static String ID = "id";
-
+    public final static String INVOICE_ID_FK = "invoiceId";
+    public final static String PATIENT_ID_FK = "patientid";
+    public final static String APPOINTMENT_ID_FK = "appointmentid";
+    public final static String EMPLOYEE_ID_FK = "employeeid";
+    public final static String SYSTEMUSER_ID_FK = "userId";
 
     public static final String TABLE_APPOINTMENTS = "appointments";
     public static final String TABLE_APPOINTMENTS_REFERENCE = TABLE_APPOINTMENTS + ".";
@@ -71,5 +75,9 @@ public class DaoConsts {
     public static final String APPOINTMENT_TIME = "appointmenttime";
     public static final String APPOINTMENT_SLOTS = "slots";
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
+
+    public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";
+    public final static String SYSTEMSETTING_SETTINGVALUE = "settingValue";
+
 }
 
