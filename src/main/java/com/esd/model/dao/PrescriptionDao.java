@@ -40,10 +40,10 @@ public class PrescriptionDao {
     private Prescription getPrescriptionDetailsFromResults(ResultSet result) throws SQLException {
         return new Prescription(
             result.getInt(DaoConsts.PRESCRIPTION_ID),
-            result.getInt(DaoConsts.EMPLOYEE_ID),
-            result.getInt(DaoConsts.PATIENT_ID),
+            result.getInt(DaoConsts.EMPLOYEE_ID_FK),
+            result.getInt(DaoConsts.PATIENT_ID_FK),
             result.getString(DaoConsts.PRESCRIPTION_DETAILS), 
-            result.getInt(DaoConsts.APPOINTMENT_ID),
+            result.getInt(DaoConsts.APPOINTMENT_ID_FK),
             result.getDate(DaoConsts.PRESCRIPTION_ISSUE_DATE)
         );
     }
@@ -85,10 +85,10 @@ public class PrescriptionDao {
             while(result.next()){
                 Prescription prescription =  new Prescription (
                     result.getInt(DaoConsts.PRESCRIPTION_ID),
-                    result.getInt(DaoConsts.EMPLOYEE_ID),
-                    result.getInt(DaoConsts.PATIENT_ID),
+                    result.getInt(DaoConsts.EMPLOYEE_ID_FK),
+                    result.getInt(DaoConsts.PATIENT_ID_FK),
                     result.getString(DaoConsts.PRESCRIPTION_DETAILS), 
-                    result.getInt(DaoConsts.APPOINTMENT_ID),
+                    result.getInt(DaoConsts.APPOINTMENT_ID_FK),
                     result.getDate(DaoConsts.PRESCRIPTION_ISSUE_DATE)
                 );
                 

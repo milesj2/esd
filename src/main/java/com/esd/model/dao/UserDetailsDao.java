@@ -1,5 +1,8 @@
 package com.esd.model.dao;
 
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.joins.Joins;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
@@ -10,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.text.Format;
 
 /**
  * Original Author: Miles Jarvis
@@ -18,16 +20,9 @@ import java.text.Format;
  */
 public class UserDetailsDao {
     private static UserDetailsDao instance;
-    
-    private static final String GET_USER_BY_NAME = "select * from userDetails where userDetails.firstName=? and userDetails.lastName=?";
-    private static final String GET_ID_BY_NAME = "select ID from userDetails where userDetails.firstName=? and userDetails.lastName=?";
+
     private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
 	private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
-
-    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
-            "join systemUser on systemUser.id=userDetails.userId" +
-            " where userDetails.id=? AND systemUser.userGroup in(?)";
-
 
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
@@ -64,16 +59,19 @@ public class UserDetailsDao {
                 result.getString(DaoConsts.USERDETAILS_ADDRESS3),
                 result.getString(DaoConsts.USERDETAILS_TOWN),
                 result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                result.getString(DaoConsts.USERDETAILS_DOB)
+                result.getDate(DaoConsts.USERDETAILS_DOB)
         );
     }
+//    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
+//            "join systemUser on systemUser.id=userDetails.userId" +
+//            " where userDetails.id=? AND systemUser.userGroup in(?)";
 
     public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(GET_USER_BY_USER_ID);
-        statement.setInt(1, id);
-        ResultSet result = statement.executeQuery();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, id));
 
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
         boolean resultFound = result.next();
         if(!resultFound){
             throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
@@ -81,25 +79,13 @@ public class UserDetailsDao {
         return getUserDetailsFromResults(result);
     }
 
-
     public boolean validateUserDetailsExistByIdAndUserGroup(int id, UserGroup... userGroups) throws SQLException {
-        String query = VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP;
-        String inStatement = "";
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, DaoConsts.SYSTEMUSER_ID_FK))
+                .withRestriction(Restrictions.in(DaoConsts.SYSTEMUSER_USERGROUP, userGroups))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, id));
 
-        //DERBY DB Lacks functionality to add an array to the query, for this reason the following code will be needed:
-        //thankfully this is an enum, so we can ensure it's safe.
-        for (UserGroup group: userGroups){
-            if(inStatement.equals("")){
-                inStatement += "'" + group.name() + "'";
-                continue;
-            }
-            inStatement += ", '"+group.name() + "'";
-        }
-        query = query.replace("(?)", "(" + inStatement + ")");
-
-        Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setInt(1, id);
+        PreparedStatement statement =  queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         return result.next();
     }
@@ -117,7 +103,7 @@ public class UserDetailsDao {
         statement.setString(5, userDetails.getAddressLine3());
         statement.setString(6, userDetails.getTown());
         statement.setString(7, userDetails.getPostCode());
-        statement.setString(8, userDetails.getDOB());
+        statement.setDate(8, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
         statement.setInt(9, userDetails.getUserId());
 
         int result = statement.executeUpdate();
@@ -168,7 +154,7 @@ public class UserDetailsDao {
            while (result.next()) {
                UserDetails userDetails = new UserDetails(
                        result.getInt(DaoConsts.ID),
-                       result.getInt(DaoConsts.SYSTEMUSER_ID),
+                       result.getInt(DaoConsts.SYSTEMUSER_ID_FK),
                        result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
                        result.getString(DaoConsts.USERDETAILS_LASTNAME),
                        result.getString(DaoConsts.USERDETAILS_ADDRESS1),
@@ -176,7 +162,7 @@ public class UserDetailsDao {
                        result.getString(DaoConsts.USERDETAILS_ADDRESS3),
                        result.getString(DaoConsts.USERDETAILS_TOWN),
                        result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                       result.getString(DaoConsts.USERDETAILS_DOB)
+                       result.getDate(DaoConsts.USERDETAILS_DOB)
                );
                userDetailsList.add(userDetails);
            }

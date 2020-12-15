@@ -2,15 +2,13 @@ package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
 import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.exceptions.InvalidUserIdException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Original Author: Jordan Hellier
@@ -27,7 +25,7 @@ public class UserService {
 
     }
 
-    public ArrayList<User> getUsers() throws SQLException {
+    public List<User> getUsers() throws SQLException {
         return userDao.getUsers();
     }
 
@@ -39,14 +37,12 @@ public class UserService {
         throw new InvalidUserCredentialsException("Passwords don't match");
     }
     
-    public boolean createUser(String username, String password, String active, String userGroup, 
-        String firstName, String lastName, String addressLine1, String addressLine2, String addressLine3, String town, String postCode, Date dob) 
-        throws SQLException, InvalidUserIdException {
-        boolean matchFound = userDao.verifyUsernameIsUnique(username);
-        if (!matchFound) {
-            userDao.addUser2SystemUser(username, password, active, userGroup);
-            int userId = userDao.getUserId(username);
-            userDao.addUserDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob);
+    public boolean createUser(User user, UserDetails userDetails) throws SQLException, InvalidUserCredentialsException {
+        boolean usernameUnique = userDao.verifyUsernameIsUnique(user.getUsername());
+        if (usernameUnique) {
+            userDao.createSystemUser(user);
+            int userId = userDao.getUserIdFromUserName(user.getUsername());
+            userDao.addUserDetailsToSystemUser(userId, userDetails);
             return true;
         }
         return false;

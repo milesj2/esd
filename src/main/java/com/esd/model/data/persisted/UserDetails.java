@@ -2,6 +2,8 @@ package com.esd.model.data.persisted;
 
 import com.esd.model.data.UserGroup;
 
+import java.util.Date;
+
 /**
  * Original Author: Jordan Hellier
  * Use: This class is a simple data class used to store the data about the address and other details
@@ -20,19 +22,13 @@ public class UserDetails {
     private String town;
     private String postCode;
 
-    private String dob;
+    private Date dateOfBirth;
 
-    public UserDetails (int id,
-                        int userId,
-                        String firstName,
-                        String lastName,
-                        String addressLine1,
-                        String addressLine2,
-                        String addressLine3,
-                        String town,
-                        String postCode,
-                        String dob)
-    {
+    public UserDetails() {
+    }
+
+    public UserDetails (int id, int userId, String firstName, String lastName, String addressLine1, String addressLine2,
+                        String addressLine3, String town, String postCode, Date dateOfBirth) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -44,7 +40,7 @@ public class UserDetails {
         this.town = town;
         this.postCode = postCode;
 
-        this.dob = dob;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getFullAddress(){
@@ -129,12 +125,11 @@ public class UserDetails {
         this.postCode = postCode;
     }
 
-    public String getDOB() {
-        return dob;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setDOB(String dob) {
-        this.dob = dob;
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
-
 }

@@ -12,8 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Original Author: Trent meier
@@ -30,9 +29,9 @@ public class InvoiceSearchController extends HttpServlet {
             DaoConsts.INVOICE_STATUS ,
             DaoConsts.INVOICE_TIME,
             DaoConsts.INVOICE_STATUS,
-            DaoConsts.EMPLOYEE_ID,
-            DaoConsts.PATIENT_ID,
-            DaoConsts.APPOINTMENT_ID));
+            DaoConsts.EMPLOYEE_ID_FK,
+            DaoConsts.PATIENT_ID_FK,
+            DaoConsts.APPOINTMENT_ID_FK));
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
@@ -53,6 +52,17 @@ public class InvoiceSearchController extends HttpServlet {
             System.out.println(e);
             response.sendRedirect("index.jsp?err=true"); //error page
         }
+    }
+
+    private static Map<String, Object> get(HttpServletRequest request, List<String> map){
+        Map<String, Object> retVal = new HashMap<>();
+        for(String s : map){
+            Object value = request.getAttribute(s);
+            if(value != null){
+                retVal.put(s, value);
+            }
+        }
+        return retVal;
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
