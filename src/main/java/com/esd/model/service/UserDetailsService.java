@@ -4,10 +4,9 @@ import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Original Author: Miles Jarvis
@@ -44,9 +43,8 @@ public class UserDetailsService {
         return new UserDetailsService(userDetailsDao);
     }
 
-    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(ArrayList<String> formKeys,
-                                                                           HttpServletRequest request) {
-        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(formKeys, request);
+    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) throws SQLException {
+        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
         return userDetails;
     }
 }

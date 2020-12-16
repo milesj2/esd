@@ -53,7 +53,7 @@
                     <td><%=userDetails.getTown()%></td>
                     <td><%=userDetails.getPostCode()%></td>
                     <td><%=userDetails.getDateOfBirth()%></td>
-                    <td><a href='userpage?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
+                    <td><a href='/user/edit?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
                 </tr>
                 <% }
             } catch(Exception e){

@@ -7,12 +7,14 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Original Author: Miles Jarvis
@@ -21,12 +23,9 @@ import java.util.ArrayList;
 public class UserDetailsDao {
     private static UserDetailsDao instance;
 
-    private static final String GET_USER_BY_USER_ID = "select * from userDetails where userDetails.userid=?";
-	private static final String GET_FILTERED_USERS = "SELECT * FROM USERDETAILS";
-
-    private static final String WHERE = " WHERE ";
-    private static final String AND = " AND ";
-    private static final String MATCH = " = ?";
+    private static final String INSERT_INTO_USERDETAILS = "insert into userDetails " +
+            "(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) " +
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_USER_DETAILS = "UPDATE USERDETAILS SET " +
             "firstname=?" +
             ",lastname=?" +
@@ -62,9 +61,6 @@ public class UserDetailsDao {
                 result.getDate(DaoConsts.USERDETAILS_DOB)
         );
     }
-//    private static final String VALIDATE_USERDETAILS_EXISTS_BY_ID_AND_USER_GROUP = "select * from userDetails " +
-//            "join systemUser on systemUser.id=userDetails.userId" +
-//            " where userDetails.id=? AND systemUser.userGroup in(?)";
 
     public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
@@ -90,10 +86,8 @@ public class UserDetailsDao {
         return result.next();
     }
 
-
     public boolean updateUserDetails(UserDetails userDetails) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
-
         PreparedStatement statement = con.prepareStatement(UPDATE_USER_DETAILS);
 
         statement.setString(1, userDetails.getFirstName());
@@ -118,62 +112,46 @@ public class UserDetailsDao {
         }
     }
 
-   public static ArrayList<UserDetails> getFilteredDetails(ArrayList<String> formKey, HttpServletRequest request) {
+   public ArrayList<UserDetails> getFilteredDetails(Map<String, Object> args) throws SQLException {
 
        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-       String STATEMENT_BUILDER = GET_FILTERED_USERS;
+       SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS);
 
-       try {
-           boolean first = true;
-           for (String key : formKey) {
-               if (!request.getParameter(key).isEmpty()) {
-                   if (first) {
-                       STATEMENT_BUILDER += WHERE + key + MATCH;
-                       first = false;
-                   } else {
-                       STATEMENT_BUILDER += AND + key + MATCH;
-                   }
-               }
-           }
-
-           //get connection
-           Connection con = ConnectionManager.getInstance().getConnection();
-           PreparedStatement statement = con.prepareStatement(STATEMENT_BUILDER);
-
-           int i = 1;  //set statement values
-           for (String key : formKey) {
-               if (!request.getParameter(key).isEmpty()) {
-                   statement.setString(i, (String) request.getParameter(key));
-                   i += 1;
-               }
-           }
-
-           ResultSet result = statement.executeQuery();
-
-           // add results to list of user to return
-           while (result.next()) {
-               UserDetails userDetails = new UserDetails(
-                       result.getInt(DaoConsts.ID),
-                       result.getInt(DaoConsts.SYSTEMUSER_ID_FK),
-                       result.getString(DaoConsts.USERDETAILS_FIRSTNAME),
-                       result.getString(DaoConsts.USERDETAILS_LASTNAME),
-                       result.getString(DaoConsts.USERDETAILS_ADDRESS1),
-                       result.getString(DaoConsts.USERDETAILS_ADDRESS2),
-                       result.getString(DaoConsts.USERDETAILS_ADDRESS3),
-                       result.getString(DaoConsts.USERDETAILS_TOWN),
-                       result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                       result.getDate(DaoConsts.USERDETAILS_DOB)
-               );
-               userDetailsList.add(userDetails);
-           }
-
-           // close statement and result set
-           statement.close();
-           result.close();
-
-       } catch (SQLException e) {
-           e.printStackTrace();
+       Iterator mapIter = args.entrySet().iterator();
+       while(mapIter.hasNext()) {
+           Map.Entry pair = (Map.Entry)mapIter.next();
+           queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
        }
+
+       PreparedStatement statement = queryBuilder.createStatement();
+       ResultSet result = statement.executeQuery();
+
+       // add results to list of user to return
+       while (result.next()) {
+           userDetailsList.add(getUserDetailsFromResults(result));
+       }
+
        return userDetailsList;
    }
+
+    public void addUserDetailsToSystemUser(int userId, UserDetails userDetails){
+        Connection con = ConnectionManager.getInstance().getConnection();
+        try {
+            PreparedStatement statement = con.prepareStatement(INSERT_INTO_USERDETAILS);
+            statement.setInt(1, userId);
+            statement.setString(2, userDetails.getFirstName());
+            statement.setString(3, userDetails.getLastName());
+            statement.setString(4, userDetails.getAddressLine1());
+            statement.setString(5, userDetails.getAddressLine2());
+            statement.setString(6, userDetails.getAddressLine3());
+            statement.setString(7, userDetails.getTown());
+            statement.setString(8, userDetails.getPostCode());
+            statement.setDate(9, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+
+            statement.executeUpdate();
+
+        } catch(SQLException e) {
+            System.err.println("Error: " + e);
+        }
+    }
 }

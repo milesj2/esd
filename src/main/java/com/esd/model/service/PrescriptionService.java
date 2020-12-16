@@ -1,14 +1,15 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.PrescriptionDao;
-import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Prescription;
+import com.esd.model.exceptions.InvalidIdValueException;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Original Author: Angela Jackson
@@ -25,22 +26,28 @@ public class PrescriptionService {
     }
 
     public boolean createPrescription(int employeeDetailsId, int patientDetailsId, String prescriptionDetails, int appointmentId,
-                                      Date issueDate) throws SQLException {
+                                      Date issueDate) throws SQLException, InvalidIdValueException {
 
         boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeDetailsId, UserGroup.DOCTOR, UserGroup.NURSE);
         boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientDetailsId, UserGroup.NHS_PATIENT, UserGroup.PRIVATE_PATIENT);
-        
+
+        Prescription prescription = new Prescription(
+                employeeDetailsId,
+                patientDetailsId,
+                prescriptionDetails,
+                appointmentId,
+                issueDate);
+
         if (employeeFound && patientFound) {
-            prescriptionDao.addPrescription(employeeDetailsId, patientDetailsId, prescriptionDetails, appointmentId, issueDate);
+            prescriptionDao.createPrescription(prescription);
             return true;
         }
         return false;
     }
     
-    public static ArrayList<Prescription> getPrescriptionFromFilteredRequest(ArrayList<String> formKeys,
-                                                                           HttpServletRequest request) {
-        ArrayList<Prescription> prescription = PrescriptionDao.getInstance().getFilteredDetails(formKeys, request);
-        return prescription;
+    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args) throws SQLException {
+        List<Prescription> prescriptionList = prescriptionDao.getFilteredDetails(args);
+        return prescriptionList;
     }
 
     public synchronized static PrescriptionService getInstance(){
@@ -48,5 +55,9 @@ public class PrescriptionService {
             instance = new PrescriptionService();
         }
         return instance;
+    }
+
+    public void updatePrescription(Prescription prescription) throws InvalidIdValueException, SQLException {
+        prescriptionDao.updatePrescription(prescription);
     }
 }

@@ -7,16 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.UserService;
-import com.esd.model.dao.UserDao;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,11 +22,14 @@ import javax.servlet.http.HttpServletResponse;
  * Use: the register user search controller redirects to the sign up page
  */
 @WebServlet("/registerUser")
-public class RegisterUser extends HttpServlet {
+public class RegisterUserController extends HttpServlet {
     
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-    
+
+    private static final String REGISTER_SUCCESS = "Successfully Registered! Please Sign in with the link below.";
+    private static final String USER_EXISTS_ERROR = "Error: Username already exists, please choose another username or sign in with the existing username";
+    private static final String REGISTER_FAILURE = "Error: User creation failed, please try again. If problem persists contact admin.";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -49,18 +46,18 @@ public class RegisterUser extends HttpServlet {
             
             boolean userRegisterd = UserService.getInstance().createUser(user, userDetails);
             if (userRegisterd) {
-                notify = "Sucessfully Registered! Please Sign in with the link below.";
+                notify = REGISTER_SUCCESS;
             } else {
-              notify = "Error: Username already exists, please choose another username or sign in with the existing username";
+              notify = USER_EXISTS_ERROR;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            notify = "Error: User creation failed, please try again. If problem persists contact admin.";
+            notify = REGISTER_FAILURE;
         }
       
         request.setAttribute("notify",notify);
         RequestDispatcher view = request.getRequestDispatcher("/registerUser.jsp");
-        view.forward(request, response);//endtry
+        view.forward(request, response);
        
     }
 
@@ -85,6 +82,7 @@ public class RegisterUser extends HttpServlet {
         userDetails.setPostCode(request.getParameter(DaoConsts.USERDETAILS_POSTCODE));
         return userDetails;
     }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -100,10 +98,4 @@ public class RegisterUser extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

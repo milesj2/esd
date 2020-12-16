@@ -1,12 +1,12 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.InvoiceDao;
-import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.Invoice;
-import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.exceptions.InvalidIdValueException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Original Author: Trent Meier
@@ -32,10 +32,19 @@ public class InvoiceService {
         return instance;
     }
 
-    public static ArrayList<Invoice> getInvoiceFromFilteredRequest(ArrayList<String> formKeys,
-                                                                   HttpServletRequest request) {
-        ArrayList<Invoice> invoices = InvoiceDao.getInstance().getFilteredDetails(formKeys, request);
-        return invoices;
+    public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
+        return invoiceDao.getInvoiceById(id);
     }
 
+    public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) throws SQLException {
+        return invoiceDao.getInstance().getFilteredDetails(args);
+    }
+
+    public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().createInvoice(invoice);
+    }
+
+    public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().updateInvoice(invoice);
+    }
 }

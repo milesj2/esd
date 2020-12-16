@@ -26,6 +26,4 @@ public class LogoutController extends HttpServlet{
             throw theException;
         }
     }
-
-
 }

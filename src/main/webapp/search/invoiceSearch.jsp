@@ -51,7 +51,7 @@
                 <td><%=invoice.getEmployeeId()%></td>
                 <td><%=invoice.getPatientId()%></td>
                 <td><%=invoice.getAppointmentId()%></td>
-                <td><a href='InvoicePage?id=<%=invoice.getId()%>'>Search Invoice</a></td>
+                <td><a href='invoice?id=<%=invoice.getId()%>'>Search Invoice</a></td>
             </tr>
             <% }
             } catch(Exception e){

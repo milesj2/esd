@@ -5,16 +5,60 @@ import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public class AppointmentDao {
 
     private static AppointmentDao instance;
+
+    private static String INSERT_APPOINTMENT = "insert into appointments " +
+            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
+            " values (?,?,?,?,?,?,?)";
+
+    private static String UPDATE_APPOINTMENT = "update appointments set" +
+            " id = ?," +
+            " appointmentdate = ?," +
+            " appointmenttime = ?," +
+            " slots = ?," +
+            " employeeid = ?," +
+            " patientid = ?," +
+            " appointmentstatus = ? " +
+            "where id = ?";
+
+    public void updateAppointment(Appointment appointment) throws SQLException {
+        if(appointment.getId()==0){
+            throw new IllegalArgumentException("appointment must have id");
+        }
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
+        statement.setDate(1, (java.sql.Date) appointment.getAppointmentDate());
+        statement.setTime(2, (Time) appointment.getAppointmentTime());
+        statement.setInt(3, appointment.getSlots());
+        statement.setInt(4, appointment.getEmployeeId());
+        statement.setInt(5, appointment.getPatientId());
+        statement.setString(6, appointment.getStatus().toString());
+        //where id
+        statement.setInt(7, appointment.getId());
+        statement.executeQuery();
+    }
+
+    public void createAppointment(Appointment appointment) throws SQLException {
+        if(appointment.getId()!=0){
+            throw new IllegalArgumentException("new appointment cannot have prepopulate id");
+        }
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(INSERT_APPOINTMENT);
+        statement.setInt(1, appointment.getId());
+        statement.setDate(2, (java.sql.Date) appointment.getAppointmentDate());
+        statement.setTime(3, (Time) appointment.getAppointmentTime());
+        statement.setInt(4, appointment.getSlots());
+        statement.setInt(5, appointment.getEmployeeId());
+        statement.setInt(6, appointment.getPatientId());
+        statement.setString(7, appointment.getStatus().toString());
+        statement.executeQuery();
+    }
 
     public List<Appointment> getAppointmentsInPeriodWithStatus(Date start, Date end, Optional<AppointmentStatus> status) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
@@ -44,6 +88,42 @@ public class AppointmentDao {
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
         appointment.setStatus(AppointmentStatus.valueOf(resultSet.getString(DaoConsts.APPOINTMENT_STATUS)));
         return appointment;
+    }
+
+    public Appointment getAppointmentById(int appointmentId) throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+        queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, appointmentId));
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+        if(!result.next()){
+            throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
+        }
+        return processResultSetForAppointment(result);
+    }
+
+    public List<Appointment> getAppointmentsInPeriodWithArgs(Date start, Date end,  Optional<Map<String, Object>> args)
+            throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+        queryBuilder.and(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, start))
+                .and(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, end));
+
+        if(args.isPresent()){
+            Iterator mapIter = args.get().entrySet().iterator();
+            while(mapIter.hasNext()) {
+                Map.Entry pair = (Map.Entry)mapIter.next();
+                queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+            }
+        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointments.add(processResultSetForAppointment(result));
+        }
+        return appointments;
     }
 
     public synchronized static AppointmentDao getInstance(){
