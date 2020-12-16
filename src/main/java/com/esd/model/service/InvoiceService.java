@@ -2,6 +2,7 @@ package com.esd.model.service;
 
 import com.esd.model.dao.InvoiceDao;
 import com.esd.model.data.persisted.Invoice;
+import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class InvoiceService {
 
     private static InvoiceService instance;
-    private InvoiceDao invoiceDao = InvoiceDao.getInstance();
+    private InvoiceDao invoiceDao;
 
     private InvoiceService(InvoiceDao invoiceDao) {
         if(invoiceDao == null){
@@ -31,7 +32,19 @@ public class InvoiceService {
         return instance;
     }
 
+    public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
+        return invoiceDao.getInvoiceById(id);
+    }
+
     public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        return invoiceDao.getFilteredDetails(args);
+        return invoiceDao.getInstance().getFilteredDetails(args);
+    }
+
+    public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().createInvoice(invoice);
+    }
+
+    public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().updateInvoice(invoice);
     }
 }

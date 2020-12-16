@@ -1,6 +1,5 @@
 <%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.esd.model.data.AppointmentOptions" %>
 <!DOCTYPE html>
 <html lang="en">

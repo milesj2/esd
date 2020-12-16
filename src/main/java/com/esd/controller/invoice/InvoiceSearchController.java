@@ -1,4 +1,4 @@
-package com.esd.controller.search;
+package com.esd.controller.invoice;
 
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
@@ -19,7 +19,6 @@ import java.util.*;
  * Use: the invoice search controller provides invoice access filtering and redirects to
  * user search page
  */
-
 @WebServlet("/invoiceSearch")
 public class InvoiceSearchController extends HttpServlet {
 
@@ -35,7 +34,9 @@ public class InvoiceSearchController extends HttpServlet {
             DaoConsts.ID));
 
     private boolean checkRequestContains(HttpServletRequest request, String key){
-        if(request.getParameterMap().containsKey(key) && !request.getParameter(key).isEmpty() && request.getParameter(key) != ""){
+        if(request.getParameterMap().containsKey(key) &&
+                !request.getParameter(key).isEmpty() &&
+                request.getParameter(key) != ""){
             return true;
         }
         return false;
@@ -55,22 +56,11 @@ public class InvoiceSearchController extends HttpServlet {
         }
 
         try {
-            response.sendRedirect("search/invoiceSearch.jsp"); //logged-in page
+            response.sendRedirect("search/invoiceSearch.jsp");
         } catch (Exception e) {
             System.out.println(e);
             response.sendRedirect("index.jsp?err=true"); //error page
         }
-    }
-
-    private static Map<String, Object> get(HttpServletRequest request, List<String> map){
-        Map<String, Object> retVal = new HashMap<>();
-        for(String s : map){
-            Object value = request.getAttribute(s);
-            if(value != null){
-                retVal.put(s, value);
-            }
-        }
-        return retVal;
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -1,11 +1,11 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.UserDao;
+import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIdException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.List;
 public class UserService {
     private static UserService instance;
 
-    
     private UserDao userDao = UserDao.getInstance();
+    private UserDetailsDao userDetailsDao;
 
     private UserService() {   
 
@@ -42,7 +42,7 @@ public class UserService {
         if (usernameUnique) {
             userDao.createSystemUser(user);
             int userId = userDao.getUserIdFromUserName(user.getUsername());
-            userDao.addUserDetailsToSystemUser(userId, userDetails);
+            userDetailsDao.getInstance().addUserDetailsToSystemUser(userId, userDetails);
             return true;
         }
         return false;

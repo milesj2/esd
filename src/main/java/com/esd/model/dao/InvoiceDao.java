@@ -3,18 +3,13 @@ package com.esd.model.dao;
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.InvoiceStatus;
-import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.esd.model.data.persisted.InvoiceItem;
+import com.esd.model.exceptions.InvalidIdValueException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Original Author: Trent Meier
@@ -22,14 +17,62 @@ import java.util.*;
  */
 public class InvoiceDao {
 
+    private ConnectionManager connectionManager = ConnectionManager.getInstance();
     private static InvoiceDao instance;
-    private static final String WHERE = " WHERE ";
-    private static final String AND = " AND ";
-    private static final String MATCH = " = ?";
-
-    private static final String GET_FILTERED_INVOICES = "SELECT * FROM INVOICE";
+    private static String INSERT_INVOICE = "insert into invoice "+
+            "(invoicedate, invoicetime, invoicestatus, statuschangedate, employeeid, patientid, privatepatient, appointmentid)"+
+            "values(?,?,?,?,?,?,?,?)";
+    private static String UPDATE_INVOICE = "update invoice set "+
+            "invoicedate=?, "+
+            "invoicetime=?, "+
+            "invoicestatus=?, "+
+            "statuschangedate=?, "+
+            "employeeid=?, "+
+            "patientid=?, "+
+            "privatepatient=?, "+
+            "appointmentid=? "+
+            "where id =?";
 
     private InvoiceDao() {}
+
+    private PreparedStatement setInsertUpdateStatement(Invoice invoice, String statementString) throws SQLException {
+        Connection con = connectionManager.getConnection();
+        PreparedStatement statement = con.prepareStatement(statementString);
+        statement.setDate(1, (java.sql.Date) invoice.getInvoiceDate());
+        statement.setTime(2, (Time) invoice.getInvoiceTime());
+        statement.setString(3, invoice.getInvoiceStatus().toString());
+        statement.setString(4, invoice.getInvoiceStatusChangeDate().toString());
+        statement.setInt(5, invoice.getEmployeeId());
+        statement.setInt(6, invoice.getPatientId());
+        statement.setBoolean(7, invoice.isPrivatePatient());
+        statement.setInt(8, invoice.getAppointmentId());
+        return statement;
+    }
+
+    private List<Invoice> processResultSetForInvoices(boolean loadItems, PreparedStatement statement) throws SQLException {
+        ResultSet result = statement.executeQuery();
+        List<Invoice> invoices = new ArrayList<>();
+        while (result.next()){
+            Invoice invoice = extractInvoiceFromResultSet(result);
+            if(loadItems){
+                invoice.setItems(getAllInvoiceItemsForInvoiceId(invoice.getId()));
+            }else{
+                invoice.setItems(new ArrayList<>());
+            }
+            invoices.add(invoice);
+        }
+        return invoices;
+    }
+
+    private InvoiceItem extractInvoiceItemFromResultSet(ResultSet resultSet) throws SQLException {
+        InvoiceItem invoiceItem =  new InvoiceItem();
+        invoiceItem.setId(resultSet.getInt(DaoConsts.ID));
+        invoiceItem.setInvoiceId(resultSet.getInt(DaoConsts.INVOICE_ID_FK));
+        invoiceItem.setCost(resultSet.getDouble(DaoConsts.INVOICEITEM_COST));
+        invoiceItem.setQuantity(resultSet.getInt(DaoConsts.INVOICEITEM_QUANTITY));
+        invoiceItem.setDescription(resultSet.getString(DaoConsts.INVOICEITEM_DESCRIPTION));
+        return invoiceItem;
+    }
 
     public List<Invoice> getAllInvoicesWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
@@ -56,21 +99,6 @@ public class InvoiceDao {
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
         return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
-    }
-
-    private List<Invoice> processResultSetForInvoices(boolean loadItems, PreparedStatement statement) throws SQLException {
-        ResultSet result = statement.executeQuery();
-        List<Invoice> invoices = new ArrayList<>();
-        while (result.next()){
-            Invoice invoice = extractInvoiceFromResultSet(result);
-            if(loadItems){
-                invoice.setItems(getAllInvoiceItemsForInvoiceId(invoice.getId()));
-            }else{
-                invoice.setItems(new ArrayList<>());
-            }
-            invoices.add(invoice);
-        }
-        return invoices;
     }
 
     public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id) throws SQLException {
@@ -104,16 +132,6 @@ public class InvoiceDao {
         return invoice;
     }
 
-    private InvoiceItem extractInvoiceItemFromResultSet(ResultSet resultSet) throws SQLException {
-        InvoiceItem invoiceItem =  new InvoiceItem();
-        invoiceItem.setId(resultSet.getInt(DaoConsts.ID));
-        invoiceItem.setInvoiceId(resultSet.getInt(DaoConsts.INVOICE_ID_FK));
-        invoiceItem.setCost(resultSet.getDouble(DaoConsts.INVOICEITEM_COST));
-        invoiceItem.setQuantity(resultSet.getInt(DaoConsts.INVOICEITEM_QUANTITY));
-        invoiceItem.setDescription(resultSet.getString(DaoConsts.INVOICEITEM_DESCRIPTION));
-        return invoiceItem;
-    }
-
     public List<Invoice> getFilteredDetails(Map<String, Object> args) throws SQLException {
         ArrayList<Invoice> invoiceList = new ArrayList<Invoice>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
@@ -131,6 +149,34 @@ public class InvoiceDao {
             invoiceList.add(extractInvoiceFromResultSet(result));
         }
         return invoiceList;
+    }
+
+    public void updateInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
+        if(invoice.getId()==0){
+            throw new InvalidIdValueException("invoice id must be populated to update invoice");
+        }
+        PreparedStatement statement = setInsertUpdateStatement(invoice, UPDATE_INVOICE);
+        statement.setInt(9, invoice.getId()); //key to id update
+        statement.executeUpdate();
+    }
+
+    public void createInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
+        if(invoice.getId()!=0){
+            throw new InvalidIdValueException("invoice id cannot be populated to create invoice");
+        }
+        PreparedStatement statement = setInsertUpdateStatement(invoice, INSERT_INVOICE);
+        statement.executeUpdate();
+    }
+
+    public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
+        queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet resultSet = statement.executeQuery();
+        if(!resultSet.next()){
+            throw new InvalidIdValueException("could not find invoice by id: "+ id);
+        }
+        return extractInvoiceFromResultSet(resultSet);
     }
 
     public synchronized static InvoiceDao getInstance(){

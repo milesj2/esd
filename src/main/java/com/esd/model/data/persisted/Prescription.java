@@ -14,6 +14,16 @@ public class Prescription {
     private int appointmentId;
     private Date issueDate;
 
+    public Prescription ( int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate)
+    {
+        this.id = 0;
+        this.employeeId = employeeId;
+        this.patientId = patientId;
+        this.prescriptionDetails = prescriptionDetails;
+        this.appointmentId = appointmentId;
+        this.issueDate = issueDate;
+    }
+
     public Prescription (int id, int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate)
     {
         this.id = id;

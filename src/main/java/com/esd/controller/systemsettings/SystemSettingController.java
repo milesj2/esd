@@ -1,12 +1,10 @@
 package com.esd.controller.systemsettings;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import com.esd.model.dao.DaoConsts;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemSettingService;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Original Author: Sam Barba
- * 
  * Use: The system settings controller use is to update the site settings as per a qualified user's request. Settings
  * are persisted via a conf file.
  *
@@ -25,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SystemSettingController extends HttpServlet {
 
 	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
+	private final String SUCCESS_MESSAGE = "Settings successfully updated.";
+	private final String INCORRECT_VALUE_MESSAGE = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -38,7 +37,6 @@ public class SystemSettingController extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
-
 	}
 
 	@Override
@@ -69,20 +67,14 @@ public class SystemSettingController extends HttpServlet {
 			if (sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
 					|| sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
 					|| sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
-				notification = "Settings successfully updated.";
+				notification = SUCCESS_MESSAGE;
 			} else {
-				notification = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
+				notification = INCORRECT_VALUE_MESSAGE;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		request.setAttribute("notification", notification);
-
-	}
-
-	@Override
-	public String getServletInfo() {
-		return "Description";
 	}
 }

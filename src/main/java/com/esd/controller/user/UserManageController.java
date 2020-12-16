@@ -1,11 +1,6 @@
 package com.esd.controller.user;
 
-import com.esd.model.dao.DaoConsts;
-import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
-import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidIdValueException;
-import com.esd.model.service.UserDetailsService;
 import com.esd.model.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -14,15 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Original Author: Miles Jarvis
  * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
- *
  */
 @WebServlet("/user/manage")
 public class UserManageController extends HttpServlet {
@@ -45,6 +37,4 @@ public class UserManageController extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher("/admin/users/manage.jsp");
         view.forward(request, response);
     }
-
-
 }

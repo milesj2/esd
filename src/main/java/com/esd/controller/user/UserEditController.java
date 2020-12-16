@@ -26,9 +26,10 @@ import java.text.SimpleDateFormat;
 @WebServlet("/user/edit")
 public class UserEditController extends HttpServlet {
 
+    private UserService userService = UserService.getInstance();
+    private UserDetailsService userDetailsService = UserDetailsService.getInstance();
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-
 
     // Needs filter
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,8 +38,8 @@ public class UserEditController extends HttpServlet {
         User user;
 
         try {
-            user = UserService.getInstance().getUserByID(Integer.parseInt(request.getParameter("id")));
-            user.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(user.getId()));
+            user = userService.getUserByID(Integer.parseInt(request.getParameter("id")));
+            user.setUserDetails(userDetailsService.getUserDetailsByUserID(user.getId()));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -100,8 +101,8 @@ public class UserEditController extends HttpServlet {
             boolean updateUserResult;
             boolean updateUserDetailsResult;
 
-            updateUserResult = UserService.getInstance().updateUser(user);
-            updateUserDetailsResult = UserDetailsService.getInstance().updateUserDetails(userDetails);
+            updateUserResult = userService.updateUser(user);
+            updateUserDetailsResult = userDetailsService.updateUserDetails(userDetails);
 
             if (updateUserResult && updateUserDetailsResult) {
                 response.sendRedirect("manage?errMsg=Success");
