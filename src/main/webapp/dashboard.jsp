@@ -13,31 +13,18 @@
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
 	    <br>
         <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { %>
-        <a href='user/manage'>Manage Users</a>
+        <a href='users/manage'>Manage Users</a>
         <br>
-        <a href='userSearch'>Search Users</a>
+        <a href='users/search'>Search Users</a>
         <br>
-            out.print("<a href='admin/reports'>AdminReports</a>");
-        }%>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-        <a href='invoiceSearch'>Search Invoices</a>
+        <a href='admin/reports'>AdminReports</a>
         <br>
-        <% } %>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
-            out.print("<a href='systemSettings'>Manage System Settings</a>");
-        }%>
-    </div>
-    
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='appointments'>Appointments</a>");
-        }%>
+        <a href='invoices/search'>Search Invoices</a>
+        <br>
+        <a href='admin/settings'>Manage System Settings</a>
+        <br>
+        <a href='appointments/schedule'>Appointments</a>
+        <%}%>
     </div>
 </body>
 </html>

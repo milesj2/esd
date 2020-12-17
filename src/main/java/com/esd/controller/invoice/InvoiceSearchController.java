@@ -19,7 +19,7 @@ import java.util.*;
  * Use: the invoice search controller provides invoice access filtering and redirects to
  * user search page
  */
-@WebServlet("/invoiceSearch")
+@WebServlet("/invoices/search")
 public class InvoiceSearchController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
@@ -55,7 +55,7 @@ public class InvoiceSearchController extends HttpServlet {
             return;
         }
 
-        RequestDispatcher view = request.getRequestDispatcher("search/invoiceSearch.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
         view.forward(request, response);
     }
 
@@ -73,11 +73,11 @@ public class InvoiceSearchController extends HttpServlet {
             List<Invoice> invoiceList = invoiceService.getInvoiceFromFilteredRequest(args);
 
             request.setAttribute("table", invoiceList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

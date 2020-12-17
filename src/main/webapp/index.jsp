@@ -42,7 +42,7 @@
             </form>
             <div class="noAccount">
                 <h1>Don't have an account?</h1>
-                <a href='registerUser'>Create account</a>
+                <a href='register'>Create account</a>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@ import java.util.List;
  * Original Author: Miles Jarvis
  * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
  */
-@WebServlet("/user/manage")
+@WebServlet("/users/manage")
 public class UserManageController extends HttpServlet {
 
     // TODO Needs filter
@@ -34,7 +34,7 @@ public class UserManageController extends HttpServlet {
         }
 
         request.setAttribute("users", users);
-        RequestDispatcher view = request.getRequestDispatcher("/admin/users/manage.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/users/manage.jsp");
         view.forward(request, response);
     }
 }

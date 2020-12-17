@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * Original Author: Angela Jackson
  * Use: the register user search controller redirects to the sign up page
  */
-@WebServlet("/registerUser")
+@WebServlet("/register")
 public class RegisterUserController extends HttpServlet {
     
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -56,7 +56,7 @@ public class RegisterUserController extends HttpServlet {
         }
       
         request.setAttribute("notify",notify);
-        RequestDispatcher view = request.getRequestDispatcher("/registerUser.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("register.jsp");
         view.forward(request, response);
        
     }
@@ -86,7 +86,7 @@ public class RegisterUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            RequestDispatcher view = req.getRequestDispatcher("/registerUser.jsp");
+            RequestDispatcher view = req.getRequestDispatcher("register.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
             e.printStackTrace();

@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
  * Use: the appointment controller provides appointment functionality for a user
  */
 
-@WebServlet("/appointment")
+@WebServlet("/appointments/view")
 public class AppointmentController extends HttpServlet {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -57,7 +57,7 @@ public class AppointmentController extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            RequestDispatcher view = request.getRequestDispatcher("/appointment/appointment.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("/appointment/view.jsp");
             view.forward(request, response);
         }
     }
@@ -93,7 +93,7 @@ public class AppointmentController extends HttpServlet {
             }
 
             // dispatch
-            RequestDispatcher view = request.getRequestDispatcher("/appointment/appointment.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("/appointment/view.jsp");
             view.forward(request, response);
         }
     }

@@ -14,7 +14,7 @@
 <h2>Invoice Search page</h2>
 <h3>Enter your search terms to retrieve the invoice details</h3>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/invoiceSearch">
+    <form method="post" action="${pageContext.request.contextPath}/invoices/search.jsp">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Id</th>
@@ -51,7 +51,7 @@
                 <td><%=invoice.getEmployeeId()%></td>
                 <td><%=invoice.getPatientId()%></td>
                 <td><%=invoice.getAppointmentId()%></td>
-                <td><a href='invoice?id=<%=invoice.getId()%>'>Search Invoice</a></td>
+                <td><a href='${pageContext.request.contextPath}/invoices/view?id=<%=invoice.getId()%>'>Search Invoice</a></td>
             </tr>
             <% }
             } catch(Exception e){
