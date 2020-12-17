@@ -1,6 +1,5 @@
 package com.esd.controller.systemsettings;
 
-import com.esd.model.dao.DaoConsts;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemSettingService;
 
@@ -20,21 +19,20 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/admin/settings")
 public class SystemSettingController extends HttpServlet {
 
+	private static final String SUCCESS_MESSAGE = "Settings successfully updated.";
+	private static final String INCORRECT_VALUE_MESSAGE = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
 	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
-	private final String SUCCESS_MESSAGE = "Settings successfully updated.";
-	private final String INCORRECT_VALUE_MESSAGE = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
 			response.setContentType("text/html;charset=UTF-8");
-			populateForm(request, response);
+			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
 		}
 	}
 
@@ -42,23 +40,22 @@ public class SystemSettingController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
 			processRequest(request, response);
-			populateForm(request, response);
+			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
 		}
 	}
 
-	private void populateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InvalidIdValueException, SQLException {
+	private void populateForm(HttpServletRequest request) throws InvalidIdValueException, SQLException {
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_NURSE, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
 	}
 
-	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void processRequest(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		String notification = "Error updating value(s) :(";
 
