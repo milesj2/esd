@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
  * page
  */
 
-@WebServlet("/invoice")
+@WebServlet("/invoices/view")
 public class InvoiceController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
@@ -36,7 +36,7 @@ public class InvoiceController extends HttpServlet {
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("invoice.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("invoices/view.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -76,7 +76,7 @@ public class InvoiceController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/appointment/appointment.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/view.jsp");
         view.forward(request, response);
     }
 }

@@ -8,7 +8,7 @@
     <title>Manage System Settings</title>
 </head>
     <body>
-        <form method="post" action="${pageContext.request.contextPath}/systemSettings">
+        <form method="post" action="${pageContext.request.contextPath}/admin/settings">
             <h4>Consultation fees (£/h) for doctors and nurses</h4>
             <label>Doctor fee (default £150.00/h): </label>
             <input type="text" placeholder="Enter fee (£/h)" name=<%=SystemSettingService.SYSTEMSETTING_FEE_DOCTOR%> id=<%=SystemSettingService.SYSTEMSETTING_FEE_DOCTOR%> value="<%=request.getAttribute(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR)%>">

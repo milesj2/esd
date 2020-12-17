@@ -22,7 +22,7 @@ import java.util.Map;
  * Use: the user search controller validates the user and then redirects to the user search
  * page
  */
-@WebServlet("/userSearch")
+@WebServlet("/users/search")
 public class UserSearchController extends HttpServlet {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
@@ -50,19 +50,15 @@ public class UserSearchController extends HttpServlet {
         // Validate user is logged in
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
         if(currentUser == null){
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("login");
             return;
         } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
-            response.sendRedirect("../../index.jsp");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        try {
-            response.sendRedirect("search/userSearch.jsp");
-        } catch (Exception e) {
-            System.out.println(e);
-            response.sendRedirect("index.jsp?err=true");
-        }
+        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        view.forward(request, response);
     }
 
     //returns search form data
@@ -76,13 +72,14 @@ public class UserSearchController extends HttpServlet {
             }
         }
         try {
+            // pass request with form keys and request (has post values)
             ArrayList<UserDetails> userDetailsList = userDetailsService.getUserDetailsFromFilteredRequest(args);
             request.setAttribute("table", userDetailsList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/userSearch.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("index.jsp?err=true");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

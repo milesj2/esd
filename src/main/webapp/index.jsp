@@ -1,10 +1,8 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="com.esd.views.ViewsConsts" %>
 <%@ page import="com.esd.views.LoginErrors" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>
+
 <html>
 <head>
     <title>Login</title>
@@ -13,12 +11,6 @@
 </head>
 <body>
     <div class="container">
-
-    <% if(currentUser != null){
-        out.print(ViewsConsts.Error.REDIRECTS_DISABLED);
-        response.sendRedirect("dashboard.jsp");
-        return;
-    } %>
         <div class="loginFormWrapper">
             <img src="images/logo.png" class="loginLogo" alt="" />
             <form action="login" method="POST">
@@ -50,7 +42,7 @@
             </form>
             <div class="noAccount">
                 <h1>Don't have an account?</h1>
-                <a href='registerUser'>Create account</a>
+                <a href='register'>Create account</a>
             </div>
         </div>
     </div>

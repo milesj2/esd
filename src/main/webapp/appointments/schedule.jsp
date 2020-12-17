@@ -11,7 +11,7 @@
 <h2>Appointment page</h2>
 <h4> Search below</h4>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/appointments">
+    <form method="post" action="${pageContext.request.contextPath}/appointments/schedule">
         <table border="1" cellpadding="5">
             <tr>
                 <th>From Date</th>

@@ -20,7 +20,7 @@ public class LogoutController extends HttpServlet{
         try {
             HttpSession session = request.getSession(false);
             session.invalidate();
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("login");
         } catch (Throwable theException) {
             theException.printStackTrace();
             throw theException;

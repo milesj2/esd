@@ -14,7 +14,7 @@
     <div>
         <%try {request.getParameter("message");} catch(Exception e) { } %>
     </div>
-    <form method="post" action="${pageContext.request.contextPath}/appointment">
+    <form method="post" action="${pageContext.request.contextPath}/appointments/view">
         <table>
             <% try {
                 Appointment appointment = (Appointment)request.getAttribute("appointment");

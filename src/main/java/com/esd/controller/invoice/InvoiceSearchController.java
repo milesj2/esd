@@ -19,14 +19,14 @@ import java.util.*;
  * Use: the invoice search controller provides invoice access filtering and redirects to
  * user search page
  */
-@WebServlet("/invoiceSearch")
+@WebServlet("/invoices/search")
 public class InvoiceSearchController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
     private ArrayList<String> invoiceFormsConst = new ArrayList<String>(Arrays.asList(
             DaoConsts.ID,
             DaoConsts.INVOICE_DATE,
-            DaoConsts.INVOICE_STATUS ,
+            DaoConsts.INVOICE_STATUS,
             DaoConsts.INVOICE_TIME,
             DaoConsts.INVOICE_STATUS,
             DaoConsts.EMPLOYEE_ID,
@@ -48,19 +48,15 @@ public class InvoiceSearchController extends HttpServlet {
         // Validate user is logged in
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
         if(currentUser == null){
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("login");
             return;
         } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
-            response.sendRedirect("../../index.jsp");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        try {
-            response.sendRedirect("search/invoiceSearch.jsp");
-        } catch (Exception e) {
-            System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
-        }
+        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        view.forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -75,12 +71,13 @@ public class InvoiceSearchController extends HttpServlet {
 
         try {
             List<Invoice> invoiceList = invoiceService.getInvoiceFromFilteredRequest(args);
+
             request.setAttribute("table", invoiceList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/invoiceSearch.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

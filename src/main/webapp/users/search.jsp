@@ -14,7 +14,7 @@
 <h2>User Search page</h2>
 <h3>Enter your search terms to retrieve user details</h3>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/userSearch">
+    <form method="post" action="${pageContext.request.contextPath}/users/search">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Id</th>
@@ -53,7 +53,7 @@
                     <td><%=userDetails.getTown()%></td>
                     <td><%=userDetails.getPostCode()%></td>
                     <td><%=userDetails.getDateOfBirth()%></td>
-                    <td><a href='/user/edit?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
+                    <td><a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
                 </tr>
                 <% }
             } catch(Exception e){

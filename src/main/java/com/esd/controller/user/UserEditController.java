@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
  * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
  *
  */
-@WebServlet("/user/edit")
+@WebServlet("/users/edit")
 public class UserEditController extends HttpServlet {
 
     private UserService userService = UserService.getInstance();
@@ -49,21 +49,12 @@ public class UserEditController extends HttpServlet {
             return;
         }
         request.setAttribute("editUser", user);
-        RequestDispatcher view = request.getRequestDispatcher("/admin/users/edit.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/users/edit.jsp");
         view.forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
-        // Validate user is logged in and admin
-        User currentUser = (User) (request.getSession().getAttribute("currentSessionUser"));
-        if (currentUser == null) {
-            response.sendRedirect("../index.jsp");
-            return;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN) {
-            response.sendRedirect("../index.jsp");
-            return;
-        }
 
         boolean active = false;
         if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)

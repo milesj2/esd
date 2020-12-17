@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * are persisted via a conf file.
  *
  */
-@WebServlet("/systemSettings")
+@WebServlet("/admin/settings")
 public class SystemSettingController extends HttpServlet {
 
 	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
@@ -30,7 +30,7 @@ public class SystemSettingController extends HttpServlet {
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			populateForm(request, response);
-			RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,7 +44,7 @@ public class SystemSettingController extends HttpServlet {
 		try {
 			processRequest(request, response);
 			populateForm(request, response);
-			RequestDispatcher view = request.getRequestDispatcher("/systemSettings/systemSettings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

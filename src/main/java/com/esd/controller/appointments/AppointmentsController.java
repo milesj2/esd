@@ -22,7 +22,7 @@ import java.util.*;
  * user search page
  */
 
-@WebServlet("/appointments")
+@WebServlet("/appointments/schedule")
 public class AppointmentsController extends HttpServlet {
 
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
@@ -57,7 +57,7 @@ public class AppointmentsController extends HttpServlet {
             throws ServletException, java.io.IOException {
 
         if(getAuthorisationState(request,response)){
-            response.sendRedirect("appointment/appointments.jsp"); //appointments page
+            response.sendRedirect("schedule.jsp"); //appointments page
         }
     }
 
@@ -91,7 +91,7 @@ public class AppointmentsController extends HttpServlet {
                 e.printStackTrace();
             }
 
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("appointment/appointments.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("schedule.jsp");
             requestDispatcher.forward(request, response);
         }
     }

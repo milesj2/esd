@@ -30,11 +30,11 @@
         }
         </script>
     
-        <img src="images/logo.png" class="loginLogo" alt="" />
+        <img src="res/images/logo.png" class="loginLogo" alt="" />
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
-        <form action="registerUser" name="register" method="post">
+        <form action="register" name="register" method="post">
 
             <h4>Personal Details</h4>
 
@@ -89,7 +89,7 @@
             <% if ( request.getAttribute("notify") != null ) { %>
             <div class="registration_msg"><strong><%=request.getAttribute("notify")%></strong></div><br>
             <% } %>
-            <p>Already have an account? <a href="index.jsp">Sign in</a>.</p>
+            <p>Already have an account? <a href="login">Sign in</a>.</p>
         </form>        
     </body>
 </html>

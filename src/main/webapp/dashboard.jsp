@@ -8,48 +8,23 @@
     <title>User Dashboard</title>
 </head>
 <body>
-    <% if(currentUser == null) {
-        response.sendRedirect("index.jsp");
-        return; //return is safe and stops further script execution
-    }%>
-
-    <nav><a href="logout">Logout</a></nav>
-
+    <nav><a href="logout">Logout</a> </nav>
     <div>
         welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
-	<br>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
-            out.print("<a href='user/manage'>Manage Users</a>");
-        }%>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='userSearch'>Search Users</a>");
-        }%>
-    </div>
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='admin/reports'>AdminReports</a>");
-        }%>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='invoiceSearch'>Search Invoices</a>");
-        }%>
-    </div>
-
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) {
-            out.print("<a href='systemSettings'>Manage System Settings</a>");
-        }%>
-    </div>
-    
-    <div>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { // todo change for appropriate user group
-            out.print("<a href='appointments'>Appointments</a>");
-        }%>
+	    <br>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { %>
+        <a href='users/manage'>Manage Users</a>
+        <br>
+        <a href='users/search'>Search Users</a>
+        <br>
+        <a href='admin/reports'>AdminReports</a>
+        <br>
+        <a href='invoices/search'>Search Invoices</a>
+        <br>
+        <a href='admin/settings'>Manage System Settings</a>
+        <br>
+        <a href='appointments/schedule'>Appointments</a>
+        <%}%>
     </div>
 </body>
 </html>
