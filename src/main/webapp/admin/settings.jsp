@@ -25,7 +25,7 @@
 
             <button value="update">Update</button>
             <%if(request.getAttribute("notification") != null){%>
-            <div><strong><%=request.getAttribute("notification")%></strong></div>
+                <div><strong><%=request.getAttribute("notification")%></strong></div>
             <% } %>
         </form>
     </body>

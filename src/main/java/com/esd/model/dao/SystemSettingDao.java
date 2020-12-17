@@ -25,8 +25,7 @@ public class SystemSettingDao {
      * Get an Integer system setting by its key
      */
     public int getIntegerSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createAndExecuteBasicStatement(settingKey);
-
+        ResultSet result = createAndExecuteGetStatement(settingKey);
         return Integer.parseInt(result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE));
     }
 
@@ -34,8 +33,7 @@ public class SystemSettingDao {
      * Get a Double system setting by its key
      */
     public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createAndExecuteBasicStatement(settingKey);
-
+        ResultSet result = createAndExecuteGetStatement(settingKey);
         return Double.parseDouble(result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE));
     }
 
@@ -43,12 +41,14 @@ public class SystemSettingDao {
      * Get a String system setting by its key
      */
     public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        ResultSet result = createAndExecuteBasicStatement(settingKey);
-
+        ResultSet result = createAndExecuteGetStatement(settingKey);
         return result.getString(DaoConsts.SYSTEMSETTING_SETTINGVALUE);
     }
 
-    private ResultSet createAndExecuteBasicStatement(String settingKey) throws SQLException, InvalidIdValueException {
+    /**
+     * Create and execute SQL 'get' statement
+     */
+    private ResultSet createAndExecuteGetStatement(String settingKey) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMSETTING)
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMSETTING_SETTINGKEY, settingKey));
 

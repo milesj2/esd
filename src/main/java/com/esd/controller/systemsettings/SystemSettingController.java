@@ -1,5 +1,6 @@
 package com.esd.controller.systemsettings;
 
+import com.esd.model.dao.DaoConsts;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemSettingService;
 
@@ -14,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Original Author: Sam Barba
- * Use: The system settings controller use is to update the site settings as per a qualified user's request. Settings
- * are persisted via a conf file.
- *
+ * Use: The system settings controller use is to update the site settings as per a qualified user's request.
  */
 @WebServlet("/admin/settings")
 public class SystemSettingController extends HttpServlet {
@@ -61,7 +60,7 @@ public class SystemSettingController extends HttpServlet {
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html;charset=UTF-8");
-		String notification = "";
+		String notification = "Error updating value(s) :(";
 
 		try {
 			if (sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
