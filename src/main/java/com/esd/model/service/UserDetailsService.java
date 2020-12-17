@@ -1,20 +1,16 @@
 package com.esd.model.service;
 
-import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
-import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIDException;
+import com.esd.model.exceptions.InvalidIdValueException;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
- * Original Author: Jordan Hellier
- * Use: This class is a singleton, The use of this class is to do any functionality needed for user such as Authentication
+ * Original Author: Miles Jarvis
+ * Use: This class is a singleton, The use of this class is to do any functionality needed for user details
  */
 public class UserDetailsService {
     private static UserDetailsService instance;
@@ -35,18 +31,20 @@ public class UserDetailsService {
     }
 
 
-    public static UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidUserIDException {
-        UserDetails userDetails = UserDetailsDao.getInstance().getUserDetailsByUserId(userId);
-        return userDetails;
+    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
+        return userDetailsDao.getUserDetailsByUserId(userId);
+    }
+
+    public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
+        return userDetailsDao.updateUserDetails(userDetails);
     }
 
     public static UserDetailsService getTestInstance(UserDetailsDao userDetailsDao){
         return new UserDetailsService(userDetailsDao);
     }
 
-    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(ArrayList<String> formKeys,
-                                                                           HttpServletRequest request) {
-        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(formKeys, request);
+    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) throws SQLException {
+        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
         return userDetails;
     }
 }

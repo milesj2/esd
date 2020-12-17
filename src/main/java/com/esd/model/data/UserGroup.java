@@ -6,7 +6,8 @@ package com.esd.model.data;
  */
 public enum UserGroup {
     ADMIN,
-    PATIENT,
+    NHS_PATIENT,
+    PRIVATE_PATIENT,
     DOCTOR,
     NURSE,
     RECEPTIONIST

@@ -14,7 +14,7 @@
 <h2>Invoice Search page</h2>
 <h3>Enter your search terms to retrieve the invoice details</h3>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/invoiceSearch">
+    <form method="post" action="${pageContext.request.contextPath}/invoices/search.jsp">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Id</th>
@@ -27,13 +27,13 @@
                 <th>Actions</th>
             </tr>
             <tr>
-                <td><input type="text" name=<%=DaoConsts.INVOICE_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
                 <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
                 <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.PATIENT_ID%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID_FK%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.PATIENT_ID_FK%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID_FK%> size="10" /></td>
                 <td>
                 </td>
             </tr>
@@ -51,7 +51,7 @@
                 <td><%=invoice.getEmployeeId()%></td>
                 <td><%=invoice.getPatientId()%></td>
                 <td><%=invoice.getAppointmentId()%></td>
-                <td><a href='InvoicePage?id=<%=invoice.getId()%>'>Search Invoice</a></td>
+                <td><a href='${pageContext.request.contextPath}/invoices/view?id=<%=invoice.getId()%>'>Search Invoice</a></td>
             </tr>
             <% }
             } catch(Exception e){

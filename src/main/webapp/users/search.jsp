@@ -14,7 +14,7 @@
 <h2>User Search page</h2>
 <h3>Enter your search terms to retrieve user details</h3>
 <div>
-    <form method="post" action="${pageContext.request.contextPath}/userSearch">
+    <form method="post" action="${pageContext.request.contextPath}/users/search">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Id</th>
@@ -27,7 +27,7 @@
                 <th>Actions</th>
             </tr>
             <tr>
-                <td><input type="text" name=<%=DaoConsts.USERDETAILS_ID%> size="10" /></td>
+                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_FIRSTNAME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_LASTNAME%> size="10" /></td>
                 <td><input type="text" name=<%=DaoConsts.USERDETAILS_ADDRESS1%> size="10" /></td>
@@ -52,8 +52,8 @@
                         <%=userDetails.getAddressLine3()%></td>
                     <td><%=userDetails.getTown()%></td>
                     <td><%=userDetails.getPostCode()%></td>
-                    <td><%=userDetails.getDOB()%></td>
-                    <td><a href='userpage?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
+                    <td><%=userDetails.getDateOfBirth()%></td>
+                    <td><a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
                 </tr>
                 <% }
             } catch(Exception e){

@@ -1,5 +1,7 @@
 package com.esd.model.data.persisted;
 
+import com.esd.model.data.AppointmentStatus;
+
 import java.util.Date;
 
 /**
@@ -13,6 +15,15 @@ public class Appointment {
     private int slots;
     private Date appointmentDate;
     private Date appointmentTime; //Could use the Joda time libary which is a little nicer....
+    private AppointmentStatus status;
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
+    }
 
     public int getId() {
         return id;

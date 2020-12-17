@@ -4,7 +4,8 @@ package com.esd.model.dao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
 
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ public class UserDaoTest {
 
     private static final String VALID_USERNAME = "testusername";
     private static final String VALID_PASSWORD = "testpass";
-    private static final UserGroup VALID_USERGROUP = UserGroup.PATIENT;
+    private static final UserGroup VALID_USERGROUP = UserGroup.NHS_PATIENT;
     private static final String INVALID_USERNAME = "sdfsdf";
 
     private UserDao target = UserDao.getInstance();

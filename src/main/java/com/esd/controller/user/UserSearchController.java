@@ -1,4 +1,4 @@
-package com.esd.controller.search;
+package com.esd.controller.user;
 
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
@@ -14,19 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Original Author: Trent meier
  * Use: the user search controller validates the user and then redirects to the user search
  * page
  */
-
-@WebServlet("/userSearch")
+@WebServlet("/users/search")
 public class UserSearchController extends HttpServlet {
 
-    //corresponds to user search form
+    private UserDetailsService userDetailsService = UserDetailsService.getInstance();
     private ArrayList<String> formValues =  new ArrayList<String>(Arrays.asList(
-            DaoConsts.USERDETAILS_ID,
+            DaoConsts.ID,
             DaoConsts.USERDETAILS_FIRSTNAME,
             DaoConsts.USERDETAILS_LASTNAME ,
             DaoConsts.USERDETAILS_ADDRESS1,
@@ -34,43 +35,51 @@ public class UserSearchController extends HttpServlet {
             DaoConsts.USERDETAILS_POSTCODE,
             DaoConsts.USERDETAILS_DOB));
 
-    // serves page initially
+    private boolean checkRequestContains(HttpServletRequest request, String key){
+        if(request.getParameterMap().containsKey(key) &&
+                !request.getParameter(key).isEmpty() &&
+                request.getParameter(key) != ""){
+            return true;
+        }
+        return false;
+    }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         // Validate user is logged in
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
         if(currentUser == null){
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("login");
             return;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){ //todo add user group validation
-            response.sendRedirect("../../index.jsp");
+        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        try {
-            response.sendRedirect("search/userSearch.jsp"); //logged-in page
-        } catch (Exception e) {
-            System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
-        }
+        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        view.forward(request, response);
     }
 
     //returns search form data
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
+
+        Map<String, Object> args =  new HashMap<>();
+        for(String key: formValues) {
+            if(checkRequestContains(request, key)){
+                args.put(key, request.getParameter(key));
+            }
+        }
         try {
             // pass request with form keys and request (has post values)
-            ArrayList<UserDetails> userDetailsList = UserDetailsService.getInstance().getUserDetailsFromFilteredRequest(formValues, request);
-
-            //return user details list
+            ArrayList<UserDetails> userDetailsList = userDetailsService.getUserDetailsFromFilteredRequest(args);
             request.setAttribute("table", userDetailsList);
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search/userSearch.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("index.jsp?err=true"); //error page
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
