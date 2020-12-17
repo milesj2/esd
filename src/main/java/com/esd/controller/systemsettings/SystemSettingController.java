@@ -39,6 +39,7 @@ public class SystemSettingController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
+			response.setContentType("text/html;charset=UTF-8");
 			processRequest(request, response);
 			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
@@ -60,13 +61,12 @@ public class SystemSettingController extends HttpServlet {
 		String notification = "Error updating value(s) :(";
 
 		try {
-			if (sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
-					|| sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
-					|| sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
-				notification = SUCCESS_MESSAGE;
-			} else {
-				notification = INCORRECT_VALUE_MESSAGE;
-			}
+			boolean feeDoctorUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
+			boolean feeNurseUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
+			boolean slotTimeUpdated = sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
+
+			notification = feeDoctorUpdated && feeNurseUpdated && slotTimeUpdated
+					? SUCCESS_MESSAGE : INCORRECT_VALUE_MESSAGE;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
