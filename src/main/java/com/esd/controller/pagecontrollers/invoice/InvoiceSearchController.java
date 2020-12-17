@@ -1,5 +1,6 @@
-package com.esd.controller.invoice;
+package com.esd.controller.pagecontrollers.invoice;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
@@ -20,6 +21,7 @@ import java.util.*;
  * user search page
  */
 @WebServlet("/invoices/search")
+@Authentication(userGroups = {UserGroup.ALL})
 public class InvoiceSearchController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();

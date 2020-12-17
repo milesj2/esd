@@ -1,4 +1,6 @@
-package com.esd.controller.authentication;
+package com.esd.controller.pagecontrollers.authentication;
+
+import com.esd.controller.annotations.Authentication;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 @WebServlet("/logout")
+@Authentication(authenticationRequired = true)
 public class LogoutController extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

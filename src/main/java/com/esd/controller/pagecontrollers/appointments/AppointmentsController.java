@@ -1,9 +1,9 @@
-package com.esd.controller.appointments;
+package com.esd.controller.pagecontrollers.appointments;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.User;
 import com.esd.model.service.AppointmentsService;
 
 import javax.servlet.RequestDispatcher;
@@ -12,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,6 +22,7 @@ import java.util.*;
  */
 
 @WebServlet("/appointments/schedule")
+@Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentsController extends HttpServlet {
 
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
@@ -33,18 +33,6 @@ public class AppointmentsController extends HttpServlet {
             DaoConsts.APPOINTMENT_STATUS,
             DaoConsts.ID));
 
-    private boolean getAuthorisationState(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Validate user is logged in
-        User currentUser = (User) (request.getSession().getAttribute("currentSessionUser"));
-        if (currentUser == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN) { //todo add user group validation
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-        return true;
-    }
 
     private boolean checkRequestContains(HttpServletRequest request, String key){
         if(request.getParameterMap().containsKey(key) && !request.getParameter(key).isEmpty() && request.getParameter(key) != ""){
@@ -56,15 +44,13 @@ public class AppointmentsController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        if(getAuthorisationState(request,response)){
             response.sendRedirect("schedule.jsp"); //appointments page
-        }
+
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        if(getAuthorisationState(request, response)){
             Map<String, Object> args =  new HashMap<>();
             for(String key: AppointmentKeys) {
                 if(checkRequestContains(request, key)){
@@ -93,6 +79,5 @@ public class AppointmentsController extends HttpServlet {
 
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("schedule.jsp");
             requestDispatcher.forward(request, response);
-        }
     }
 }

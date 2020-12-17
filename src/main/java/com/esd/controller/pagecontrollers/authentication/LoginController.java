@@ -1,11 +1,10 @@
-package com.esd.controller.authentication;
+package com.esd.controller.pagecontrollers.authentication;
 
-import com.esd.model.data.UserGroup;
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.data.persisted.User;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.service.UserService;
 import com.esd.views.LoginErrors;
-import com.esd.views.ViewsConsts;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,6 +22,7 @@ import java.sql.SQLException;
  *
  */
 @WebServlet("/login")
+@Authentication(loggedInUserAccess=false, authenticationRequired = false)
 public class LoginController extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

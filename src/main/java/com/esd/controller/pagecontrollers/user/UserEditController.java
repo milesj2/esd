@@ -1,5 +1,6 @@
-package com.esd.controller.user;
+package com.esd.controller.pagecontrollers.user;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
  *
  */
 @WebServlet("/users/edit")
+@Authentication(userGroups = {UserGroup.ALL})
 public class UserEditController extends HttpServlet {
 
     private UserService userService = UserService.getInstance();

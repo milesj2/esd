@@ -1,5 +1,7 @@
-package com.esd.controller.admin;
+package com.esd.controller.pagecontrollers.admin;
 
+import com.esd.controller.annotations.Authentication;
+import com.esd.model.data.UserGroup;
 import com.esd.model.reportgen.SystemReports;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/admin/reports")
+@Authentication(userGroups = {UserGroup.ADMIN})
 public class ReportController extends HttpServlet {
 
     @Override

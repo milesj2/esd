@@ -1,5 +1,7 @@
-package com.esd.controller.user;
+package com.esd.controller.pagecontrollers.user;
 
+import com.esd.controller.annotations.Authentication;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.service.UserService;
 
@@ -17,6 +19,7 @@ import java.util.List;
  * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
  */
 @WebServlet("/users/manage")
+@Authentication(userGroups = {UserGroup.ADMIN})
 public class UserManageController extends HttpServlet {
 
     // TODO Needs filter

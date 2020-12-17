@@ -10,5 +10,8 @@ public enum UserGroup {
     PRIVATE_PATIENT,
     DOCTOR,
     NURSE,
-    RECEPTIONIST
+    RECEPTIONIST,
+
+    //Used for user filtering
+    ALL
 }

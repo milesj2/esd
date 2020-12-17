@@ -1,5 +1,6 @@
-package com.esd.controller.user;
+package com.esd.controller.pagecontrollers.user;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -23,6 +24,7 @@ import java.util.Map;
  * page
  */
 @WebServlet("/users/search")
+@Authentication(userGroups = {UserGroup.ALL})
 public class UserSearchController extends HttpServlet {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
