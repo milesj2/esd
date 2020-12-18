@@ -19,9 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/admin/settings")
 public class SystemSettingController extends HttpServlet {
 
-	private static final String SUCCESS_MESSAGE = "Settings successfully updated.";
-	private static final String INCORRECT_VALUE_MESSAGE = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
-	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
+    private SystemSettingService sysSettingService = SystemSettingService.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -57,17 +55,28 @@ public class SystemSettingController extends HttpServlet {
 	}
 
 	private void processRequest(HttpServletRequest request) {
-		String notification = "Error updating value(s) :(";
+		String notification = "";
 
 		try {
 			boolean feeDoctorUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
 			boolean feeNurseUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
 			boolean slotTimeUpdated = sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
 
-			notification = feeDoctorUpdated && feeNurseUpdated && slotTimeUpdated
-					? SUCCESS_MESSAGE : INCORRECT_VALUE_MESSAGE;
+			if (feeDoctorUpdated || feeNurseUpdated || slotTimeUpdated) {
+                notification += "<p>Successfully updated setting(s).";
+            }
+			if (!feeDoctorUpdated) {
+				notification += "<p>Failed to update doctor fee. Please use decimals.";
+			}
+			if (!feeNurseUpdated) {
+				notification += "<p>Failed to update nurse fee. Please use decimals.";
+			}
+			if (!slotTimeUpdated) {
+				notification += "<p>Failed to update slot time. Please use integers.";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			notification = "<p>Error updating value(s) :(";
 		}
 
 		request.setAttribute("notification", notification);
