@@ -18,7 +18,7 @@
             out.print(errMsg);
         } %>
 </p>
-<a href="${pageContext.request.contextPath}/dashboard.jsp">Dashboard</a>
+<a href="${pageContext.request.contextPath}/dashboard">Dashboard</a>
 <table>
     <tr>
         <th>ID</th>

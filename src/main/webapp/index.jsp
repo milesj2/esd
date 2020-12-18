@@ -6,13 +6,13 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="css/master.css">
+    <link rel="stylesheet" href="res/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="res/css/master.css">
 </head>
 <body>
     <div class="container">
         <div class="loginFormWrapper">
-            <img src="images/logo.png" class="loginLogo" alt="" />
+            <img src="res/images/logo.png" class="loginLogo" alt="" />
             <form action="login" method="POST">
                 <input type="text" placeholder="username" id="username" name="username" val=""/><br/>
                 <input type="password" placeholder="password" id="password" name="password" val=""/><br/>

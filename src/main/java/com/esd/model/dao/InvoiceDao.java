@@ -87,8 +87,8 @@ public class InvoiceDao {
 
     public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(Date start, Date end, InvoiceStatus status,boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
-                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
-                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end))
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_STATUS_CHANGE_DATE, start))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_STATUS_CHANGE_DATE, end))
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
         return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
