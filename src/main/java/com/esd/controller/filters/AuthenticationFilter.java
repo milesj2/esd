@@ -28,11 +28,11 @@ public class AuthenticationFilter implements Filter {
 
         //this technically should never happen. if it does we'll log it and forward the user
         if(! (servletRequest instanceof HttpServletRequest) || !(servletResponse instanceof HttpServletResponse)){
-            //TODO handle error
             System.err.println("Failed to process");
             return;
         }
 
+        //use the casted objects from this point
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
@@ -49,7 +49,6 @@ public class AuthenticationFilter implements Filter {
 
                 //class missing annotation, possible security issue
                 if(annotation == null){
-                    //TODO handle error/output warning
                     System.out.println("WARNING: Servlet is missing authentication annotation and is not secure: " + mapping.getServletName());
                     filterChain.doFilter(servletRequest,servletResponse);
                     return;
@@ -62,14 +61,14 @@ public class AuthenticationFilter implements Filter {
                     // points to possible mistake in code base
                     if(annotation.userGroups().length == 0){
                         if(user != null && !annotation.loggedInUserAccess()){
-                            ((HttpServletResponse)servletResponse).sendRedirect(UrlUtils.absoluteUrl(request, "dashboard"));
+                            response.sendRedirect(UrlUtils.absoluteUrl(request, "dashboard"));
                             return;
                         }
                         filterChain.doFilter(servletRequest,servletResponse);
                         return;
                     }
                     System.err.println("ERROR: Authenitcation is marked as not required but usergroups are marked to be restricted: " + mapping.getServletName());
-                    //TODO error page?
+                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_UNAUTHORIZED));
                     return;
                 }
 
@@ -78,7 +77,6 @@ public class AuthenticationFilter implements Filter {
                 //validate session
                 if(user == null){
                     ((HttpServletResponse)servletResponse).sendRedirect(UrlUtils.absoluteUrl(request, "login"));
-                    System.err.println("Error, user is not authenticated redirecting");
                     return;
                 }
 
@@ -86,7 +84,7 @@ public class AuthenticationFilter implements Filter {
                 List<UserGroup> userGroupList = Arrays.asList(annotation.userGroups());
 
                 if(!userGroupList.contains(UserGroup.ALL) && !userGroupList.contains(user.getUserGroup())){
-                    //TODO handle invalid usergroup error
+                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_UNAUTHORIZED));
                     return;
                 }
 
@@ -99,17 +97,7 @@ public class AuthenticationFilter implements Filter {
             return;
         }
 
-        //TODO refactor this out into a seperate filter, JSP files should never be directly accessed.
-        if(mappingMatch == MappingMatch.EXTENSION){
-            if(user == null && !mapping.getMatchValue().equals("index")){
-                ((HttpServletResponse)servletResponse).sendRedirect("index.jsp");
-                System.err.println("Error, user is not authenticated redirecting");
-                return;
-            }
-            filterChain.doFilter(servletRequest,servletResponse);
-        }
-
-        //TODO this should happen if it does forward to some error page...
+        //We don't care about default mapping so we can just forward the reqyest
         System.err.println("No mapping match handled for: " + mappingMatch.name());
         filterChain.doFilter(servletRequest,servletResponse);
     }
