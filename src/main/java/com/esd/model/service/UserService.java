@@ -41,9 +41,6 @@ public class UserService {
         }
 
         throw new InvalidUserCredentialsException("Passwords don't match");
-
-
-
     }
     
     public boolean createUser(User user, UserDetails userDetails) throws SQLException, InvalidUserCredentialsException {

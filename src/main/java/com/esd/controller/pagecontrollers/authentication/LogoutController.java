@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 @WebServlet("/logout")
-@Authentication(authenticationRequired = true, userGroups = {UserGroup.ALL})
+@Authentication(userGroups = {UserGroup.ALL})
 public class LogoutController extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

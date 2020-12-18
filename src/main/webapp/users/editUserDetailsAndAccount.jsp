@@ -20,7 +20,7 @@
 <%
     if (user.getUserGroup() == UserGroup.ADMIN) { %>
         <h1>Editing User is disabled for admin accounts from this page.</h1>
-        <a href="manageUserAccount.jsp">Return to User Management</a>
+        <a href="${pageContext.request.contextPath}/users/manage">Return to User Management</a>
     <%  return;
     }
     %>
