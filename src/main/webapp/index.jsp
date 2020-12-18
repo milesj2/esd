@@ -18,26 +18,9 @@
                 <input type="password" placeholder="password" id="password" name="password" val=""/><br/>
                 <button type="submit">Login</button>
                 <span class="errMessage">
-                    <%
-                        String errMsg, errCode;
-                        errCode = request.getParameter("err");
-                        if (errCode != null){
-                            LoginErrors err = LoginErrors.valueOf(errCode);
-                            switch (err){
-                                case IncorrectCredentials:
-                                    errMsg = "Invalid username/password";
-                                    break;
-                                case AccountDisabled:
-                                    errMsg = "This account is locked. Please contact your admin to reactive the account.";
-                                    break;
-                                default:
-                                    errMsg = "Unknown Error! Please contact admin if this error continues";
-                                    break;
-                            }
-                            out.print(errMsg);
-                        }
-
-                         %>
+                    <% if (request.getAttribute("errorMessage") != null){%>
+                        <%= request.getAttribute("errorMessage") %>
+                    <% } %>
                 </span>
             </form>
             <div class="noAccount">

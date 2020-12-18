@@ -4,6 +4,7 @@ import com.esd.model.dao.UserDao;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.exceptions.InactiveAccountException;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 
@@ -29,12 +30,20 @@ public class UserService {
         return userDao.getUsers();
     }
 
-    public User validateCredentials(String username, String password) throws SQLException, InvalidUserCredentialsException {
+    public User validateCredentials(String username, String password) throws SQLException, InvalidUserCredentialsException, InactiveAccountException {
         User user = userDao.getUserByUsername(username);
+
         if(user.getPassword().equals(password)){
+            if(!user.isActive()){
+                throw new InactiveAccountException("Account inactive");
+            }
             return user;
         }
+
         throw new InvalidUserCredentialsException("Passwords don't match");
+
+
+
     }
     
     public boolean createUser(User user, UserDetails userDetails) throws SQLException, InvalidUserCredentialsException {

@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.authentication;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.UrlUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ public class LogoutController extends HttpServlet{
         try {
             HttpSession session = request.getSession(false);
             session.invalidate();
-            response.sendRedirect("login");
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "login"));
         } catch (Throwable theException) {
             theException.printStackTrace();
             throw theException;
