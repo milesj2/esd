@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebFilter(filterName = "AuthenticationFilter", urlPatterns = "/*")
+@WebFilter(filterName = "AuthenticationFilter")
 public class AuthenticationFilter implements Filter {
 
     @Override
