@@ -40,7 +40,7 @@ public class SystemSettingController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
 			response.setContentType("text/html;charset=UTF-8");
-			processRequest(request, response);
+			processRequest(request);
 			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
@@ -56,8 +56,7 @@ public class SystemSettingController extends HttpServlet {
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
 	}
 
-	private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-		response.setContentType("text/html;charset=UTF-8");
+	private void processRequest(HttpServletRequest request) {
 		String notification = "Error updating value(s) :(";
 
 		try {
