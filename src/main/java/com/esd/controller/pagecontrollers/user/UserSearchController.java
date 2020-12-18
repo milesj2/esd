@@ -59,7 +59,7 @@ public class UserSearchController extends HttpServlet {
             return;
         }
 
-        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("userDetailsSearch.jsp");
         view.forward(request, response);
     }
 
@@ -77,7 +77,7 @@ public class UserSearchController extends HttpServlet {
             // pass request with form keys and request (has post values)
             ArrayList<UserDetails> userDetailsList = userDetailsService.getUserDetailsFromFilteredRequest(args);
             request.setAttribute("table", userDetailsList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("userDetailsSearch.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);

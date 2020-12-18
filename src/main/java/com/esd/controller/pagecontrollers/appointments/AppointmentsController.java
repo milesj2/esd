@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.UrlUtils;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
@@ -44,7 +45,7 @@ public class AppointmentsController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-            response.sendRedirect("schedule.jsp"); //appointments page
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/scheduleAppointment.jsp")); //appointments page
 
     }
 
@@ -77,7 +78,7 @@ public class AppointmentsController extends HttpServlet {
                 e.printStackTrace();
             }
 
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("schedule.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/appointments/scheduleAppointment.jsp");
             requestDispatcher.forward(request, response);
     }
 }

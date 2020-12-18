@@ -39,7 +39,7 @@ public class InvoiceController extends HttpServlet {
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("invoices/view.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -79,7 +79,7 @@ public class InvoiceController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/invoices/view.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
         view.forward(request, response);
     }
 }

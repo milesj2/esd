@@ -36,7 +36,7 @@ public class ErrorController extends HttpServlet {
             homeLinkText = "Login";
             homeLink = UrlUtils.absoluteUrl(request, "login");
         }
-        
+
         switch (errorCode){
             case HttpServletResponse.SC_UNAUTHORIZED:
                 contentTitle = "Sorry! You're not allowed to see this page...";
@@ -54,7 +54,7 @@ public class ErrorController extends HttpServlet {
         request.setAttribute("homeLinkText", homeLinkText);
         request.setAttribute("homeLink", homeLink);
 
-        RequestDispatcher view = request.getRequestDispatcher("error.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/error.jsp");
         view.forward(request, response);
     }
 }

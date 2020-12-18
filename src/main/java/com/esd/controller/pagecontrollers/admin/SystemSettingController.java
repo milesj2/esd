@@ -30,6 +30,7 @@ public class SystemSettingController extends HttpServlet {
 			response.setContentType("text/html;charset=UTF-8");
 			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/systemSettings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,7 +44,7 @@ public class SystemSettingController extends HttpServlet {
 			response.setContentType("text/html;charset=UTF-8");
 			processRequest(request);
 			populateForm(request);
-			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/systemSettings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -44,7 +44,7 @@ public class AppointmentController extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            RequestDispatcher view = request.getRequestDispatcher("/appointment/view.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
             view.forward(request, response);
 
     }
@@ -78,7 +78,7 @@ public class AppointmentController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/appointment/view.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
         view.forward(request, response);
     }
 }

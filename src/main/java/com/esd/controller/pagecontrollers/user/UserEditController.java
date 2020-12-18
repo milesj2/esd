@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Miles Jarvis
- * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
+ * Use: The edit controller's use is to pass updated user details from editUserDetailsAndAccount.jsp's post data in SQL.
  *
  */
 @WebServlet("/users/edit")
@@ -51,7 +51,7 @@ public class UserEditController extends HttpServlet {
             return;
         }
         request.setAttribute("editUser", user);
-        RequestDispatcher view = request.getRequestDispatcher("/users/edit.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/users/editUserDetailsAndAccount.jsp");
         view.forward(request, response);
     }
 

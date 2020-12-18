@@ -19,7 +19,7 @@ public class ReportController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            RequestDispatcher view = req.getRequestDispatcher("reports/manage.jsp");
+            RequestDispatcher view = req.getRequestDispatcher("/admin/reports/reports.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
             e.printStackTrace();
@@ -35,7 +35,7 @@ public class ReportController extends HttpServlet {
             req.setAttribute("generatedReport", generatedReport);
             req.setAttribute("backLink", req.getHeader("referer"));
 
-            RequestDispatcher view = req.getRequestDispatcher("reports/view.jsp");
+            RequestDispatcher view = req.getRequestDispatcher("/admin/reports/viewReport.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
             e.printStackTrace();

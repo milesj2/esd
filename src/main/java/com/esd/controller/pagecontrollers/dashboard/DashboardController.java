@@ -16,7 +16,7 @@ public class DashboardController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, java.io.IOException {
-        RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/dashboard.jsp");
         view.forward(request, response);
     }
 }

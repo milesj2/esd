@@ -30,7 +30,7 @@ public class LoginController extends HttpServlet{
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
         view.forward(request, response);
 
     }
@@ -57,7 +57,7 @@ public class LoginController extends HttpServlet{
             request.setAttribute("errorMessage", LoginErrors.UNKNOWN.getMessage());
         }
 
-        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
         view.forward(request, response);
     }
 }

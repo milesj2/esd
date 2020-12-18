@@ -58,7 +58,7 @@ public class RegisterUserController extends HttpServlet {
         }
       
         request.setAttribute("notify",notify);
-        RequestDispatcher view = request.getRequestDispatcher("register.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/register.jsp");
         view.forward(request, response);
        
     }
@@ -88,7 +88,7 @@ public class RegisterUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            RequestDispatcher view = req.getRequestDispatcher("register.jsp");
+            RequestDispatcher view = req.getRequestDispatcher("/register.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
             e.printStackTrace();

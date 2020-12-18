@@ -2,6 +2,7 @@ package com.esd.controller.pagecontrollers.authentication;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.UrlUtils;
+import com.esd.model.data.UserGroup;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 @WebServlet("/logout")
-@Authentication(authenticationRequired = true)
+@Authentication(authenticationRequired = true, userGroups = {UserGroup.ALL})
 public class LogoutController extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +25,7 @@ public class LogoutController extends HttpServlet{
         try {
             HttpSession session = request.getSession(false);
             session.invalidate();
-            response.sendRedirect(UrlUtils.absoluteUrl(request, "login"));
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/login"));
         } catch (Throwable theException) {
             theException.printStackTrace();
             throw theException;
