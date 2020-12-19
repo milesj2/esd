@@ -21,10 +21,9 @@
         <br>
         <a href='invoices/search'>Search Invoices</a>
         <br>
-        <a href='admin/settings'>Manage System Settings</a>
-        <br>
         <a href='appointments/schedule'>Appointments</a>
+        <br>
+        <a href='admin/settings'>Manage System Settings</a>
         <%}%>
-    </div>
 </body>
 </html>

@@ -8,7 +8,7 @@
     <title>Appointments</title>
 </head>
 <body>
-<h2>Appointment page</h2>
+<h2>Appointments</h2>
 <h4> Search below</h4>
 <div>
     <form method="post" action="${pageContext.request.contextPath}/appointments/schedule">

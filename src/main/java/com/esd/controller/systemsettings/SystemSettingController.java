@@ -14,65 +14,69 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Original Author: Sam Barba
- * Use: The system settings controller use is to update the site settings as per a qualified user's request. Settings
- * are persisted via a conf file.
- *
+ * Use: The system settings controller use is to update the site settings as per a qualified user's request.
  */
 @WebServlet("/admin/settings")
 public class SystemSettingController extends HttpServlet {
 
-	private SystemSettingService sysSettingService = SystemSettingService.getInstance();
-	private final String SUCCESS_MESSAGE = "Settings successfully updated.";
-	private final String INCORRECT_VALUE_MESSAGE = "Invalid value entered. Enter decimals for fees, or integer for slot time.";
+    private SystemSettingService sysSettingService = SystemSettingService.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
 			response.setContentType("text/html;charset=UTF-8");
-			populateForm(request, response);
+			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
 		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			processRequest(request, response);
-			populateForm(request, response);
+			response.setContentType("text/html;charset=UTF-8");
+			processRequest(request);
+			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
 		}
 	}
 
-	private void populateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InvalidIdValueException, SQLException {
+	private void populateForm(HttpServletRequest request) throws InvalidIdValueException, SQLException {
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_FEE_NURSE, sysSettingService.getDoubleSettingValueByKey(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
 			request.setAttribute(SystemSettingService.SYSTEMSETTING_SLOT_TIME, sysSettingService.getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
 	}
 
-	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		response.setContentType("text/html;charset=UTF-8");
+	private void processRequest(HttpServletRequest request) {
 		String notification = "";
 
 		try {
-			if (sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR))
-					|| sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE))
-					|| sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME))) {
-				notification = SUCCESS_MESSAGE;
-			} else {
-				notification = INCORRECT_VALUE_MESSAGE;
+			boolean feeDoctorUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_DOCTOR));
+			boolean feeNurseUpdated = sysSettingService.updateSystemSettingDouble(SystemSettingService.SYSTEMSETTING_FEE_NURSE, request.getParameter(SystemSettingService.SYSTEMSETTING_FEE_NURSE));
+			boolean slotTimeUpdated = sysSettingService.updateSystemSettingInteger(SystemSettingService.SYSTEMSETTING_SLOT_TIME, request.getParameter(SystemSettingService.SYSTEMSETTING_SLOT_TIME));
+
+			if (feeDoctorUpdated || feeNurseUpdated || slotTimeUpdated) {
+                notification += "<p>Successfully updated setting(s).";
+            }
+			if (!feeDoctorUpdated) {
+				notification += "<p>Failed to update doctor fee. Please use decimals.";
+			}
+			if (!feeNurseUpdated) {
+				notification += "<p>Failed to update nurse fee. Please use decimals.";
+			}
+			if (!slotTimeUpdated) {
+				notification += "<p>Failed to update slot time. Please use integers.";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			notification = "<p>Error updating value(s) :(";
 		}
 
 		request.setAttribute("notification", notification);

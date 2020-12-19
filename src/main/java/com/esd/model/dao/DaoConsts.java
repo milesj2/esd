@@ -77,7 +77,7 @@ public class DaoConsts {
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
 
     public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";
-    public final static String SYSTEMSETTING_SETTINGVALUE = "settingValue";
+    public final static String SYSTEMSETTING_SETTINGVALUE = "settingVal";
 
 }
 
