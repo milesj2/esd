@@ -5,8 +5,13 @@
     <welcome-file-list>
         <welcome-file>login</welcome-file>
     </welcome-file-list>
-    <error-page>
-        <error-code>401</error-code>
-        <location>/errors/401.html</location>
-    </error-page>
+
+    <filter-mapping>
+        <filter-name>JSPFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

@@ -1,5 +1,7 @@
-package com.esd.controller.systemsettings;
+package com.esd.controller.pagecontrollers.admin;
 
+import com.esd.controller.annotations.Authentication;
+import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemSettingService;
 
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * Use: The system settings controller use is to update the site settings as per a qualified user's request.
  */
 @WebServlet("/admin/settings")
+@Authentication(userGroups = {UserGroup.ADMIN})
 public class SystemSettingController extends HttpServlet {
 
     private SystemSettingService sysSettingService = SystemSettingService.getInstance();
@@ -27,6 +30,7 @@ public class SystemSettingController extends HttpServlet {
 			response.setContentType("text/html;charset=UTF-8");
 			populateForm(request);
 			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/systemSettings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,7 +44,7 @@ public class SystemSettingController extends HttpServlet {
 			response.setContentType("text/html;charset=UTF-8");
 			processRequest(request);
 			populateForm(request);
-			RequestDispatcher view = request.getRequestDispatcher("/admin/settings.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/admin/systemSettings.jsp");
 			view.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

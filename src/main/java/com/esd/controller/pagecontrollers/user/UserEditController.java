@@ -1,5 +1,6 @@
-package com.esd.controller.user;
+package com.esd.controller.pagecontrollers.user;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -20,10 +21,11 @@ import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Miles Jarvis
- * Use: The edit controller's use is to pass updated user details from edit.jsp's post data in SQL.
+ * Use: The edit controller's use is to pass updated user details from editUserDetailsAndAccount.jsp's post data in SQL.
  *
  */
 @WebServlet("/users/edit")
+@Authentication(userGroups = {UserGroup.ALL})
 public class UserEditController extends HttpServlet {
 
     private UserService userService = UserService.getInstance();
@@ -49,7 +51,7 @@ public class UserEditController extends HttpServlet {
             return;
         }
         request.setAttribute("editUser", user);
-        RequestDispatcher view = request.getRequestDispatcher("/users/edit.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/users/editUserDetailsAndAccount.jsp");
         view.forward(request, response);
     }
 

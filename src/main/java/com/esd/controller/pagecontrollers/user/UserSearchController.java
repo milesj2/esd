@@ -1,5 +1,6 @@
-package com.esd.controller.user;
+package com.esd.controller.pagecontrollers.user;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -23,6 +24,7 @@ import java.util.Map;
  * page
  */
 @WebServlet("/users/search")
+@Authentication(userGroups = {UserGroup.ALL})
 public class UserSearchController extends HttpServlet {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
@@ -57,7 +59,7 @@ public class UserSearchController extends HttpServlet {
             return;
         }
 
-        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("userDetailsSearch.jsp");
         view.forward(request, response);
     }
 
@@ -75,7 +77,7 @@ public class UserSearchController extends HttpServlet {
             // pass request with form keys and request (has post values)
             ArrayList<UserDetails> userDetailsList = userDetailsService.getUserDetailsFromFilteredRequest(args);
             request.setAttribute("table", userDetailsList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("userDetailsSearch.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);

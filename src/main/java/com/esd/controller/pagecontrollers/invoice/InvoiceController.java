@@ -1,8 +1,10 @@
-package com.esd.controller.invoice;
+package com.esd.controller.pagecontrollers.invoice;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.InvoiceOptions;
 import com.esd.model.data.InvoiceStatus;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.service.InvoiceService;
 
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
  */
 
 @WebServlet("/invoices/view")
+@Authentication(userGroups = {UserGroup.ALL})
 public class InvoiceController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
@@ -36,7 +39,7 @@ public class InvoiceController extends HttpServlet {
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("invoices/view.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -76,7 +79,7 @@ public class InvoiceController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/invoices/view.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
         view.forward(request, response);
     }
 }

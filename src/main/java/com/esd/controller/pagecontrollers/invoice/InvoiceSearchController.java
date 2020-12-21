@@ -1,5 +1,6 @@
-package com.esd.controller.invoice;
+package com.esd.controller.pagecontrollers.invoice;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
@@ -20,6 +21,7 @@ import java.util.*;
  * user search page
  */
 @WebServlet("/invoices/search")
+@Authentication(userGroups = {UserGroup.ALL})
 public class InvoiceSearchController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
@@ -44,18 +46,7 @@ public class InvoiceSearchController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
-
-        // Validate user is logged in
-        User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
-        if(currentUser == null){
-            response.sendRedirect("login");
-            return;
-        } else if (currentUser.getUserGroup() != UserGroup.ADMIN){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/searchInvoices.jsp");
         view.forward(request, response);
     }
 
@@ -73,7 +64,7 @@ public class InvoiceSearchController extends HttpServlet {
             List<Invoice> invoiceList = invoiceService.getInvoiceFromFilteredRequest(args);
 
             request.setAttribute("table", invoiceList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("search.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/searchInvoices.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);

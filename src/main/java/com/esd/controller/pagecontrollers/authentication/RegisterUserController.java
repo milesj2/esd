@@ -1,5 +1,6 @@
-package com.esd.controller.authentication;
+package com.esd.controller.pagecontrollers.authentication;
 
+import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * Use: the register user search controller redirects to the sign up page
  */
 @WebServlet("/register")
+@Authentication(loggedInUserAccess=false, authenticationRequired = false)
 public class RegisterUserController extends HttpServlet {
     
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -56,7 +58,7 @@ public class RegisterUserController extends HttpServlet {
         }
       
         request.setAttribute("notify",notify);
-        RequestDispatcher view = request.getRequestDispatcher("register.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/register.jsp");
         view.forward(request, response);
        
     }
@@ -86,7 +88,7 @@ public class RegisterUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            RequestDispatcher view = req.getRequestDispatcher("register.jsp");
+            RequestDispatcher view = req.getRequestDispatcher("/register.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
             e.printStackTrace();

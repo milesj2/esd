@@ -1,11 +1,12 @@
-package com.esd.controller.authentication;
+package com.esd.controller.pagecontrollers.authentication;
 
-import com.esd.model.data.UserGroup;
+import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.UrlUtils;
 import com.esd.model.data.persisted.User;
+import com.esd.model.exceptions.InactiveAccountException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import com.esd.model.service.UserService;
 import com.esd.views.LoginErrors;
-import com.esd.views.ViewsConsts;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,12 +24,13 @@ import java.sql.SQLException;
  *
  */
 @WebServlet("/login")
+@Authentication(loggedInUserAccess=false, authenticationRequired = false)
 public class LoginController extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
         view.forward(request, response);
 
     }
@@ -39,20 +41,23 @@ public class LoginController extends HttpServlet{
             User user = UserService.getInstance()
                     .validateCredentials(request.getParameter("username"), request.getParameter("password"));
 
-            if (!user.isActive()){
-                response.sendRedirect("login?err=" + LoginErrors.AccountDisabled);
-                return;
-            }
             //create http session
             HttpSession session = request.getSession(true);
             session.setAttribute("currentSessionUser",user);
-            response.sendRedirect("dashboard"); //logged-in page
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            response.sendRedirect("login?err=" + LoginErrors.Unknown);
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "dashboard")); //logged-in page
+            return;
         } catch (InvalidUserCredentialsException e){
-            System.out.println(e.getMessage());
-            response.sendRedirect("login?err=" + LoginErrors.IncorrectCredentials);
+            e.printStackTrace();
+            request.setAttribute("errorMessage", LoginErrors.INCORRECT_CREDENTIALS.getMessage());
+        } catch (InactiveAccountException e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", LoginErrors.ACCOUNT_DISABLED.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", LoginErrors.UNKNOWN.getMessage());
         }
+
+        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
+        view.forward(request, response);
     }
 }
