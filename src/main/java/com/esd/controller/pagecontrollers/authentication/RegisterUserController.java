@@ -3,15 +3,14 @@ package com.esd.controller.pagecontrollers.authentication;
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
-import javax.servlet.annotation.WebServlet;
-
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.UserService;
 
+import javax.servlet.annotation.WebServlet;
+import org.joda.time.LocalDate;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,9 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/register")
 @Authentication(loggedInUserAccess=false, authenticationRequired = false)
 public class RegisterUserController extends HttpServlet {
-    
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
 
     private static final String REGISTER_SUCCESS = "Successfully Registered! Please Sign in with the link below.";
     private static final String USER_EXISTS_ERROR = "Error: Username already exists, please choose another username or sign in with the existing username";
@@ -75,7 +71,7 @@ public class RegisterUserController extends HttpServlet {
         userDetails.setFirstName(request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME));
         userDetails.setLastName(request.getParameter(DaoConsts.USERDETAILS_LASTNAME));
 
-        userDetails.setDateOfBirth(dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB)));
+        userDetails.setDateOfBirth(LocalDate.parse(request.getParameter(DaoConsts.USERDETAILS_DOB)));
         userDetails.setAddressLine1(request.getParameter(DaoConsts.USERDETAILS_ADDRESS1));
         userDetails.setAddressLine2(request.getParameter(DaoConsts.USERDETAILS_ADDRESS2));
         userDetails.setAddressLine3(request.getParameter(DaoConsts.USERDETAILS_ADDRESS3));

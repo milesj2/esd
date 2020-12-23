@@ -7,13 +7,10 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.joda.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,7 +55,7 @@ public class UserDetailsDao {
                 result.getString(DaoConsts.USERDETAILS_ADDRESS3),
                 result.getString(DaoConsts.USERDETAILS_TOWN),
                 result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                result.getDate(DaoConsts.USERDETAILS_DOB)
+                LocalDate.parse(result.getString(DaoConsts.USERDETAILS_DOB))
         );
     }
 
@@ -97,7 +94,7 @@ public class UserDetailsDao {
         statement.setString(5, userDetails.getAddressLine3());
         statement.setString(6, userDetails.getTown());
         statement.setString(7, userDetails.getPostCode());
-        statement.setDate(8, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+        statement.setDate(8, Date.valueOf(userDetails.getDateOfBirth().toString()));
         statement.setInt(9, userDetails.getUserId());
 
         int result = statement.executeUpdate();
@@ -146,7 +143,7 @@ public class UserDetailsDao {
             statement.setString(6, userDetails.getAddressLine3());
             statement.setString(7, userDetails.getTown());
             statement.setString(8, userDetails.getPostCode());
-            statement.setDate(9, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+            statement.setDate(9, Date.valueOf(userDetails.getDateOfBirth().toString()));
 
             statement.executeUpdate();
 

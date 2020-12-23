@@ -1,32 +1,20 @@
 package com.esd.model.reportgen.reports;
 
-import com.esd.model.data.UserGroup;
 import com.esd.model.reportgen.Report;
 import com.esd.model.reportgen.ReportType;
 import com.esd.model.reportgen.ReportUtils;
 import com.esd.model.service.reports.SystemOverViewReportService;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import org.joda.time.LocalDate;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SystemOverviewReport implements Report {
 
     private static final String REPORT_NAME = "MAIN_REPORT";
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     private static final String ERROR_DIV = "<div class=\"report\" style=\"color: red;\">Failed to process report, check input data, if problmen persists contact admin</div>";
     private static String reportTemplate;
@@ -52,12 +40,12 @@ public class SystemOverviewReport implements Report {
     @Override
     public String generateReport(Map<String, String[]> parameterMap) {
 
-        Date startDate;
-        Date endDate;
+        LocalDate startDate;
+        LocalDate endDate;
         try {
             
-            startDate = dateFormat.parse(parameterMap.get("startDate")[0]);
-            endDate = dateFormat.parse(parameterMap.get("endDate")[0]);
+            startDate = LocalDate.parse(parameterMap.get("startDate")[0]);
+            endDate = LocalDate.parse(parameterMap.get("endDate")[0]);
         }catch (Exception e){
             return ERROR_DIV;
         }
@@ -71,7 +59,7 @@ public class SystemOverviewReport implements Report {
         }
 
         String report = reportTemplate;
-        String dateHeader = String.format("Date: %s TO %s", dateFormat.format(startDate), dateFormat.format(endDate));
+        String dateHeader = String.format("Date: %s TO %s", startDate, endDate);
 
 
         report = report.replace("$HEADER",

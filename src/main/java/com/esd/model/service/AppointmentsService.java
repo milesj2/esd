@@ -4,6 +4,7 @@ import com.esd.model.dao.AppointmentDao;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.exceptions.InvalidIdValueException;
 
+import org.joda.time.LocalDate;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class AppointmentsService {
 
     private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
         //check if there are conflicting appointments
-        // todo update to include time and working day check
+        // todo working day logic
         List<Appointment> conflictingApts = appointmentDao.getAppointmentsInPeriodWithStatus(
                 appointment.getAppointmentDate(),
                 appointment.getAppointmentDate(),
@@ -48,7 +49,7 @@ public class AppointmentsService {
         return appointmentDao.getAppointmentById(AppointmentId);
     }
 
-    public List<Appointment> getAppointmentsInRange(Date fromDate, Date toDate, Optional<Map<String, Object>> args) throws SQLException {
+    public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 

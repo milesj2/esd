@@ -8,6 +8,8 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.service.AppointmentsService;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Trent meier
@@ -26,8 +27,6 @@ import java.text.SimpleDateFormat;
 @Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentController extends HttpServlet {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
 
     @Override
@@ -46,7 +45,6 @@ public class AppointmentController extends HttpServlet {
             }
             RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
             view.forward(request, response);
-
     }
 
     @Override
@@ -57,8 +55,8 @@ public class AppointmentController extends HttpServlet {
 
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-            appointment.setAppointmentDate(dateFormat.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
-            appointment.setAppointmentTime(dateFormat.parse("14:15:00")); //todo figure out time format
+            appointment.setAppointmentDate(LocalDate.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
+            appointment.setAppointmentTime(LocalTime.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME)));
             appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
             appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
             appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));

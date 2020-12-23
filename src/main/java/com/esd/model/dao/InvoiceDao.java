@@ -6,10 +6,10 @@ import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.exceptions.InvalidIdValueException;
-
+import org.joda.time.LocalDate;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
-import java.util.Date;
 
 /**
  * Original Author: Trent Meier
@@ -38,8 +38,8 @@ public class InvoiceDao {
     private PreparedStatement setInsertUpdateStatement(Invoice invoice, String statementString) throws SQLException {
         Connection con = connectionManager.getConnection();
         PreparedStatement statement = con.prepareStatement(statementString);
-        statement.setDate(1, (java.sql.Date) invoice.getInvoiceDate());
-        statement.setTime(2, (Time) invoice.getInvoiceTime());
+        statement.setDate(1, Date.valueOf(invoice.getInvoiceDate().toString()));
+        statement.setTime(2, Time.valueOf(invoice.getInvoiceTime().toString()));
         statement.setString(3, invoice.getInvoiceStatus().toString());
         statement.setString(4, invoice.getInvoiceStatusChangeDate().toString());
         statement.setInt(5, invoice.getEmployeeId());
@@ -74,7 +74,7 @@ public class InvoiceDao {
         return invoiceItem;
     }
 
-    public List<Invoice> getAllInvoicesWithStatus(Date start, Date end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
+    public List<Invoice> getAllInvoicesWithStatus(LocalDate start, LocalDate end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
                 .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_DATE, end));
@@ -85,7 +85,7 @@ public class InvoiceDao {
         return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
     }
 
-    public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(Date start, Date end, InvoiceStatus status,boolean loadItems) throws SQLException {
+    public List<Invoice> getInvoiceWithStatusChangeToThisPeriod(LocalDate start, LocalDate end, InvoiceStatus status,boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_STATUS_CHANGE_DATE, start))
                 .withRestriction(Restrictions.lessThanInclusive(DaoConsts.INVOICE_STATUS_CHANGE_DATE, end))
