@@ -30,8 +30,8 @@ public class AppointmentController extends HttpServlet {
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
 
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
             try {
@@ -49,7 +49,8 @@ public class AppointmentController extends HttpServlet {
 
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
             int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));

@@ -32,7 +32,7 @@ public class RegisterUserController extends HttpServlet {
     private static final String REGISTER_SUCCESS = "Successfully Registered! Please Sign in with the link below.";
     private static final String USER_EXISTS_ERROR = "Error: Username already exists, please choose another username or sign in with the existing username";
     private static final String REGISTER_FAILURE = "Error: User creation failed, please try again. If problem persists contact admin.";
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -60,7 +60,6 @@ public class RegisterUserController extends HttpServlet {
         request.setAttribute("notify",notify);
         RequestDispatcher view = request.getRequestDispatcher("/register.jsp");
         view.forward(request, response);
-       
     }
 
     private User createUserFromRequest(HttpServletRequest request) throws ParseException {

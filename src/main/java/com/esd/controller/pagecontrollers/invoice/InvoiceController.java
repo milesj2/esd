@@ -31,7 +31,8 @@ public class InvoiceController extends HttpServlet {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if(!request.getParameter(DaoConsts.ID).isEmpty()){
             try{
                 Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
@@ -44,7 +45,8 @@ public class InvoiceController extends HttpServlet {
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
 

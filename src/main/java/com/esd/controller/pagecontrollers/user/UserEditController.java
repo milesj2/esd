@@ -33,8 +33,9 @@ public class UserEditController extends HttpServlet {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
 
-    // Needs filter
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    // todo filter as appropriate
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         User user;
@@ -55,7 +56,8 @@ public class UserEditController extends HttpServlet {
         view.forward(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         boolean active = false;

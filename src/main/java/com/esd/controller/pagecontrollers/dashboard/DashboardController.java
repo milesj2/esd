@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 @Authentication(userGroups = {UserGroup.ALL})
 public class DashboardController extends HttpServlet {
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, java.io.IOException {
         RequestDispatcher view = request.getRequestDispatcher("/dashboard.jsp");
         view.forward(request, response);

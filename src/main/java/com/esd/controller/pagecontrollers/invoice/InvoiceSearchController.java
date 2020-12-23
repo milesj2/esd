@@ -44,13 +44,15 @@ public class InvoiceSearchController extends HttpServlet {
         return false;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         RequestDispatcher view = request.getRequestDispatcher("/invoices/searchInvoices.jsp");
         view.forward(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         Map<String, Object> args =  new HashMap<>();
