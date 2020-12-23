@@ -23,7 +23,7 @@ import java.sql.SQLException;
  * Use: the appointment controller provides appointment functionality for a user
  */
 
-@WebServlet("/appointments/view")
+@WebServlet("/appointments/viewAppointment")
 @Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentController extends HttpServlet {
 
@@ -58,11 +58,11 @@ public class AppointmentController extends HttpServlet {
             appointment.setAppointmentDate(LocalDate.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
             appointment.setAppointmentTime(LocalTime.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME)));
             appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
-            appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
+            //appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));//todo required?
             appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
             appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
 
-            if(request.getParameter("option") == AppointmentOptions.UPDATE.toString()) {
+            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
                 appointmentsService.updateAppointment(appointment);
             } else {
                 appointmentsService.createNewAppointment(appointment);
@@ -74,6 +74,7 @@ public class AppointmentController extends HttpServlet {
 
         } catch (Exception e){
             e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         // dispatch

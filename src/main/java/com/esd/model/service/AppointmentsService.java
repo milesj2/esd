@@ -27,12 +27,20 @@ public class AppointmentsService {
 
     private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
         //check if there are conflicting appointments
-        // todo working day logic
         List<Appointment> conflictingApts = appointmentDao.getAppointmentsInPeriodWithStatus(
                 appointment.getAppointmentDate(),
                 appointment.getAppointmentDate(),
                 Optional.empty());
         if(conflictingApts.size() > 0){
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkIfAptIsWorkingDay(Appointment appointment) {
+        //joda time day of week 6 or 7 is weekend (non working day)
+        int dayOfWeek = appointment.getAppointmentDate().getDayOfWeek();
+        if(dayOfWeek == 6 || dayOfWeek == 7){
             return false;
         }
         return true;
@@ -57,12 +65,18 @@ public class AppointmentsService {
         if(!checkIfAptConflicts(appointment)){
             throw new InvalidIdValueException("Appointment conflicts with existing appointment");
         }
+        if(!checkIfAptIsWorkingDay(appointment)){
+            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
+        }
         appointmentDao.createAppointment(appointment);
     }
 
     public void updateAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
         if(!checkIfAptConflicts(appointment)){
             throw new InvalidIdValueException("Appointment conflicts with existing appointment");
+        }
+        if(!checkIfAptIsWorkingDay(appointment)){
+            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
         }
         appointmentDao.updateAppointment(appointment);
     }

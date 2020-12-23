@@ -50,7 +50,7 @@
                 <td><%=appointment.getSlots()%></td>
                 <td><%=appointment.getStatus()%></td>
                 <td><%=appointment.getPatientId()%></td>
-                <td><a href='appointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Amend Appointment</a></td>
+                <td><a href='viewAppointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Amend Appointment</a></td>
             </tr>
             <% }
             } catch(Exception e){
