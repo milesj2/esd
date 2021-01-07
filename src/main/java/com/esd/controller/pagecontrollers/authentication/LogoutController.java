@@ -20,7 +20,8 @@ import javax.servlet.http.HttpSession;
 @Authentication(userGroups = {UserGroup.ALL})
 public class LogoutController extends HttpServlet{
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
             HttpSession session = request.getSession(false);

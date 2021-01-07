@@ -1,19 +1,18 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.utils.UrlUtils;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.service.AppointmentsService;
 
+import org.joda.time.LocalDate;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -24,11 +23,9 @@ import java.util.*;
 
 @WebServlet("/appointments/schedule")
 @Authentication(userGroups = {UserGroup.ALL})
-public class AppointmentsController extends HttpServlet {
+public class AppointmentsSearchController extends HttpServlet {
 
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private static final ArrayList<String> AppointmentKeys = new ArrayList<String>(Arrays.asList(
             DaoConsts.APPOINTMENT_SLOTS,
             DaoConsts.APPOINTMENT_STATUS,
@@ -42,14 +39,16 @@ public class AppointmentsController extends HttpServlet {
         return false;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-            response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/scheduleAppointment.jsp")); //appointments page
-
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/appointments/scheduleAppointment.jsp");
+        requestDispatcher.forward(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
             Map<String, Object> args =  new HashMap<>();
@@ -60,16 +59,16 @@ public class AppointmentsController extends HttpServlet {
             }
 
             try {
-                // default of today todo get today
-                Date fromDate = dateFormat.parse("2020-11-01");
-                Date toDate = dateFormat.parse("2020-12-31");
+                // default of today todo filter for user
+                LocalDate fromDate = LocalDate.now();
+                LocalDate toDate = LocalDate.now();
 
                 if(checkRequestContains(request, "fromDate")) {
-                    fromDate = dateFormat.parse(request.getParameter("fromDate"));
+                    fromDate = LocalDate.parse(request.getParameter("fromDate"));
                 }
 
                 if(checkRequestContains(request, "toDate")) {
-                    toDate = dateFormat.parse(request.getParameter("toDate"));
+                    toDate = LocalDate.parse(request.getParameter("toDate"));
                 }
 
                 List<Appointment> appointmentList = appointmentsService.getAppointmentsInRange(fromDate, toDate, Optional.ofNullable(args));

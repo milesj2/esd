@@ -27,15 +27,16 @@ import java.sql.SQLException;
 @Authentication(loggedInUserAccess=false, authenticationRequired = false)
 public class LoginController extends HttpServlet{
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
         view.forward(request, response);
-
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
             User user = UserService.getInstance()

@@ -1,12 +1,12 @@
 package com.esd.model.service.reports;
 
 import com.esd.model.dao.AppointmentDao;
-import com.esd.model.dao.DaoConsts;
 import com.esd.model.dao.InvoiceDao;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
+import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -41,7 +41,7 @@ public class SystemOverViewReportService {
         return instance;
     }
 
-    public HashMap<String, String> getReportData(Date start, Date end) throws SQLException {
+    public HashMap<String, String> getReportData(LocalDate start, LocalDate end) throws SQLException {
         int invoicesCreated = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.empty(), true).size();
         int invoicesUnpaid = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.of(InvoiceStatus.UNPAID), true).size();
         int invoicesOverDue = invoiceDao.getAllInvoicesWithStatus(start, end, Optional.of(InvoiceStatus.OVERDUE), true).size();

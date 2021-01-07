@@ -1,8 +1,8 @@
 package com.esd.model.data.persisted;
 
 import com.esd.model.data.AppointmentStatus;
-
-import java.util.Date;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 /**
  * Original Author: Jordan Hellier
@@ -13,8 +13,8 @@ public class Appointment {
     private int patientId;
     private int employeeId;
     private int slots;
-    private Date appointmentDate;
-    private Date appointmentTime; //Could use the Joda time libary which is a little nicer....
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
     private AppointmentStatus status;
 
     public AppointmentStatus getStatus() {
@@ -57,19 +57,19 @@ public class Appointment {
         this.slots = slots;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) {
+    public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public Date getAppointmentTime() {
+    public LocalTime getAppointmentTime() {
         return appointmentTime;
     }
 
-    public void setAppointmentTime(Date appointmentTime) {
+    public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
 }

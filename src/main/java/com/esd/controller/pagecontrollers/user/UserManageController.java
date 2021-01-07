@@ -23,7 +23,8 @@ import java.util.List;
 public class UserManageController extends HttpServlet {
 
     // TODO Needs filter
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         List<User> users;

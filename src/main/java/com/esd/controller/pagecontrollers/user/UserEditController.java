@@ -9,6 +9,7 @@ import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.UserDetailsService;
 import com.esd.model.service.UserService;
 
+import org.joda.time.LocalDate;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Miles Jarvis
@@ -30,11 +29,10 @@ public class UserEditController extends HttpServlet {
 
     private UserService userService = UserService.getInstance();
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
 
-    // Needs filter
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    // todo filter as appropriate
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         User user;
@@ -55,7 +53,8 @@ public class UserEditController extends HttpServlet {
         view.forward(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         boolean active = false;
@@ -82,9 +81,9 @@ public class UserEditController extends HttpServlet {
                     request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
                     request.getParameter(DaoConsts.USERDETAILS_TOWN),
                     request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
-                    dateFormatter.parse(request.getParameter(DaoConsts.USERDETAILS_DOB))
+                    LocalDate.parse(request.getParameter(DaoConsts.USERDETAILS_DOB))
             );
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }

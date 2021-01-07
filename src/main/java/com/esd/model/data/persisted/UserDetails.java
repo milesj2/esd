@@ -1,8 +1,6 @@
 package com.esd.model.data.persisted;
 
-import com.esd.model.data.UserGroup;
-
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 /**
  * Original Author: Jordan Hellier
@@ -22,13 +20,13 @@ public class UserDetails {
     private String town;
     private String postCode;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     public UserDetails() {
     }
 
     public UserDetails (int id, int userId, String firstName, String lastName, String addressLine1, String addressLine2,
-                        String addressLine3, String town, String postCode, Date dateOfBirth) {
+                        String addressLine3, String town, String postCode, LocalDate dateOfBirth) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -125,11 +123,11 @@ public class UserDetails {
         this.postCode = postCode;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 }

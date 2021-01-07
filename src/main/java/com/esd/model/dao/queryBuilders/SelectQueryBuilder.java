@@ -15,9 +15,6 @@ public class SelectQueryBuilder{
 
     List<Restriction> restrictions = new ArrayList<>();
     List<Join> joins = new ArrayList<>();
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-
 
     public SelectQueryBuilder(String table) {
         this.table = table;

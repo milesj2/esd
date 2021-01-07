@@ -46,7 +46,8 @@ public class UserSearchController extends HttpServlet {
         return false;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         // Validate user is logged in
@@ -64,7 +65,8 @@ public class UserSearchController extends HttpServlet {
     }
 
     //returns search form data
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         Map<String, Object> args =  new HashMap<>();
