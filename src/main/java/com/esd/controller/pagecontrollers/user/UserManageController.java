@@ -25,7 +25,12 @@ public class UserManageController extends HttpServlet {
     // TODO Needs filter
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
+            throws ServletException, java.io.IOException
+    {
+        request.setAttribute("pageTitle", "Manage Users");
+        String previous = (String) request.getAttribute("currentPage");
+        request.setAttribute("previousPage", "/dashboard");
+        request.setAttribute("currentPage", "/users/manage");
 
         List<User> users;
 

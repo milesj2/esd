@@ -16,7 +16,12 @@ public class DashboardController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, java.io.IOException {
+        throws ServletException, java.io.IOException
+    {
+        request.setAttribute("pageTitle", "Welcome");
+        request.setAttribute("previousPage", request.getAttribute("currentPage"));
+        request.setAttribute("currentPage", "dashboard");
+
         RequestDispatcher view = request.getRequestDispatcher("/dashboard.jsp");
         view.forward(request, response);
     }

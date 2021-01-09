@@ -48,7 +48,11 @@ public class UserSearchController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
+            throws ServletException, java.io.IOException
+    {
+        request.setAttribute("pageTitle", "Manage Users");
+        request.setAttribute("previousPage", request.getAttribute("currentPage"));
+        request.setAttribute("currentPage", "/users/manage");
 
         // Validate user is logged in
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));
