@@ -4,11 +4,156 @@
     --background-color:#0077C6;
     --accent-color-dark:#004472;
     --accent-color-light:#4DB8FF;
+    --logo-height:100px;
+    --nav-width:250px;
+    --font-size:15px;
 }
 
+/*
+#############################################
+############ GENERIC ########################
+#############################################
+*/
+
 body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
     background: var(--background-color);
+    overflow: hidden;
+    font-family: "Helvetica Neue", sans-serif;
 }
+
+
+.root_container {
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.main_container {
+    height: 100%;
+}
+
+
+/*
+#############################################
+############ TITLE BAR ######################
+#############################################
+*/
+
+.title_bar{
+    margin: 0;
+    padding: 10px;
+    height: calc(var(--logo-height) - 2*10px);
+    width: calc(100vw - 250px);
+    background: #DDDDDD;
+    text-align: center;
+}
+
+.title_bar h1 {
+
+}
+
+/*
+#############################################
+############ SIDE BAR #######################
+#############################################
+*/
+
+.sidebar_container {
+    margin: 0;
+    height: 100%;
+    background: #AAAAAA;
+
+}
+
+.sidebar_container .logo {
+    width: var(--nav-width);
+    height: var(--logo-height);
+}
+
+.sidebar_container nav {
+    padding: 10px;
+    display: block;
+}
+
+.sidebar_container nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar_container nav a {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar_container nav img {
+    width: var(--font-size);
+    margin-right: 2px;
+}
+
+.sidebar_container nav .dropdown_list {
+    display: none;
+    margin-left: 30px;
+}
+
+.sidebar_container nav .show {
+    display: block;
+}
+
+/*
+#############################################
+############ Main ###########################
+#############################################
+*/
+
+main {
+    margin: 0;
+    padding: 20px;
+    height: calc(100vh - var(--logo-height));
+    width: calc(100vw - var(--nav-width) - 2*10px);
+    background: #eeeeee;
+}
+
+main .widgets {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+}
+
+main .widgets .row {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    min-height: 300px;
+
+}
+
+main .widgets .half-widget {
+    width: 50%;
+    border: 1px solid blue;
+}
+
+main .widgets .whole-widget {
+    width: 100%;
+    border: 1px solid blue;
+}
+
+/*
+#############################################
+############ LOGIN ##########################
+#############################################
+*/
 
 .loginFormWrapper {
     font: 16px/2em Lato, serif;
@@ -70,4 +215,44 @@ body{
 }
 .form-links a {
     color: #fff;
+}
+
+/*
+#############################################
+############ CONTROLS #######################
+#############################################
+*/
+
+.search_table {
+    margin: 20px;
+    width: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.search_table  td, .search_table  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.search_table  tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+.search_table  tr:hover {
+    background-color: #ddd;
+}
+
+.search_table  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+    width: 1000px;
+}
+
+.search_table img {
+    height: var(--font-size);
+    margin-left: 5px;
 }
