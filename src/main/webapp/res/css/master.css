@@ -47,7 +47,8 @@ body{
     padding: 10px;
     height: calc(var(--logo-height) - 2*10px);
     width: calc(100vw - 250px);
-    background: #DDDDDD;
+    /*background: #DDDDDD; */
+    background: var(--background-color);
     text-align: center;
 }
 
@@ -64,7 +65,8 @@ body{
 .sidebar_container {
     margin: 0;
     height: 100%;
-    background: #AAAAAA;
+    /*background: #AAAAAA; */
+    background: var(--background-color);
 
 }
 
@@ -223,6 +225,8 @@ main .widgets .whole-widget {
 #############################################
 */
 
+/****** Search tables ******/
+
 .search_table {
     margin: 20px;
     width: 90%;
@@ -255,4 +259,25 @@ main .widgets .whole-widget {
 .search_table img {
     height: var(--font-size);
     margin-left: 5px;
+}
+
+/****** Forms ******/
+
+.input_form * {
+    box-sizing: border-box;
+}
+
+.input_form label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+.input_form input[type=submit] {
+    background-color: var(--background-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
 }

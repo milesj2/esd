@@ -4,27 +4,42 @@
 <html>
 <head>
     <title>Generate Report</title>
+    <link rel="stylesheet" href="../res/css/master.css">
+    <script src="../res/js/main.js"></script>
 </head>
-    <body>
-        <form method="POST" action="${pageContext.request.contextPath}/admin/reports">
-            Report: <select name="report">
-            <%
-                for (String key : SystemReports.availableReports.keySet()) {
-                    out.print("<option value=\"" + key + "\">" + SystemReports.availableReports.get(key).getReportName() + "</option>");
-                }
-            %>
-            </select> <br/>
+<body>
+    <div class="root_container">
+        <%@ include file="../../res/components/sidebar.jsp" %>
+        <div class="main_container">
+            <%@ include file="../../res/components/titlebar.jsp" %>
+            <main>
+            <form method="POST" action="${pageContext.request.contextPath}/admin/reports" class="input_form loginFormWrapper">
+                <label for="report">Report:</label>
+                <select id="report" name="report">
+                <%
+                    for (String key : SystemReports.availableReports.keySet()) {
+                        out.print("<option value=\"" + key + "\">" + SystemReports.availableReports.get(key).getReportName() + "</option>");
+                    }
+                %>
+                </select>
+                <br/>
                 Report parameters: <br/>
-                Start Date: <input type="date" name="startDate"/><br/>
-                End Date: <input type="date" name="endDate"/><br/>
-                report type: <select name="reportType">
+                <label for="report">Start Date:</label>
+                <input id="startDate" type="date" name="startDate"/><br/>
+                <label for="endDate">End Date:</label>
+                <input id="endDate" type="date" name="endDate"/><br/>
+                <label for="reportType">Report type:</label>
+                <select id="reportType" name="reportType">
                 <%
                     for (ReportType key : ReportType.values()) {
                         out.print("<option value=\"" + key + "\">" + key.name() + "</option>");
                     }
                 %>
-            </select> <br/>
-            <button type="submit">Generate report</button>
-        </form>
-    </body>
+                </select> <br/>
+                <input type="submit" value="Generate Report">
+            </form>
+            </main>
+        </div>
+    </div>
+</body>
 </html>

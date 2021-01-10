@@ -1,5 +1,6 @@
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
+var previous_sort_header;
+
+
 function onDropDownClick(button) {
     if(button.src.includes("right")) {
         button.src.replace("res/icons/chevron-right.png", "res/icons/chevron-down.png");
@@ -16,7 +17,6 @@ function onDropDownClick(button) {
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
-    /*
     if (!event.target.matches('.dropdown_btn')) {
         var dropdowns = document.getElementsByClassName("dropdown_list");
         var i;
@@ -27,44 +27,46 @@ window.onclick = function(event) {
             }
         }
     }
-     */
+
 }
 
 
 function sortTable(e){
     // Modified: https://www.w3schools.com/howto/howto_js_sort_table.asp
-    var rows, switching, i, x, y, shouldSwitch, img;
+    var rows, switching, i, x, y, shouldSwitch, img, sort, header;
 
-    var header = e.target;
+    console.log(e.target.tag);
+    if (e.target.tag === "img"){
+        header = e.currentTarget.parentElement;
+    } else {
+        header = e.currentTarget;
+    }
 
-    if (header.getAttribute("sort") === "lock"){
+    sort = header.getAttribute("sort");
+
+    if (sort === "lock") {
         return;
+    }
+    console.log(header.sort);
+    if (sort === null) {
+        if (previous_sort_header != null){
+            previous_sort_header.innerHTML = header.innerHTML.split("<img")[0];
+        }
+        previous_sort_header = header;
+        img = document.createElement("img")
+        img.src = contextPath + "/res/icons/chevron-down.png";
+        header.appendChild(img);
+        header.setAttribute("sort", "down");
+    } else if (sort === "up") {
+        header.children[0].src = contextPath + "/res/icons/chevron-down.png";
+        header.setAttribute("sort", "down");
+    } else if (sort === "down") {
+        header.children[0].src = contextPath + "/res/icons/chevron-up.png";
+        header.setAttribute("sort", "up");
     }
 
     var cellIndex = header.cellIndex;
     var table = header.parentElement.parentElement.parentElement;
-
-    var headers = table.getElementsByTagName("th");
-
-    for(i = 0; i < headers.length; i++){
-        header = headers[i];
-        if (i === cellIndex){
-            if (header.childElementCount > 0){
-                img = header.children[0];
-                if (img.src.includes("down")){
-                    img.src = contextPath + "/res/icons/chevron-up.png";
-                } else {
-                    img.src = contextPath + "/res/icons/chevron-down.png";
-                }
-                break;
-            }
-            img = document.createElement("img")
-            img.src = contextPath + "/res/icons/chevron-down.png";
-            header.appendChild(img);
-            continue;
-        }
-        header.innerHTML = header.innerHTML.split("<img")[0];
-    }
 
     switching = true;
     while (switching) {
@@ -74,9 +76,16 @@ function sortTable(e){
             shouldSwitch = false;
             x = rows[i].getElementsByTagName("TD")[cellIndex];
             y = rows[i + 1].getElementsByTagName("TD")[cellIndex];
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
+            if (sort === "down"){
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
             }
         }
         if (shouldSwitch) {
@@ -88,10 +97,9 @@ function sortTable(e){
 
 
 function addFuncToTableControl(){
+    var i, j, searchTables;
 
-    var searchTables = document.getElementsByClassName("search_table");
-    var i;
-    var j;
+    searchTables = document.getElementsByClassName("search_table");
 
     for (i = 0; i < searchTables.length; i++) {
 
