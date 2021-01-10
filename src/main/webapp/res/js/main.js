@@ -1,4 +1,14 @@
-var previous_sort_header;
+let previous_sort_header;
+
+
+
+class DashboardItem {
+    constructor(name, link, icon) {
+        this.name = name;
+        this.link = link;
+        this.icon = icon
+    }
+}
 
 
 function onDropDownClick(button) {
@@ -113,4 +123,39 @@ function addFuncToTableControl(){
         }
     }
 }
+
+function generateWidgets(widgetList){
+    var i, dashboardItem, img, h2, a, dashboard, row, widget;
+    console.log("Test");
+    dashboard = document.getElementById("dashboard");
+
+    for(i = 0; i < widgetList.length; i++){
+        widget = widgetList[i];
+        dashboardItem = document.createElement("div");
+        a = document.createElement("a");
+        img = document.createElement("img");
+        h2 = document.createElement("h2");
+
+        dashboardItem.classList.add("quarter-widget");
+        a.href = widget.link;
+        img.src = widget.icon;
+        h2.innerHTML = widget.name;
+
+        a.appendChild(img);
+        a.appendChild(h2);
+
+        dashboardItem.appendChild(a);
+
+        if (dashboard.lastChild.childNodes.length < 4 && dashboard.childElementCount !== 0){
+            dashboard.lastChild.appendChild(dashboardItem);
+            continue;
+        }
+        row = document.createElement("div");
+        row.classList.add("row");
+        row.appendChild(dashboardItem);
+
+        dashboard.appendChild(row);
+    }
+}
+
 

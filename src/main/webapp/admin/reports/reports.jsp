@@ -13,7 +13,7 @@
         <div class="main_container">
             <%@ include file="../../res/components/titlebar.jsp" %>
             <main>
-            <form method="POST" action="${pageContext.request.contextPath}/admin/reports" class="input_form loginFormWrapper">
+            <form method="POST" action="${pageContext.request.contextPath}/admin/reports" class="input_form">
                 <label for="report">Report:</label>
                 <select id="report" name="report">
                 <%

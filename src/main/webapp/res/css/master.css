@@ -47,8 +47,8 @@ body{
     padding: 10px;
     height: calc(var(--logo-height) - 2*10px);
     width: calc(100vw - 250px);
-    /*background: #DDDDDD; */
-    background: var(--background-color);
+    background: #CCCCCC;
+    /*background: var(--background-color); */
     text-align: center;
 }
 
@@ -65,8 +65,8 @@ body{
 .sidebar_container {
     margin: 0;
     height: 100%;
-    /*background: #AAAAAA; */
-    background: var(--background-color);
+    background: #888888;
+    /*background: var(--background-color);*/
 
 }
 
@@ -125,9 +125,20 @@ main .widgets {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    margin-top: 5%;
     flex-direction: column;
     width: 100%;
     text-align: center;
+}
+
+main .widgets img {
+    height: 100px;
+    font-size: 15px;
+}
+
+main .widgets a {
+    text-decoration: none;
+    color: black;
 }
 
 main .widgets .row {
@@ -137,18 +148,20 @@ main .widgets .row {
     display: -webkit-flex;
     display: flex;
     width: 100%;
-    min-height: 300px;
+    min-height: 150px;
 
+}
+
+main .widgets .quarter-widget {
+    width: 25%;
 }
 
 main .widgets .half-widget {
     width: 50%;
-    border: 1px solid blue;
 }
 
 main .widgets .whole-widget {
     width: 100%;
-    border: 1px solid blue;
 }
 
 /*
@@ -279,5 +292,4 @@ main .widgets .whole-widget {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    float: right;
 }
