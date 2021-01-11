@@ -11,6 +11,7 @@
     <script src="res/js/main.js"></script>
 </head>
 <body>
+<<<<<<< HEAD
     <div class="root_container">
         <%@ include file="res/components/sidebar.jsp" %>
         <div class="main_container">
@@ -36,6 +37,7 @@
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
         { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/settings.png"},
+        { name: "Manage Third Party", link: "thirdPartyManagement/manage", icon: "res/icons/settings.png"},
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
     items = [
