@@ -46,7 +46,7 @@ public class ThirdPartyController extends HttpServlet {
             ex.printStackTrace();
             notify = REQUEST_FAILURE;
         }
-        
+
         request.setAttribute("notify",notify);
         RequestDispatcher view = request.getRequestDispatcher("/thirdPartyManagement/addThirdParty.jsp");
         view.forward(request, response);

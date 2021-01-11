@@ -11,6 +11,7 @@
     <script src="res/js/main.js"></script>
 </head>
 <body>
+<<<<<<< HEAD
     <div class="root_container">
         <%@ include file="res/components/sidebar.jsp" %>
         <div class="main_container">
@@ -66,5 +67,26 @@
 
 </script>
 
+=======
+    <nav><a href="logout">Logout</a> </nav>
+    <div>
+        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
+	    <br>
+        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { %>
+        <a href='users/manage'>Manage Users</a>
+        <br>
+        <a href='users/search'>Search Users</a>
+        <br>
+        <a href='admin/reports'>AdminReports</a>
+        <br>
+        <a href='invoices/search'>Search Invoices</a>
+        <br>
+        <a href='appointments/schedule'>Appointments</a>
+        <br>
+        <a href='admin/settings'>Manage System Settings</a>
+        <br>
+        <a href='thirdPartyManagement/manage'>Manage Third Party</a>
+        <%}%>
+>>>>>>> 588225e (51 - third party management)
 </body>
 </html>
