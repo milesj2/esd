@@ -6,57 +6,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Appointments</title>
+    <title>Template</title>
+    <link rel="stylesheet" href="../res/css/master.css">
+    <script src="../res/js/main.js"></script>
 </head>
 <body>
-<h2>Appointments</h2>
-<h4> Search below</h4>
-<div>
-    <form method="post" action="${pageContext.request.contextPath}/appointments/schedule">
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th>Slots</th>
-                <th>Status</th>
-                <th>Id</th>
-            </tr>
-            <tr>
-                <td><input type="date" name="fromDate" size="10" /></td>
-                <td><input type="date" name="toDate" size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_SLOTS%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.APPOINTMENT_STATUS%> size="10" /></td>
-                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
-                <td><input type="submit" value="Search" /></td>
-            </tr>
-        </table>
-        <h4>
-            search results:
-        </h4>
-        <table border="1" cellpadding="5">
-            <% try {
-                ArrayList<Appointment> appointmentList = (ArrayList<Appointment>)request.getAttribute("table");
-            out.print("<tr>");
-                out.print("<th>Appointment Date</th> ");
-                out.print("<th>Appointment Time</th>");
-                out.print("<th>Appointment Slots</th>");
-                out.print("<th>Appointment Status</th>");
-                out.print("<th>Patient Id</th>");
-                out.print("<th>Actions</th>");
-            out.print("</tr>");
-                for(Appointment appointment:appointmentList){ %>
-            <tr>
-                <td><%=appointment.getAppointmentDate()%></td>
-                <td><%=appointment.getAppointmentTime()%></td>
-                <td><%=appointment.getSlots()%></td>
-                <td><%=appointment.getStatus()%></td>
-                <td><%=appointment.getPatientId()%></td>
-                <td><a href='viewAppointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Amend Appointment</a></td>
-            </tr>
-            <% }
-            } catch(Exception e){
-            } %>
-        </table>
-    </form>
-</div>
+    <div class="root_container">
+        <%@ include file="../res/components/sidebar.jsp" %>
+        <div class="main_container">
+            <%@ include file="../res/components/titlebar.jsp" %>
+            <main>
+                <h2>Appointments</h2>
+                <form method="post" action="${pageContext.request.contextPath}/appointments/schedule">
+                    <table class="search_table" >
+                        <tr>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Slots</th>
+                            <th>Status</th>
+                            <th>Id</th>
+                            <th sort="lock"></th>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="fromDate" size="10" /></td>
+                            <td><input type="date" name="toDate" size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.APPOINTMENT_SLOTS%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.APPOINTMENT_STATUS%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
+                            <td><input type="submit" value="Search" /></td>
+                        </tr>
+                    </table>
+                    <h4>Search results:</h4>
+                    <table class="search_table">
+                        <tr>
+                            <th>Appointment Date</th>
+                            <th>Appointment Time</th>
+                            <th>Appointment Slots</th>
+                            <th>Appointment Status</th>
+                            <th>Patient Id</th>
+                            <th sort="lock">Actions</th>
+                        </tr>
+                        <% try {
+                            ArrayList<Appointment> appointmentList = (ArrayList<Appointment>)request.getAttribute("table");
+                            for(Appointment appointment:appointmentList){ %>
+                        <tr>
+                            <td><%=appointment.getAppointmentDate()%></td>
+                            <td><%=appointment.getAppointmentTime()%></td>
+                            <td><%=appointment.getSlots()%></td>
+                            <td><%=appointment.getStatus()%></td>
+                            <td><%=appointment.getPatientId()%></td>
+                            <td><a href='viewAppointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Amend Appointment</a></td>
+                        </tr>
+                        <% }
+                        } catch(Exception e){
+                        } %>
+                    </table>
+                </form>
+            </main>
+        </div>
+    </div>
+    <script>
+        var contextPath = "${pageContext.request.contextPath}"
+        addFuncToTableControl();
+    </script>
+</body>
 </body>
 </html>

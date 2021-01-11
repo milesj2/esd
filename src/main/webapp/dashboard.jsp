@@ -19,7 +19,6 @@
                 Welcome <% out.print(currentUser.getUsername()); %>. Your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
                 <br>
                 <div id="dashboard" class="widgets">
-
                 </div>
             </main>
         </div>

@@ -20,10 +20,10 @@
         <h1>Navigation</h1>
         <ul>
             <li>
-                <a style="padding-left: 20px" href="#">Account</a>
+                <a style="padding-left: 22px" href="#">Account</a>
             </li>
             <li>
-                <a style="padding-left: 20px" href="appointments/schedule">Appointments</a>
+                <a style="padding-left: 22px" href="${pageContext.request.contextPath}/appointments/schedule">Appointments</a>
             </li>
             <li>
                 <a class="dropdown_btn" onclick="onDropDownClick(this)" href="#">

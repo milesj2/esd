@@ -13,7 +13,6 @@
     <script src="../res/js/main.js"></script>
 </head>
 <body>
-    <script>var contextPath = "${pageContext.request.contextPath}"</script>
     <div class="root_container">
         <%@ include file="../res/components/sidebar.jsp" %>
         <div class="main_container">
@@ -58,6 +57,9 @@
             </main>
         </div>
     </div>
-<script>addFuncToTableControl();</script>
+<script>
+    var contextPath = "${pageContext.request.contextPath}"
+    addFuncToTableControl();
+</script>
 </body>
 </html>
