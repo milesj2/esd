@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -34,6 +35,11 @@ public class InvoiceController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if(!request.getParameter(DaoConsts.ID).isEmpty()){
+
+            HttpSession session = request.getSession();
+            session.setAttribute("previousPage", session.getAttribute("currentPage"));
+            session.setAttribute("currentPage", request.getServletPath());
+
             try{
                 Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 request.setAttribute("invoice", invoice);

@@ -4,11 +4,171 @@
     --background-color:#0077C6;
     --accent-color-dark:#004472;
     --accent-color-light:#4DB8FF;
+    --logo-height:100px;
+    --nav-width:250px;
+    --font-size:15px;
 }
 
+/*
+#############################################
+############ GENERIC ########################
+#############################################
+*/
+
 body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
     background: var(--background-color);
+    overflow: hidden;
+    font-family: "Helvetica Neue", sans-serif;
 }
+
+
+.root_container {
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.main_container {
+    height: 100%;
+}
+
+
+/*
+#############################################
+############ TITLE BAR ######################
+#############################################
+*/
+
+.title_bar{
+    margin: 0;
+    padding: 10px;
+    height: calc(var(--logo-height) - 2*10px);
+    width: calc(100vw - 250px);
+    background: #CCCCCC;
+    /*background: var(--background-color); */
+    text-align: center;
+}
+
+.title_bar h1 {
+
+}
+
+/*
+#############################################
+############ SIDE BAR #######################
+#############################################
+*/
+
+.sidebar_container {
+    margin: 0;
+    height: 100%;
+    background: #888888;
+    /*background: var(--background-color);*/
+
+}
+
+.sidebar_container .logo {
+    width: var(--nav-width);
+    height: var(--logo-height);
+}
+
+.sidebar_container nav {
+    padding: 10px;
+    display: block;
+}
+
+.sidebar_container nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar_container nav a {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar_container nav img {
+    width: var(--font-size);
+    margin-right: 2px;
+}
+
+.sidebar_container nav .dropdown_list {
+    display: none;
+    margin-left: 30px;
+}
+
+.sidebar_container nav .show {
+    display: block;
+}
+
+/*
+#############################################
+############ Main ###########################
+#############################################
+*/
+
+main {
+    margin: 0;
+    padding: 20px;
+    height: calc(100vh - var(--logo-height));
+    width: calc(100vw - var(--nav-width) - 2*10px);
+    background: #eeeeee;
+}
+
+main .widgets {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin-top: 5%;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+}
+
+main .widgets img {
+    height: 100px;
+    font-size: 15px;
+}
+
+main .widgets a {
+    text-decoration: none;
+    color: black;
+}
+
+main .widgets .row {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    min-height: 150px;
+
+}
+
+main .widgets .quarter-widget {
+    width: 25%;
+}
+
+main .widgets .half-widget {
+    width: 50%;
+}
+
+main .widgets .whole-widget {
+    width: 100%;
+}
+
+/*
+#############################################
+############ LOGIN ##########################
+#############################################
+*/
 
 .loginFormWrapper {
     font: 16px/2em Lato, serif;
@@ -70,4 +230,66 @@ body{
 }
 .form-links a {
     color: #fff;
+}
+
+/*
+#############################################
+############ CONTROLS #######################
+#############################################
+*/
+
+/****** Search tables ******/
+
+.search_table {
+    margin: 20px;
+    width: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.search_table  td, .search_table  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.search_table  tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+.search_table  tr:hover {
+    background-color: #ddd;
+}
+
+.search_table  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--background-color);
+    color: white;
+    width: 1000px;
+}
+
+.search_table img {
+    height: var(--font-size);
+    margin-left: 5px;
+}
+
+/****** Forms ******/
+
+.input_form * {
+    box-sizing: border-box;
+}
+
+.input_form label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+.input_form input[type=submit], .input_form_button {
+    background-color: var(--background-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }

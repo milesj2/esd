@@ -7,6 +7,5 @@
 <nav><a href="<%= request.getAttribute("homeLink") %>"><%= request.getAttribute("homeLinkText")%></a></nav>
 <h1><%= request.getAttribute("contentTitle") %></h1>
 <p><%= request.getAttribute("contentBody") %></p>
-
 </body>
 </html>
