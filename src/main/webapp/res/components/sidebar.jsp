@@ -1,5 +1,5 @@
 <div class="sidebar_container">
-    <a href="dashboard">
+    <a href="${pageContext.request.contextPath}/dashboard">
         <img class="logo" src="${pageContext.request.contextPath}/res/images/logo_small.png" alt="SmartWare Logo">
     </a>
     <nav>
@@ -8,18 +8,28 @@
             Logout
         </a>
         <br>
-        <a href="${pageContext.request.contextPath}/<% out.print(request.getAttribute("previousPage")); %>">
+        <a href="${pageContext.request.contextPath}/dashboard">
+            <img src="${pageContext.request.contextPath}/res/icons/home.png" alt="home button image">
+            Home
+        </a>
+        <br>
+        <a href="${pageContext.request.contextPath}/<% out.print(request.getSession().getAttribute("previousPage")); %> ">
             <img src="${pageContext.request.contextPath}/res/icons/rotate-2.png" alt="back button image">
             Back
         </a>
         <h1>Navigation</h1>
         <ul>
             <li>
-                <img class="dropdown_btn"
-                     onclick="onDropDownClick(this)"
-                     src="${pageContext.request.contextPath}/res/icons/chevron-right.png"
-                     alt="users drop down list">
-                <a href="#">Users</a>
+                <a style="padding-left: 20px" href="#">Account</a>
+            </li>
+            <li>
+                <a style="padding-left: 20px" href="appointments/schedule">Appointments</a>
+            </li>
+            <li>
+                <a class="dropdown_btn" onclick="onDropDownClick(this)" href="#">
+                    <img src="${pageContext.request.contextPath}/res/icons/chevron-right.png" alt="users drop down list">
+                    Example Drop Down
+                </a>
                 <ul class="dropdown_list">
                     <li>
                         <a href="#">Dropdown 1</a>
@@ -31,20 +41,6 @@
                         <a href="#">Dropdown 3</a>
                     </li>
                 </ul>
-            </li>
-            <li>
-                <img id="reports"
-                     onclick="onDropDownClick(this);"
-                     src="${pageContext.request.contextPath}/res/icons/chevron-right.png"
-                     alt="users drop down list">
-                <a href="#">Reports</a>
-            </li>
-            <li>
-                <img id="appointments"
-                     onclick="onDropDownClick(this);"
-                     src="${pageContext.request.contextPath}/res/icons/chevron-right.png"
-                     alt="users drop down list">
-                <a href="#">Appointments</a>
             </li>
         </ul>
     </nav>

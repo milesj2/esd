@@ -26,9 +26,6 @@
                             out.print(errMsg);
                         } %>
                 </p>
-                <a href="${pageContext.request.contextPath}/dashboard">Dashboard</a>
-                <a href="${pageContext.request.contextPath}/<% out.print(request.getAttribute("previousPage")); %>">BACK</a>
-                <a href="${pageContext.request.contextPath}<% out.print(request.getAttribute("currentPage")); %>">CURRENT</a>
                 <table class="search_table">
                     <tr>
                         <th>ID</th>

@@ -1,51 +1,28 @@
 let previous_sort_header;
 
 
-
-class DashboardItem {
-    constructor(name, link, icon) {
-        this.name = name;
-        this.link = link;
-        this.icon = icon
-    }
-}
-
-
-function onDropDownClick(button) {
+function onDropDownClick(section) {
+    if (section.tag === "img")
+        section.parentElement;
+    var button = section.firstElementChild;
     if(button.src.includes("right")) {
         button.src.replace("res/icons/chevron-right.png", "res/icons/chevron-down.png");
     } else {
         button.src.replace("res/icons/chevron-down.png", "res/icons/chevron-right.png");
     }
-
-    if (button.nextElementSibling == null){
+    console.log(button.src);
+    if (section.nextElementSibling == null){
         return;
     }
-    var dropdownChild = button.nextElementSibling.nextElementSibling;
+    var dropdownChild = section.nextElementSibling;
+    console.log(dropdownChild);
     dropdownChild.classList.toggle("show");
 }
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.dropdown_btn')) {
-        var dropdowns = document.getElementsByClassName("dropdown_list");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-
-}
-
 
 function sortTable(e){
     // Modified: https://www.w3schools.com/howto/howto_js_sort_table.asp
     var rows, switching, i, x, y, shouldSwitch, img, sort, header;
 
-    console.log(e.target.tag);
     if (e.target.tag === "img"){
         header = e.currentTarget.parentElement;
     } else {
@@ -53,11 +30,9 @@ function sortTable(e){
     }
 
     sort = header.getAttribute("sort");
-
     if (sort === "lock") {
         return;
     }
-    console.log(header.sort);
     if (sort === null) {
         if (previous_sort_header != null){
             previous_sort_header.innerHTML = header.innerHTML.split("<img")[0];
@@ -83,6 +58,8 @@ function sortTable(e){
         switching = false;
         rows = table.rows;
         for (i = 1; i < (rows.length - 1); i++) {
+            if (rows[i].getAttribute("sort") === "lock")
+                continue;
             shouldSwitch = false;
             x = rows[i].getElementsByTagName("TD")[cellIndex];
             y = rows[i + 1].getElementsByTagName("TD")[cellIndex];

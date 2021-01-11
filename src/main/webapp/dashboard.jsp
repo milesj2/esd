@@ -31,29 +31,29 @@
     <% if(currentUser.getUserGroup().equals(UserGroup.ADMIN) || currentUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
      items = [
         { name: "Manage Users", link: "users/manage", icon: "res/icons/users.png" },
-        { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/users.png" },
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/users.png" },
-        { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/search.png" },
+        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
+        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
+        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
+        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/settings.png"},
     ];
     <% } else if(currentUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
     items = [
         { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/users.png" },
+        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/users.png" },
+        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentUser.getUserGroup().equals(UserGroup.NURSE)) { %>
     items = [
-        { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/users.png" },
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/users.png" },
+        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
+        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
+        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
+        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
     items = [
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/users.png" },
+        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
     items = [

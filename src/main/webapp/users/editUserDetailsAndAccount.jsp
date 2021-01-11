@@ -32,8 +32,8 @@
             %>
             <h1>Editing User <%= user.getUsername() %></h1>
             <h2>Name: <%= user.getUserDetails().getFirstName() %></h2>
-            <button onclick="window.location = '${pageContext.request.contextPath}/users/manage';">Cancel</button>
-            <form method="post" action="${pageContext.request.contextPath}/users/edit" id="userEdit">
+            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/manage';">Cancel</button>
+            <form class="input_form" method="post" action="${pageContext.request.contextPath}/users/edit" id="userEdit">
                 <input type="submit" name="saveEdit" value="Save">
                 <br>
                 <input type="hidden" name="id" value="<%= user.getId() %>">
@@ -81,7 +81,7 @@
                 </select>
                 <br>
                 <label>Account Active</label>
-                <br>
+
                 <label class="switch">
                     <input name="active" type="checkbox" class="switch-input" <% if(user.isActive()) out.print("checked");%>>
                     <span class="switch-label" data-on="on" data-off="off"></span>

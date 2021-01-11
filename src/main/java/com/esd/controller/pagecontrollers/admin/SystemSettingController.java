@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Original Author: Sam Barba
@@ -26,6 +27,11 @@ public class SystemSettingController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+		HttpSession session = request.getSession();
+		session.setAttribute("previousPage", session.getAttribute("currentPage"));
+		session.setAttribute("currentPage", request.getServletPath());
+
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			populateForm(request);

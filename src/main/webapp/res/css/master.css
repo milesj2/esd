@@ -264,7 +264,7 @@ main .widgets .whole-widget {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #4CAF50;
+    background-color: var(--background-color);
     color: white;
     width: 1000px;
 }
@@ -285,7 +285,7 @@ main .widgets .whole-widget {
     display: inline-block;
 }
 
-.input_form input[type=submit] {
+.input_form input[type=submit], .input_form_button {
     background-color: var(--background-color);
     color: white;
     padding: 12px 20px;

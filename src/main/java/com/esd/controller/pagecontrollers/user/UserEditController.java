@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.Navigation;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 /**
@@ -36,6 +38,10 @@ public class UserEditController extends HttpServlet {
             throws ServletException, java.io.IOException {
 
         User user;
+
+        HttpSession session = request.getSession();
+        session.setAttribute("previousPage", session.getAttribute("currentPage"));
+        session.setAttribute("currentPage", request.getServletPath());
 
         try {
             user = userService.getUserByID(Integer.parseInt(request.getParameter("id")));

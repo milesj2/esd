@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,9 +51,9 @@ public class UserSearchController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException
     {
-        request.setAttribute("pageTitle", "Manage Users");
-        request.setAttribute("previousPage", request.getAttribute("currentPage"));
-        request.setAttribute("currentPage", "/users/manage");
+        HttpSession session = request.getSession();
+        session.setAttribute("previousPage", session.getAttribute("currentPage"));
+        session.setAttribute("currentPage", request.getServletPath());
 
         // Validate user is logged in
         User currentUser = (User)(request.getSession().getAttribute("currentSessionUser"));

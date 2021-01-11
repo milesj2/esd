@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.Navigation;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.service.UserService;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,10 +29,12 @@ public class UserManageController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException
     {
+
+        HttpSession session = request.getSession();
+        session.setAttribute("previousPage", session.getAttribute("currentPage"));
+        session.setAttribute("currentPage", request.getServletPath());
+
         request.setAttribute("pageTitle", "Manage Users");
-        String previous = (String) request.getAttribute("currentPage");
-        request.setAttribute("previousPage", "/dashboard");
-        request.setAttribute("currentPage", "/users/manage");
 
         List<User> users;
 
