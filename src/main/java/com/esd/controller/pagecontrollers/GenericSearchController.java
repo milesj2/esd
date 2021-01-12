@@ -41,6 +41,5 @@ public abstract class GenericSearchController extends HttpServlet {
                 System.err.println("Unhandled type for user search controller: " + type);
                 break;
         }
-
     }
 }
