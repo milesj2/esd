@@ -1,7 +1,6 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.utils.Navigation;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;

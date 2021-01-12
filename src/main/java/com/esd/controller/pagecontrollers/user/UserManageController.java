@@ -1,7 +1,6 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.utils.Navigation;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.service.UserService;
@@ -24,7 +23,6 @@ import java.util.List;
 @Authentication(userGroups = {UserGroup.ADMIN})
 public class UserManageController extends HttpServlet {
 
-    // TODO Needs filter
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException
