@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.pagecontrollers.GenericSearchController;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 @WebServlet("/users/search")
 @Authentication(userGroups = {UserGroup.ALL})
-public class UserSearchController extends HttpServlet {
+public class UserSearchController extends GenericSearchController {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
     private ArrayList<String> formValues =  new ArrayList<String>(Arrays.asList(
@@ -74,33 +75,7 @@ public class UserSearchController extends HttpServlet {
         view.forward(request, response);
     }
 
-    //returns search form data
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        final String type = request.getParameter("type");
-
-        switch (type){
-            case "search":
-                //the submitted button is the only button included in the request
-                if(request.getParameter("search") != null){
-                    performSearch(request, response);
-                }else if(request.getParameter("cancel") !=null){
-                    getResult(request, response);
-                }
-                break;
-            case "result":
-                getResult(request, response);
-                break;
-            default:
-                System.err.println("Unhandled type for user search controller: " + type);
-                break;
-        }
-
-    }
-
-    private void getResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void getResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         URIBuilder redirectURIBuilder = null;
         try {
@@ -114,11 +89,9 @@ public class UserSearchController extends HttpServlet {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-
     }
 
-    private void performSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void performSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> args =  new HashMap<>();
         for(String key: formValues) {
             if(checkRequestContains(request, key)){
