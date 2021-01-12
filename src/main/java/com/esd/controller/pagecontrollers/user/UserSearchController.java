@@ -6,6 +6,7 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.UserDetailsService;
+import org.apache.http.client.utils.URIBuilder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,8 +77,48 @@ public class UserSearchController extends HttpServlet {
     //returns search form data
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
+            throws ServletException, IOException {
 
+        final String type = request.getParameter("type");
+
+        switch (type){
+            case "search":
+                //the submitted button is the only button included in the request
+                if(request.getParameter("search") != null){
+                    performSearch(request, response);
+                }else if(request.getParameter("cancel") !=null){
+                    getResult(request, response);
+                }
+                break;
+            case "result":
+                getResult(request, response);
+                break;
+            default:
+                System.err.println("Unhandled type for user search controller: " + type);
+                break;
+        }
+
+    }
+
+    private void getResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        URIBuilder redirectURIBuilder = null;
+        try {
+            redirectURIBuilder = new URIBuilder(request.getParameter("redirect"));
+
+            if(request.getParameter("selectedUserId") != null) {
+                redirectURIBuilder.addParameter("selectedUserId", request.getParameter("selectedUserId"));
+            }
+
+            response.sendRedirect(redirectURIBuilder.build().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void performSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> args =  new HashMap<>();
         for(String key: formValues) {
             if(checkRequestContains(request, key)){

@@ -17,14 +17,10 @@
         <%@ include file="../res/components/sidebar.jsp" %>
         <div class="main_container">
             <%@ include file="../res/components/titlebar.jsp" %>
-            <main>
+    <main>
                 <h2>User Search page</h2>
                 <h3>Enter your search terms to retrieve user details</h3>
-                <form method="post" action="${pageContext.request.contextPath}/users/search">
-                    <tr>
-                        <input type="submit" value="Search" />
-                    </tr>
-                    <table class="search_table" border="1" cellpadding="5">
+                    <table border="1" cellpadding="5">
                         <tr>
                             <th>Id</th>
                             <th>First Name</th>
@@ -33,43 +29,60 @@
                             <th>Town</th>
                             <th>Post Code</th>
                             <th>Dob</th>
-                            <th sort="lock">Actions</th>
+                            <th>Actions</th>
                         </tr>
-                        <tr sort="lock">
-                            <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
-                            <td><input type="text" name=<%=DaoConsts.USERDETAILS_FIRSTNAME%> size="10" /></td>
-                            <td><input type="text" name=<%=DaoConsts.USERDETAILS_LASTNAME%> size="10" /></td>
-                            <td><input type="text" name=<%=DaoConsts.USERDETAILS_ADDRESS1%> size="10" /></td>
-                            <td><input type="text" name=<%=DaoConsts.USERDETAILS_TOWN%> size="10" /></td>
-                            <td><input type="text" name=<%=DaoConsts.USERDETAILS_POSTCODE%> size="10" /></td>
-                            <td><input type="date" name=<%=DaoConsts.USERDETAILS_DOB%> size="10" /></td>
+                        <form method="post" action="${__SELF}">
+                            <tr>
+                                <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
+                                <td><input type="text" name=<%=DaoConsts.USERDETAILS_FIRSTNAME%> size="10" /></td>
+                                <td><input type="text" name=<%=DaoConsts.USERDETAILS_LASTNAME%> size="10" /></td>
+                                <td><input type="text" name=<%=DaoConsts.USERDETAILS_ADDRESS1%> size="10" /></td>
+                                <td><input type="text" name=<%=DaoConsts.USERDETAILS_TOWN%> size="10" /></td>
+                                <td><input type="text" name=<%=DaoConsts.USERDETAILS_POSTCODE%> size="10" /></td>
+                                <td><input type="date" name=<%=DaoConsts.USERDETAILS_DOB%> size="10" /></td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <input type="submit" name="search" value="search" />
+                                <% if (request.getParameter("redirect") != null){%>
+                                <input type="submit" name="cancel" value="cancel" />
+                                <% } %>
+
+                                <input type="hidden" name="type" value="search" />
+                            </tr>
+                        </form>
+                        <% try {
+                            ArrayList<UserDetails> userDetailList = (ArrayList<UserDetails>)request.getAttribute("table");
+                            for(UserDetails userDetails:userDetailList){ %>
+                        <tr>
+                            <td><%=userDetails.getUserId()%></td>
+                            <td><%=userDetails.getFirstName()%></td>
+                            <td><%=userDetails.getLastName()%></td>
+                            <td><%=userDetails.getAddressLine1()%>
+                                <%=userDetails.getAddressLine2()%>
+                                <%=userDetails.getAddressLine3()%></td>
+                            <td><%=userDetails.getTown()%></td>
+                            <td><%=userDetails.getPostCode()%></td>
+                            <td><%=userDetails.getDateOfBirth()%></td>
                             <td>
+                                <% if (request.getParameter("redirect") != null){%>
+                                <form method="post" action="${__SELF}">
+                                    <input type="hidden" name="type" value="result" />
+                                    <input type="hidden" name="selectedUserId" value="<%=userDetails.getUserId()%>" />
+                                    <input type="submit" value="Select User" />
+                                </form>
+                                <%}else{%>
+                                <a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a>
+                                <%}%>
                             </td>
                         </tr>
-                        <% try {
-                        ArrayList<UserDetails> userDetailList = (ArrayList<UserDetails>)request.getAttribute("table");
-                        for(UserDetails userDetails:userDetailList){ %>
-                            <tr>
-                                <td><%=userDetails.getUserId()%></td>
-                                <td><%=userDetails.getFirstName()%></td>
-                                <td><%=userDetails.getLastName()%></td>
-                                <td><%=userDetails.getAddressLine1()%>
-                                    <%=userDetails.getAddressLine2()%>
-                                    <%=userDetails.getAddressLine3()%></td>
-                                <td><%=userDetails.getTown()%></td>
-                                <td><%=userDetails.getPostCode()%></td>
-                                <td><%=userDetails.getDateOfBirth()%></td>
-                                <td><a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a></td>
-                            </tr>
-                            <% }
+                        <% }
                         } catch(Exception e){
                         } %>
                     </table>
-                </form>
-        </main>
+                </main>
     </div>
-
-</div>
 <script>
     var contextPath = "${pageContext.request.contextPath}"
     addFuncToTableControl();
