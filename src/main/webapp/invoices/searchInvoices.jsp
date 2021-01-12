@@ -20,8 +20,7 @@
         <main>
             <h2>Invoice Search page</h2>
             <h3>Enter your search terms to retrieve the invoice details</h3>
-            <form method="post" action="${pageContext.request.contextPath}/invoices/search">
-                <input type="submit" value="Search" />
+
                 <table border="1" cellpadding="5" class="search_table">
                     <tr>
                         <th>Id</th>
@@ -34,15 +33,22 @@
                         <th sort="lock">Actions</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
-                        <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
-                        <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
-                        <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>
-                        <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID_FK%> size="10" /></td>
-                        <td><input type="text" name=<%=DaoConsts.PATIENT_ID_FK%> size="10" /></td>
-                        <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID_FK%> size="10" /></td>
-                        <td>
-                        </td>
+                        <form method="post" action="${pageContext.request.contextPath}/invoices/search">
+                                <input type="submit" name="search" value="Search" />
+                                    <% if (request.getParameter("redirect") != null){%>
+                                <input type="submit" name="cancel" value="cancel" />
+                                    <% } %>
+                                <input type="hidden" name="type" value="search" />
+                            <td><input type="text" name=<%=DaoConsts.ID%> size="10" /></td>
+                            <td><input type="date" name=<%=DaoConsts.INVOICE_DATE%> size="10" /></td>
+                            <td><input type="time" name=<%=DaoConsts.INVOICE_TIME%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.INVOICE_STATUS%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.EMPLOYEE_ID_FK%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.PATIENT_ID_FK%> size="10" /></td>
+                            <td><input type="text" name=<%=DaoConsts.APPOINTMENT_ID_FK%> size="10" /></td>
+                            <td>
+                            </td>
+                        </form>
                     </tr>
                     <% try {
                         ArrayList<Invoice> invoiceList = (ArrayList<Invoice>)request.getAttribute("table");
@@ -55,7 +61,17 @@
                         <td><%=invoice.getEmployeeId()%></td>
                         <td><%=invoice.getPatientId()%></td>
                         <td><%=invoice.getAppointmentId()%></td>
-                        <td><a href='${pageContext.request.contextPath}/invoices/view?id=<%=invoice.getId()%>'>Search Invoice</a></td>
+                        <td>
+                            <% if (request.getParameter("redirect") != null){%>
+                            <form method="post" action="${__SELF}">
+                                <input type="hidden" name="type" value="result" />
+                                <input type="hidden" name="selectedInvoiceId" value="<%=invoice.getId()%>" />
+                                <input type="submit" value="Select Invoice" />
+                            </form>
+                            <%}else{%>
+                            <a href='${pageContext.request.contextPath}/invoices/view?id=<%=invoice.getId()%>'>Search Invoice</a>
+                            <%}%>
+                            </td>
                     </tr>
                     <% }
                     } catch(Exception e){

@@ -8,7 +8,7 @@
         <form>
                 <input type="submit" name="selectPatient" value="select patient" formaction="${__SELF}">
             <%  if (request.getAttribute("patientId") != null){ %>
-                <input type="text" name="patientId" disabled value="<%= request.getAttribute("patientId") %>">
+                <input type="text" name="patientId" readonly value="<%= request.getAttribute("patientId") %>">
             <% } %>
             <input type="hidden" name="action" value="">
             <input type="text" name="dummyInput" value="<%= request.getAttribute("dummyInput") %>">

@@ -20,7 +20,7 @@
     <main>
                 <h2>User Search page</h2>
                 <h3>Enter your search terms to retrieve user details</h3>
-                    <table border="1" cellpadding="5">
+                    <table border="1" cellpadding="5" class="search_table">
                         <tr>
                             <th>Id</th>
                             <th>First Name</th>
@@ -29,7 +29,7 @@
                             <th>Town</th>
                             <th>Post Code</th>
                             <th>Dob</th>
-                            <th>Actions</th>
+                            <th sort="lock">Actions</th>
                         </tr>
                         <form method="post" action="${__SELF}">
                             <tr>
