@@ -3,6 +3,7 @@ package com.esd.model.dao;
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.InvoiceStatus;
+import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.data.persisted.SystemUser;
@@ -169,6 +170,18 @@ public class InvoiceDao {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_ID, id));
         return processResultSetForInvoices(true, queryBuilder.createStatement()).get(0);
+    }
+
+    public Invoice getLastAddedInvoice() throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
+
+        ResultSet result = queryBuilder.createStatement().executeQuery();
+        List<Invoice> invoices = new ArrayList<>();
+
+        while (result.next()) {
+            invoices.add(extractInvoiceFromResultSet(result));
+        }
+        return invoices.stream().max(Comparator.comparing(Invoice::getId)).orElse(null);
     }
 
     public synchronized static InvoiceDao getInstance(){

@@ -19,7 +19,7 @@ public class SystemSettingService {
 
     private SystemSettingService(SystemSettingDao systemSettingDao){
         if (systemSettingDao == null){
-            throw new IllegalArgumentException("systemSettingDao must not be null");
+            throw new IllegalArgumentException("systemSettingDao cannot be null!");
         }
         this.systemSettingDao = systemSettingDao;
     }

@@ -45,5 +45,15 @@
                 </ul>
             </li>
         </ul>
+        <div>
+            <h3>Quick Notifications</h3>
+            <strong>Last added appointment:</strong>
+            <br>
+            <%=request.getAttribute("lastAddedAppointmentInfo")%>
+            <br>
+            <strong>Last added invoice: </strong>
+            <br>
+            <%=request.getAttribute("lastAddedInvoiceInfo")%>
+        </div>
     </nav>
 </div>

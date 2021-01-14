@@ -30,7 +30,7 @@ public class AppointmentsService {
 
     private AppointmentsService(AppointmentDao appointmentDao){
         if(appointmentDao == null){
-            throw new IllegalArgumentException("appointment dao must not be null");
+            throw new IllegalArgumentException("appointmentDao cannot be null!");
         }
         this.appointmentDao = appointmentDao;
     }
@@ -148,7 +148,7 @@ public class AppointmentsService {
        return false;
     }
 
-    public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, int requestedSlotLength, LocalDate date){
+    public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, int requestedSlotLength, LocalDate date) {
         try {
             UserDetails employeeDetails = UserDetailsDao.getInstance().getUserDetailsByUserId(employeeDetailsId);
             List<WorkingHours> workingTimes = workingHoursDao.getWorkingHoursForEmployee(employeeDetailsId);
@@ -160,12 +160,12 @@ public class AppointmentsService {
                     .filter(x -> x.getWorkingDays().contains(day))
                     .collect(Collectors.toList());
 
-            if(applicableWorkingHours.size() == 0){
+            if (applicableWorkingHours.size() == 0) {
                 return new ArrayList<>();
             }
 
             int slotTime = SystemSettingService.getInstance().getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME);
-            if(slotTime == 0){
+            if (slotTime == 0) {
                 return new ArrayList<>();
             }
 
@@ -173,8 +173,8 @@ public class AppointmentsService {
             List<Appointment> bookedAppointments = this.getAppointmentsInRange(date, date, Optional.empty());
 
             //loop all booked appointments and slots removing any overlaps
-            for(Appointment a : bookedAppointments){
-                if(a.isCancled()){
+            for (Appointment a : bookedAppointments) {
+                if (a.isCancled()) {
                     continue;
                 }
                 for (int i = allSlots.size() - 1; i >= 0; i--) {
@@ -188,7 +188,7 @@ public class AppointmentsService {
                     boolean overlap = (appointmentTime.isBefore(slotEndTime)) && (slotStartTime.isBefore(appointmentEndTime))
                             || (appointmentTime.isEqual(slotStartTime) && appointmentEndTime.isEqual(slotEndTime));
 
-                    if(overlap){
+                    if (overlap) {
                         allSlots.remove(i);
                     }
                 }
@@ -202,10 +202,14 @@ public class AppointmentsService {
 
             //return the final slot list
             return appointmentPlaceHolders;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public Appointment getLastAddedAppointment() throws SQLException {
+        return appointmentDao.getLastAddedAppointment();
     }
 
     private List<LocalTime> generateAllPossibleSlots(List<WorkingHours> applicableWorkingHours, LocalDate date, int slotTime, int requestedSlotLength) {
@@ -231,7 +235,7 @@ public class AppointmentsService {
         return allSlots;
     }
 
-    public synchronized static AppointmentsService getInstance(){
+    public synchronized static AppointmentsService getInstance() {
         if(instance == null){
             instance = new AppointmentsService(AppointmentDao.getInstance());
         }

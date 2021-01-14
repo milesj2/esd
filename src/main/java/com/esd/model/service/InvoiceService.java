@@ -36,7 +36,7 @@ public class InvoiceService {
 
     private InvoiceService(InvoiceDao invoiceDao) {
         if(invoiceDao == null){
-            throw new IllegalArgumentException("invoiceDao must not be null");
+            throw new IllegalArgumentException("invoiceDao cannot be null!");
         }
         this.invoiceDao = invoiceDao;
     }
@@ -133,5 +133,9 @@ public class InvoiceService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Invoice getLastAddedInvoice() throws  SQLException {
+        return invoiceDao.getInstance().getLastAddedInvoice();
     }
 }

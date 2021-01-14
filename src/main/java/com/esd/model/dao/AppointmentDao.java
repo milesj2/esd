@@ -131,6 +131,18 @@ public class AppointmentDao {
         return appointments;
     }
 
+    public Appointment getLastAddedAppointment() throws SQLException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+
+        ResultSet result = queryBuilder.createStatement().executeQuery();
+        List<Appointment> appointments = new ArrayList<>();
+
+        while (result.next()) {
+            appointments.add(processResultSetForAppointment(result));
+        }
+        return appointments.stream().max(Comparator.comparing(Appointment::getId)).orElse(null);
+    }
+
     public synchronized static AppointmentDao getInstance(){
         if(instance == null){
             instance = new AppointmentDao();

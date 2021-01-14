@@ -20,14 +20,11 @@ import java.io.IOException;
 @Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentBookingConfirmationController extends HttpServlet {
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBookingConfirmation.jsp");
         view.forward(request, response);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

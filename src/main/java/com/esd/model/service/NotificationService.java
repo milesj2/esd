@@ -1,28 +1,57 @@
 package com.esd.model.service;
 
+import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.Invoice;
+
+import java.sql.SQLException;
+
 /**
  * Original Author: Sam Barba
  * Use: This class is a singleton, the use of which is to do any functionality needed for dashboard notifications
  */
 public class NotificationService {
     private static NotificationService instance;
-    private AppointmentService appointmentService;
+    private AppointmentsService appointmentsService;
     private InvoiceService invoiceService;
 
-    private NotificationService(AppointmentService appointmentService, InvoiceService invoiceService){
-        if (appointmentService == null) {
-            throw new IllegalArgumentException("appointmentService must not be null");
+    public String getLastAddedAppointmentInfo() throws SQLException {
+        Appointment app = appointmentsService.getLastAddedAppointment();
+        if (app == null) {
+            return "No appointments added yet.";
+        }
+        return "ID: " + app.getId()
+                + "<br>Patient ID: " + app.getPatientId()
+                + "<br>Employee ID: " + app.getEmployeeId()
+                + "<br>Status: " + app.getStatus().toString()
+                + "<br>Date: " + app.getAppointmentDate() + ", " + app.getAppointmentTime();
+    }
+
+    public String getLastAddedInvoiceInfo() throws SQLException {
+        Invoice inv = invoiceService.getLastAddedInvoice();
+        if (inv == null) {
+            return "No invoices added yet.";
+        }
+        return "ID: " + inv.getId()
+                + "<br>Patient ID: " + inv.getPatientId()
+                + "<br>Employee ID: " + inv.getEmployeeId()
+                + "<br>Appointment ID: " + inv.getAppointmentId()
+                + "<br>Date: " + inv.getInvoiceDate() + ", " + inv.getInvoiceTime();
+    }
+
+    private NotificationService(AppointmentsService appointmentsService, InvoiceService invoiceService){
+        if (appointmentsService == null) {
+            throw new IllegalArgumentException("appointmentService cannot be null!");
         }
         if (invoiceService == null) {
-            throw new IllegalArgumentException("invoiceService must not be null");
+            throw new IllegalArgumentException("invoiceService cannot be null!");
         }
-        this.appointmentService = appointmentService;
+        this.appointmentsService = appointmentsService;
         this.invoiceService = invoiceService;
     }
 
     public synchronized static NotificationService getInstance() {
         if (instance == null){
-            instance = new NotificationService(AppointmentService.getInstance(), InvoiceService.getInstance());
+            instance = new NotificationService(AppointmentsService.getInstance(), InvoiceService.getInstance());
         }
         return instance;
     }

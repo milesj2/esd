@@ -22,7 +22,7 @@ public class UserDetailsService {
 
     private UserDetailsService(UserDetailsDao userDetailsDao) {
         if(userDetailsDao == null){
-            throw new IllegalArgumentException("userDetailsDao must not be null");
+            throw new IllegalArgumentException("userDetailsDao cannot be null!");
         }
         this.userDetailsDao = userDetailsDao;
     }
