@@ -1,7 +1,6 @@
 package com.esd.controller.pagecontrollers.dashboard;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.utils.Navigation;
 import com.esd.model.data.UserGroup;
 
 import javax.servlet.RequestDispatcher;

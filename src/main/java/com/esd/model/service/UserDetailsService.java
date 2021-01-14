@@ -43,8 +43,13 @@ public class UserDetailsService {
         return new UserDetailsService(userDetailsDao);
     }
 
-    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
+    public ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) {
+        ArrayList<UserDetails> userDetails = new ArrayList<>();
+        try {
+            userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return userDetails;
     }
 }

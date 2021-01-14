@@ -5,6 +5,7 @@ import com.esd.model.data.persisted.Invoice;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +37,13 @@ public class InvoiceService {
         return invoiceDao.getInvoiceById(id);
     }
 
-    public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        return invoiceDao.getInstance().getFilteredDetails(args);
+    public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) {
+        try {
+            return invoiceDao.getInstance().getFilteredDetails(args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
