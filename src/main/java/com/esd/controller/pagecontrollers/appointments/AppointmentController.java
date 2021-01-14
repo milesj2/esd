@@ -2,7 +2,6 @@ package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
-import com.esd.model.data.AppointmentOptions;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 /**
  * Original Author: Trent meier
@@ -38,14 +36,14 @@ public class AppointmentController extends HttpServlet {
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-                // if referred with get url get appointments
-            if(request.getParameterMap().containsKey(DaoConsts.ID)) {
-                int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
-                Appointment appointment = appointmentsService.getAppointmentById(idVal);
-                request.setAttribute("appointment", appointment);
-            }
-            RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
-            view.forward(request, response);
+        // if referred with get url get appointments
+        if (request.getParameterMap().containsKey(DaoConsts.ID)) {
+            int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
+            Appointment appointment = appointmentsService.getAppointmentById(idVal);
+            request.setAttribute("appointment", appointment);
+        }
+        RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
+        view.forward(request, response);
     }
 
     @Override

@@ -238,9 +238,9 @@ public class AppointmentsService {
         return instance;
     }
 
-    public Appointment getAppointmentById(int AppointmentId)  {
+    public Appointment getAppointmentById(int appId)  {
         try {
-            return appointmentDao.getAppointmentById(AppointmentId);
+            return appointmentDao.getAppointmentById(appId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
