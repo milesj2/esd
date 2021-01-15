@@ -79,6 +79,27 @@ public class AppointmentsService {
         return false;
     }
 
+    public boolean updateAppointment(int appointmentId, AppointmentPlaceHolder placeholder, int patientId){
+        if(!validateAppointmentSlotForEmployee(placeholder)){
+            return false;
+        }
+        Appointment appointment = new Appointment();
+        appointment.setId(appointmentId);
+        appointment.setEmployeeId(placeholder.getEmployeeId());
+        appointment.setPatientId(patientId);
+        appointment.setAppointmentDate(placeholder.getAppointmentDate());
+        appointment.setAppointmentTime(placeholder.getAppointmentTime());
+        appointment.setSlots(placeholder.getSlots());
+        appointment.setStatus(AppointmentStatus.PENDING);
+        try {
+            appointmentDao.updateAppointment(appointment);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployeeOfDefaultLength(int employeeDetailsId, LocalDate date) {
         return generatePossibleAppointmentsForEmployee(employeeDetailsId, 1, date);
     }
@@ -190,26 +211,6 @@ public class AppointmentsService {
         return allSlots;
     }
 
-    private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
-        //check if there are conflicting appointments
-        List<Appointment> conflictingApts = appointmentDao.getAppointmentsInPeriodWithStatus(
-                appointment.getAppointmentDate(),
-                appointment.getAppointmentDate(),
-                Optional.empty());
-        if(conflictingApts.size() > 0){
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkIfAptIsWorkingDay(Appointment appointment) {
-        //joda time day of week 6 or 7 is weekend (non working day)
-        int dayOfWeek = appointment.getAppointmentDate().getDayOfWeek();
-        if(dayOfWeek == 6 || dayOfWeek == 7){
-            return false;
-        }
-        return true;
-    }
 
     public synchronized static AppointmentsService getInstance(){
         if(instance == null){
@@ -224,25 +225,5 @@ public class AppointmentsService {
 
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
-    }
-
-    public void createNewAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
-        if(!checkIfAptConflicts(appointment)){
-            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
-        }
-        if(!checkIfAptIsWorkingDay(appointment)){
-            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
-        }
-        appointmentDao.createAppointment(appointment);
-    }
-
-    public void updateAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
-        if(!checkIfAptConflicts(appointment)){
-            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
-        }
-        if(!checkIfAptIsWorkingDay(appointment)){
-            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
-        }
-        appointmentDao.updateAppointment(appointment);
     }
 }
