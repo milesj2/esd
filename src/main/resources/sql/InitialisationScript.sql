@@ -163,9 +163,9 @@ values (5,'Jim', 'Smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('199
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (6,'Jane', 'Jones', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DATE('2001-07-11'));
 
-insert into workingHours(workingDays, startTime, endTime) values('1,2,3,4,5', TIME('9:00:00'), TIME('9:00:00'));
-insert into workingHoursJT(employeeId, workingHoursId) values (3,1)
-insert into workingHoursJT(employeeId, workingHoursId) values (4,1)
+insert into workingHours(workingDays, startTime, endTime) values('1,2,3,4,5', TIME('9:00:00'), TIME('17:00:00'));
+insert into workingHoursJT(employeeId, workingHoursId) values (3,1);
+insert into workingHoursJT(employeeId, workingHoursId) values (4,1);
 
 --create 2 days of appointments
 
