@@ -26,7 +26,6 @@ create schema ADMIN;
 - Click the check box for "I have read and accept..." and click Next >
 - Accept the default values for the Domain Location settings and click Finish.
 - Now open Tools > Servers and select the server you just added.
-
 (Instructions are from this link: https://stackoverflow.com/questions/58080214/how-to-add-glassfish-5-0-server-in-netbeans-8-2 
 there are also screenshots there showing every step).
 
