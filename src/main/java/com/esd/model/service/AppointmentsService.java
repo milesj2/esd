@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * Original Author: Trent Meier
  * Use: This class is a singleton, used to access appointments data objects
  */
-
 public class AppointmentsService {
 
     private static AppointmentsService instance;
@@ -38,7 +37,11 @@ public class AppointmentsService {
         this.appointmentDao = appointmentDao;
     }
 
-    public List<AppointmentPlaceHolder> generateAllPossibleAppointments(LocalDate date){
+    public List<AppointmentPlaceHolder> generateAllPossibleAppointmentsOfDefaultLength(LocalDate date){
+        return generateAllPossibleAppointments(date, 1);
+    }
+
+    public List<AppointmentPlaceHolder> generateAllPossibleAppointments(LocalDate date, int requestedSlotLength){
         try {
             List<Integer> employeeIds = UserDetailsDao.getInstance().getAllUsersOfGroups(UserGroup.DOCTOR, UserGroup.NURSE)
                     .stream()
@@ -47,7 +50,7 @@ public class AppointmentsService {
 
             List<AppointmentPlaceHolder> possibleAppointments = new ArrayList<>();
             for(Integer id : employeeIds){
-                possibleAppointments.addAll(generatePossibleAppointmentsForEmployee(id, date));
+                possibleAppointments.addAll(generatePossibleAppointmentsForEmployee(id, requestedSlotLength, date));
             }
             return possibleAppointments;
         } catch (SQLException throwables) {
@@ -56,7 +59,66 @@ public class AppointmentsService {
         return new ArrayList<>();
     }
 
-    public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, LocalDate date){
+    public boolean bookAppointment(AppointmentPlaceHolder placeholder, int patientId){
+        if(!validateAppointmentSlotForEmployee(placeholder)){
+            return false;
+        }
+        Appointment appointment = new Appointment();
+        appointment.setEmployeeId(placeholder.getEmployeeId());
+        appointment.setPatientId(patientId);
+        appointment.setAppointmentDate(placeholder.getAppointmentDate());
+        appointment.setAppointmentTime(placeholder.getAppointmentTime());
+        appointment.setSlots(placeholder.getSlots());
+        appointment.setStatus(AppointmentStatus.PENDING);
+        try {
+            appointmentDao.createAppointment(appointment);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployeeOfDefaultLength(int employeeDetailsId, LocalDate date) {
+        return generatePossibleAppointmentsForEmployee(employeeDetailsId, 1, date);
+    }
+
+    public boolean validateAppointmentSlotForEmployee(AppointmentPlaceHolder placeHolder){
+        try {
+            List<Appointment> bookedAppointments = this.getAppointmentsInRange(placeHolder.getAppointmentDate(), placeHolder.getAppointmentDate(), Optional.empty());
+            int slotTime = SystemSettingService.getInstance().getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME);
+            if(slotTime == 0){
+                return false;
+            }
+
+            //loop all booked appointments and slots removing any overlaps
+            for(Appointment a : bookedAppointments){
+                if(a.isCancled()){
+                    continue;
+                }
+
+                LocalTime appointmentTime = a.getAppointmentTime();
+                LocalTime appointmentEndTime = a.getAppointmentTime().plusMinutes(slotTime * a.getSlots());
+                LocalTime slotStartTime = placeHolder.getAppointmentTime();
+                LocalTime slotEndTime = placeHolder.getAppointmentTime().plusMinutes(slotTime * placeHolder.getSlots());
+
+                //if the slots were periods the following boolean value would look like so:
+                // a.start < a.end && a.start < a.end || p = s
+                boolean overlap = (appointmentTime.isBefore(slotEndTime)) && (slotStartTime.isBefore(appointmentEndTime))
+                        || (appointmentTime.isEqual(slotStartTime) && appointmentEndTime.isEqual(slotEndTime));
+
+                if(overlap){
+                    return false;
+                }
+
+            }
+        } catch (SQLException | InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+       return false;
+    }
+
+    public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, int requestedSlotLength, LocalDate date){
         try {
             List<WorkingHours> workingTimes = workingHoursDao.getWorkingHoursForEmployee(employeeDetailsId);
 
@@ -76,21 +138,10 @@ public class AppointmentsService {
                 return new ArrayList<>();
             }
 
-            List<LocalTime> allSlots = new ArrayList<>();
-
-            //loop all working hours to generate all possible slots
-            for(WorkingHours currentWorkingTime : applicableWorkingHours){
-                LocalTime currentTime = new LocalTime(currentWorkingTime.getStartTime());
-
-                while(currentTime.isBefore(currentWorkingTime.getEndTime())){
-                    allSlots.add(new LocalTime(currentTime));
-                    currentTime = currentTime.plusMinutes(slotTime);
-                }
-            }
-
+            List<LocalTime> allSlots = generateAllPossibleSlots(applicableWorkingHours, slotTime, requestedSlotLength);
             List<Appointment> bookedAppointments = this.getAppointmentsInRange(date, date, Optional.empty());
 
-            //loop all booked appointments and slots removing anyt overlaps
+            //loop all booked appointments and slots removing any overlaps
             for(Appointment a : bookedAppointments){
                 if(a.isCancled()){
                     continue;
@@ -99,7 +150,7 @@ public class AppointmentsService {
                     LocalTime appointmentTime = a.getAppointmentTime();
                     LocalTime appointmentEndTime = a.getAppointmentTime().plusMinutes(slotTime * a.getSlots());
                     LocalTime slotStartTime = allSlots.get(i);
-                    LocalTime slotEndTime = allSlots.get(i).plusMinutes(slotTime);
+                    LocalTime slotEndTime = allSlots.get(i).plusMinutes(slotTime * requestedSlotLength);
 
                     //if the slots were periods the following boolean value would look like so:
                     // a.start < a.end && a.start < a.end || p = s
@@ -111,9 +162,11 @@ public class AppointmentsService {
                     }
                 }
             }
+
+            //turn the slot times into Appointment placeholders and then return
             List<AppointmentPlaceHolder> appointmentPlaceHolders = new ArrayList<>();
             allSlots.forEach(slotTime2 -> {
-                appointmentPlaceHolders.add(new AppointmentPlaceHolder(employeeDetailsId, date, slotTime2));
+                appointmentPlaceHolders.add(new AppointmentPlaceHolder(employeeDetailsId, requestedSlotLength, date, slotTime2));
             });
 
             //return the final slot list
@@ -122,6 +175,19 @@ public class AppointmentsService {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    private List<LocalTime> generateAllPossibleSlots(List<WorkingHours> applicableWorkingHours, int slotTime, int requestedSlotLength) {
+        List<LocalTime> allSlots = new ArrayList<>();
+        for(WorkingHours currentWorkingTime : applicableWorkingHours){
+            LocalTime currentTime = new LocalTime(currentWorkingTime.getStartTime());
+
+            while(currentTime.isBefore(currentWorkingTime.getEndTime())){
+                allSlots.add(new LocalTime(currentTime));
+                currentTime = currentTime.plusMinutes(slotTime * requestedSlotLength);
+            }
+        }
+        return allSlots;
     }
 
     private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
