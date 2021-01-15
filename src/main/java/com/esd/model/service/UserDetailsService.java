@@ -1,11 +1,13 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.UserDetailsDao;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +41,10 @@ public class UserDetailsService {
         return userDetailsDao.getUserDetailsByUserId(userId);
     }
 
+    public List<UserDetails> getAllUsersOfGroups(UserGroup... groups) throws SQLException, InvalidIdValueException {
+        return userDetailsDao.getAllUsersOfGroups(groups);
+    }
+
     public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
         return userDetailsDao.updateUserDetails(userDetails);
     }
@@ -47,8 +53,8 @@ public class UserDetailsService {
         return new UserDetailsService(userDetailsDao);
     }
 
-    public ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) {
-        ArrayList<UserDetails> userDetails = new ArrayList<>();
+    public List<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) {
+        List<UserDetails> userDetails = new ArrayList<>();
         try {
             userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
         } catch (SQLException throwables) {

@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -124,7 +125,23 @@ public class UserDetailsDao {
         }
     }
 
-   public ArrayList<UserDetails> getFilteredDetails(Map<String, Object> args) throws SQLException {
+    public List<UserDetails> getAllUsersOfGroups(UserGroup...groups) throws SQLException {
+        ArrayList<UserDetails> userDetailsList = new ArrayList<>();
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withRestriction(Restrictions.in(DaoConsts.USERDETAILS_USERGROUP, groups))
+                .createStatement();
+
+        ResultSet result = statement.executeQuery();
+
+        // add results to list of user to return
+        while (result.next()) {
+            userDetailsList.add(getUserDetailsFromResults(result));
+        }
+
+        return userDetailsList;
+    }
+
+   public List<UserDetails> getFilteredDetails(Map<String, Object> args) throws SQLException {
 
        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS);
