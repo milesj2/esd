@@ -67,11 +67,11 @@ public class AppointmentController extends HttpServlet {
             appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
             appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
 
-            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
-                appointmentsService.updateAppointment(appointment);
-            } else {
-                appointmentsService.createNewAppointment(appointment);
-            }
+//            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
+//                appointmentsService.updateAppointment(appointment);
+//            } else {
+//                appointmentsService.createNewAppointment(appointment);
+//            }
 
             request.setAttribute("message", "Success");
             appointment = appointmentsService.getAppointmentById(idVal);
