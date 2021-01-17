@@ -30,8 +30,8 @@
     // PLACE HOLDER GENERATION
     <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
      items = [
-        { name: "Manage Users", link: "systemUsers/manage", icon: "res/icons/systemUsers.png" },
-        { name: "Search Users", link: "systemUsers/search", icon: "res/icons/systemUser-search.png" },
+        { name: "Manage Users", link: "users/manage", icon: "res/icons/users.png" },
+        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
