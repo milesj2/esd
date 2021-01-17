@@ -1,10 +1,16 @@
 package com.esd.model.data;
 
+import com.esd.model.data.persisted.User;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Original Author: Jordan Hellier
  * Use: This enum is used for the type of user, its main use is for page restriction.
  */
 public enum UserGroup {
+
     ADMIN,
     NHS_PATIENT,
     PRIVATE_PATIENT,
@@ -13,5 +19,7 @@ public enum UserGroup {
     RECEPTIONIST,
 
     //Used for user filtering
-    ALL
+    ALL;
+
+    public static List<UserGroup> patients = Arrays.asList(NHS_PATIENT, PRIVATE_PATIENT);
 }

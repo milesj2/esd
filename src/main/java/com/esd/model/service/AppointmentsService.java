@@ -37,26 +37,26 @@ public class AppointmentsService {
         this.appointmentDao = appointmentDao;
     }
 
-    public List<AppointmentPlaceHolder> generateAllPossibleAppointmentsOfDefaultLength(LocalDate date){
+    public Map<Integer, List<AppointmentPlaceHolder>> generateAllPossibleAppointmentsOfDefaultLength(LocalDate date){
         return generateAllPossibleAppointments(date, 1);
     }
 
-    public List<AppointmentPlaceHolder> generateAllPossibleAppointments(LocalDate date, int requestedSlotLength){
+    public Map<Integer, List<AppointmentPlaceHolder>> generateAllPossibleAppointments(LocalDate date, int requestedSlotLength){
         try {
             List<Integer> employeeIds = UserDetailsDao.getInstance().getAllUsersOfGroups(UserGroup.DOCTOR, UserGroup.NURSE)
                     .stream()
                     .map(UserDetails::getId)
                     .collect(Collectors.toList());
 
-            List<AppointmentPlaceHolder> possibleAppointments = new ArrayList<>();
+            Map<Integer, List<AppointmentPlaceHolder>> possibleAppointments = new HashMap<>();
             for(Integer id : employeeIds){
-                possibleAppointments.addAll(generatePossibleAppointmentsForEmployee(id, requestedSlotLength, date));
+                possibleAppointments.put(id, generatePossibleAppointmentsForEmployee(id, requestedSlotLength, date));
             }
             return possibleAppointments;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return new ArrayList<>();
+        return new HashMap<>();
     }
 
     public boolean bookAppointment(AppointmentPlaceHolder placeholder, int patientId){
@@ -141,6 +141,7 @@ public class AppointmentsService {
 
     public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, int requestedSlotLength, LocalDate date){
         try {
+            UserDetails employeeDetails = UserDetailsDao.getInstance().getUserDetailsByUserId(employeeDetailsId);
             List<WorkingHours> workingTimes = workingHoursDao.getWorkingHoursForEmployee(employeeDetailsId);
 
             int day = date.getDayOfWeek();
@@ -187,7 +188,7 @@ public class AppointmentsService {
             //turn the slot times into Appointment placeholders and then return
             List<AppointmentPlaceHolder> appointmentPlaceHolders = new ArrayList<>();
             allSlots.forEach(slotTime2 -> {
-                appointmentPlaceHolders.add(new AppointmentPlaceHolder(employeeDetailsId, requestedSlotLength, date, slotTime2));
+                appointmentPlaceHolders.add(new AppointmentPlaceHolder(employeeDetailsId, employeeDetails, requestedSlotLength, date, slotTime2));
             });
 
             //return the final slot list

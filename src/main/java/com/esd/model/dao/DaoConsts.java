@@ -67,7 +67,6 @@ public class DaoConsts {
     public final static String USERDETAILS_ADDRESS3 = "addressline3";
     public final static String USERDETAILS_TOWN = "town";
     public final static String USERDETAILS_POSTCODE = "postcode";
-    public final static String USERDETAILS_USERGROUP = "usergroup";
     public final static String USERDETAILS_DOB = "dob";
 
     public static final String INVOICE_STATUS_CHANGE_DATE = "statusChangeDate";

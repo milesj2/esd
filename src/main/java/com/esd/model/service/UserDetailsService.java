@@ -37,8 +37,15 @@ public class UserDetailsService {
         return userDetailsDao.getUserDetailsById(id);
     }
 
-    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
-        return userDetailsDao.getUserDetailsByUserId(userId);
+    public UserDetails getUserDetailsByUserID(int userId) {
+        try {
+            return userDetailsDao.getUserDetailsByUserId(userId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<UserDetails> getAllUsersOfGroups(UserGroup... groups) throws SQLException, InvalidIdValueException {

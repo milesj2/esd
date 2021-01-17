@@ -128,7 +128,8 @@ public class UserDetailsDao {
     public List<UserDetails> getAllUsersOfGroups(UserGroup...groups) throws SQLException {
         ArrayList<UserDetails> userDetailsList = new ArrayList<>();
         PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
-                .withRestriction(Restrictions.in(DaoConsts.USERDETAILS_USERGROUP, groups))
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, DaoConsts.SYSTEMUSER_ID_FK))
+                .withRestriction(Restrictions.in(DaoConsts.SYSTEMUSER_USERGROUP, groups))
                 .createStatement();
 
         ResultSet result = statement.executeQuery();
