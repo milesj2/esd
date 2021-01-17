@@ -19,7 +19,7 @@
             <%@ include file="res/components/titlebar.jsp" %>
             <main>
                 <h1>Dashboard</h1>
-                Welcome <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>
+                Welcome, <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>.
                 <br>
                 <div id="dashboard" class="widgets">
                     <% for (DashboardWidget widget : (List<DashboardWidget>)request.getAttribute("widgets")) { %>
@@ -30,6 +30,16 @@
                             </a>
                         </div>
                     <% } %>
+                </div>
+                <div>
+                    <h3>Quick Notifications</h3>
+                    <strong>Last added appointment:</strong>
+                    <br>
+                    <%=request.getAttribute("lastAddedAppointmentInfo")%>
+                    <br>
+                    <strong>Last added invoice: </strong>
+                    <br>
+                    <%=request.getAttribute("lastAddedInvoiceInfo")%>
                 </div>
             </main>
         </div>
