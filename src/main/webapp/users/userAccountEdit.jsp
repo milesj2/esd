@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Template</title>
+    <title>My Account</title>
     <script src="../res/js/main.js"></script>
     <link rel="stylesheet" href="../res/css/master.css">
     <link rel="stylesheet" href="../res/css/simple-switch.css">
@@ -72,7 +72,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input id="password_submit" type="submit" name="saveEdit" value="Save" disabled>
+                                <input id="password_submit" type="submit" name="saveEdit" value="Update" disabled>
                             </td>
                         </tr>
                     </table>
@@ -84,7 +84,6 @@
                     <h1>Personal Details</h1>
                 </div>
                 <form class="input_form toggle_hide" method="post" action="${pageContext.request.contextPath}/users/edit" id="userDetailsEdit">
-                    <input type="hidden" name="id" value="<%= user.getId() %>">
                     <table>
                         <tr>
                             <td>
@@ -154,7 +153,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input type="submit" name="saveEdit" value="Save">
+                                <input type="submit" name="saveEdit" value="Update">
                             </td>
                         </tr>
                     </table>

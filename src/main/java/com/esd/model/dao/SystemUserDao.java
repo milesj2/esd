@@ -27,6 +27,7 @@ public class SystemUserDao {
             "(username, password, active, userGroup) values (?, ?, ?, ?)";
     private static final String UPDATE_USER = "UPDATE SYSTEMUSER SET " +
             "username=?,password=?,usergroup=?,active=? WHERE ID=?";
+    private static final String UPDATE_USER_PASSWORD = "UPDATE SYSTEMUSER SET password=? WHERE ID = ?";
 
     private SystemUserDao() {
     }
@@ -90,6 +91,24 @@ public class SystemUserDao {
             throw new InvalidIdValueException(String.format("No user found for id '%d'", systemUser.getId()));
         } else{
             // Uknown Exception?
+            return false;
+        }
+    }
+
+    public boolean updatePassword(String password, int userId) throws SQLException, InvalidIdValueException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_USER_PASSWORD);
+
+        statement.setString(1, password);
+        statement.setInt(2, userId);
+
+        int userResult = statement.executeUpdate();
+
+        if (userResult == 1){
+            return true;
+        } else if (userResult == 0){
+            throw new InvalidIdValueException(String.format("No user found for id '%d'", userId));
+        } else{
             return false;
         }
     }
