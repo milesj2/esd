@@ -24,11 +24,11 @@ import java.util.*;
 
 @WebServlet("/appointments/search")
 @Authentication(userGroups = {UserGroup.ALL})
-public class AppointmentsSearchController extends GenericSearchController {
+public class AppointmentSearchController extends GenericSearchController {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
 
-    public AppointmentsSearchController() {
+    public AppointmentSearchController() {
         columns = Arrays.asList(
                 new SearchColumn(DaoConsts.ID, "Id", "number"),
                 new SearchColumn(DaoConsts.INVOICE_DATE, "Invoice Date", "date"),

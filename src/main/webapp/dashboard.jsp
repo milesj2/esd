@@ -37,7 +37,7 @@
                     <br>
                     <%=request.getAttribute("lastAddedAppointmentInfo")%>
                     <br>
-                    <strong>Last added invoice: </strong>
+                    <strong>Last added invoice:</strong>
                     <br>
                     <%=request.getAttribute("lastAddedInvoiceInfo")%>
                 </div>

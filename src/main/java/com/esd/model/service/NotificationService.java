@@ -20,10 +20,10 @@ public class NotificationService {
             return "No appointments added yet.";
         }
         return "ID: " + app.getId()
-                + "<br>Patient ID: " + app.getPatientId()
-                + "<br>Employee ID: " + app.getEmployeeId()
+                + "<br>Date: " + app.getAppointmentDate() + ", " + app.getAppointmentTime()
                 + "<br>Status: " + app.getStatus().toString()
-                + "<br>Date: " + app.getAppointmentDate() + ", " + app.getAppointmentTime();
+                + "<br>Patient ID: " + app.getPatientId()
+                + "<br>Employee ID: " + app.getEmployeeId();
     }
 
     public String getLastAddedInvoiceInfo() throws SQLException {
@@ -32,10 +32,10 @@ public class NotificationService {
             return "No invoices added yet.";
         }
         return "ID: " + inv.getId()
+                + "<br>Date: " + inv.getInvoiceDate() + ", " + inv.getInvoiceTime()
                 + "<br>Patient ID: " + inv.getPatientId()
                 + "<br>Employee ID: " + inv.getEmployeeId()
-                + "<br>Appointment ID: " + inv.getAppointmentId()
-                + "<br>Date: " + inv.getInvoiceDate() + ", " + inv.getInvoiceTime();
+                + "<br>Appointment ID: " + inv.getAppointmentId();
     }
 
     private NotificationService(AppointmentsService appointmentsService, InvoiceService invoiceService){
