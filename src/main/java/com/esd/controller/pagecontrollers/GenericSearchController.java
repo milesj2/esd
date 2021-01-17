@@ -1,8 +1,5 @@
 package com.esd.controller.pagecontrollers;
 
-import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
-import com.esd.model.data.persisted.UserDetails;
 import org.apache.http.client.utils.URIBuilder;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public abstract class GenericSearchController extends HttpServlet {
 

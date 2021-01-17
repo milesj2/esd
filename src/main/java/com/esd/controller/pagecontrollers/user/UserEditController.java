@@ -3,11 +3,11 @@ package com.esd.controller.pagecontrollers.user;
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.UserDetailsService;
-import com.esd.model.service.UserService;
+import com.esd.model.service.SystemUserService;
 
 import org.joda.time.LocalDate;
 import javax.servlet.RequestDispatcher;
@@ -28,7 +28,7 @@ import java.sql.SQLException;
 @Authentication(userGroups = {UserGroup.ALL})
 public class UserEditController extends HttpServlet {
 
-    private UserService userService = UserService.getInstance();
+    private SystemUserService systemUserService = SystemUserService.getInstance();
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
 
     // todo filter as appropriate
@@ -36,15 +36,15 @@ public class UserEditController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        User user;
+        SystemUser systemUser;
 
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
         try {
-            user = userService.getUserByID(Integer.parseInt(request.getParameter("id")));
-            user.setUserDetails(userDetailsService.getUserDetailsByUserID(user.getId()));
+            systemUser = systemUserService.getUserByID(Integer.parseInt(request.getParameter("id")));
+            systemUser.setUserDetails(userDetailsService.getUserDetailsByUserID(systemUser.getId()));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ public class UserEditController extends HttpServlet {
             response.sendRedirect("manage?errMsg=" + e.getMessage());
             return;
         }
-        request.setAttribute("editUser", user);
+        request.setAttribute("editUser", systemUser);
         RequestDispatcher view = request.getRequestDispatcher("/users/editUserDetailsAndAccount.jsp");
         view.forward(request, response);
     }
@@ -66,7 +66,7 @@ public class UserEditController extends HttpServlet {
         if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)
             active = true;
 
-        User user = new User(
+        SystemUser systemUser = new SystemUser(
                 Integer.parseInt(request.getParameter(DaoConsts.ID)),
                 request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
                 request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
@@ -78,7 +78,7 @@ public class UserEditController extends HttpServlet {
         try {
             userDetails = new UserDetails(
                     -1,
-                    user.getId(),
+                    systemUser.getId(),
                     request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
                     request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
                     request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
@@ -98,7 +98,7 @@ public class UserEditController extends HttpServlet {
             boolean updateUserResult;
             boolean updateUserDetailsResult;
 
-            updateUserResult = userService.updateUser(user);
+            updateUserResult = systemUserService.updateUser(systemUser);
             updateUserDetailsResult = userDetailsService.updateUserDetails(userDetails);
 
             if (updateUserResult && updateUserDetailsResult) {
@@ -111,7 +111,7 @@ public class UserEditController extends HttpServlet {
             response.sendRedirect("manage?errMsg=" + e.getMessage());
             System.out.println(e.getMessage());
         } catch (InvalidIdValueException e) {
-            response.sendRedirect("manage?errMsg=" + "Invalid id user'" + user.getId() + "'");
+            response.sendRedirect("manage?errMsg=" + "Invalid id user'" + systemUser.getId() + "'");
             System.out.println(e.getMessage());
         }
     }

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserDetailsDaoTest {
+public class SystemUserDetailsDaoTest {
 
     private UserDetailsDao target = UserDetailsDao.getInstance();
 

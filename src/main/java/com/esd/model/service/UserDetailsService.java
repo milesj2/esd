@@ -13,6 +13,7 @@ import java.util.Map;
  * Use: This class is a singleton, The use of this class is to do any functionality needed for user details
  */
 public class UserDetailsService {
+
     private static UserDetailsService instance;
     private UserDetailsDao userDetailsDao;
 

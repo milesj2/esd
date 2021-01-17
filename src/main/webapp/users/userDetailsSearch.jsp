@@ -19,7 +19,7 @@
             <%@ include file="../res/components/titlebar.jsp" %>
     <main>
                 <h2>User Search page</h2>
-                <h3>Enter your search terms to retrieve user details</h3>
+                <h3>Enter your search terms to retrieve systemUser details</h3>
                     <table border="1" cellpadding="5" class="search_table">
                         <tr>
                             <th>Id</th>
@@ -73,7 +73,7 @@
                                     <input type="submit" value="Select User" />
                                 </form>
                                 <%}else{%>
-                                <a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a>
+                                <a href='${pageContext.request.contextPath}/systemUsers/edit?id=<%=userDetails.getUserId()%>'>Search Users</a>
                                 <%}%>
                             </td>
                         </tr>

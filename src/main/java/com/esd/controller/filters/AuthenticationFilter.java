@@ -3,7 +3,7 @@ package com.esd.controller.filters;
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.UrlUtils;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -36,7 +36,7 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
-        User user = (User)request.getSession().getAttribute("currentSessionUser");
+        SystemUser systemUser = (SystemUser)request.getSession().getAttribute("currentSessionUser");
 
         HttpServletMapping mapping = request.getHttpServletMapping();
         MappingMatch mappingMatch = mapping.getMappingMatch();
@@ -60,7 +60,7 @@ public class AuthenticationFilter implements Filter {
                     // having a user group on annotation, but marked as no authentication required,
                     // points to possible mistake in code base
                     if(annotation.userGroups().length == 0){
-                        if(user != null && !annotation.loggedInUserAccess()){
+                        if(systemUser != null && !annotation.loggedInUserAccess()){
                             response.sendRedirect(UrlUtils.absoluteUrl(request, "dashboard"));
                             return;
                         }
@@ -75,7 +75,7 @@ public class AuthenticationFilter implements Filter {
                 //authentication required
 
                 //validate session
-                if(user == null){
+                if(systemUser == null){
                     ((HttpServletResponse)servletResponse).sendRedirect(UrlUtils.absoluteUrl(request, "login"));
                     return;
                 }
@@ -83,7 +83,7 @@ public class AuthenticationFilter implements Filter {
                 //validate user group
                 List<UserGroup> userGroupList = Arrays.asList(annotation.userGroups());
 
-                if(!userGroupList.contains(UserGroup.ALL) && !userGroupList.contains(user.getUserGroup())){
+                if(!userGroupList.contains(UserGroup.ALL) && !userGroupList.contains(systemUser.getUserGroup())){
                     response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_UNAUTHORIZED));
                     return;
                 }

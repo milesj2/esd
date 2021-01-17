@@ -1,8 +1,9 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>
+<% SystemUser currentSystemUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
 <html>
 <head>
     <title>User Dashboard</title>
@@ -16,7 +17,7 @@
             <%@ include file="res/components/titlebar.jsp" %>
             <main>
                 <h1>Dashboard</h1>
-                Welcome <% out.print(currentUser.getUsername()); %>. Your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
+                Welcome <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>
                 <br>
                 <div id="dashboard" class="widgets">
                 </div>
@@ -27,36 +28,36 @@
     var items;
 
     // PLACE HOLDER GENERATION
-    <% if(currentUser.getUserGroup().equals(UserGroup.ADMIN) || currentUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
+    <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
      items = [
-        { name: "Manage Users", link: "users/manage", icon: "res/icons/users.png" },
-        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
+        { name: "Manage Users", link: "systemUsers/manage", icon: "res/icons/systemUsers.png" },
+        { name: "Search Users", link: "systemUsers/search", icon: "res/icons/systemUser-search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
         { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/settings.png"},
     ];
-    <% } else if(currentUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
+    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
     items = [
-        { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
+        { name: "Search Users", link: "systemUsers/search", icon: "res/icons/search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
-    <% } else if(currentUser.getUserGroup().equals(UserGroup.NURSE)) { %>
+    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NURSE)) { %>
     items = [
-        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
+        { name: "Search Users", link: "systemUsers/search", icon: "res/icons/systemUser-search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
-    <% } else if(currentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
+    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
     items = [
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
-    <% } else if(currentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
+    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
     items = [
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/users.png" },
+        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/systemUsers.png" },
     ];
     <% } %>
 
