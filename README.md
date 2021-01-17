@@ -5,7 +5,7 @@ The below is guidance for various aspects of the project
 For consistency it's important we all follow the same code style, this involves formatting code in a certain way, here is a link to googles Java code style which we will follow throughout the project https://google.github.io/styleguide/javaguide.html pay particular attention to package naming, class naming, function names etc. 
 
 # Derby DB
-## creating systemUsers
+## creating Users
 Creating a database systemUser is done in 2 steps execute the 2 below commands as root systemUser to create a new systemUser:
 
 CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.systemUser.\<username\>','\<password\>');

@@ -27,7 +27,7 @@
             </li>
             <li>
                 <a class="dropdown_btn" onclick="onDropDownClick(this)" href="#">
-                    <img src="${pageContext.request.contextPath}/res/icons/chevron-right.png" alt="systemUsers drop down list">
+                    <img src="${pageContext.request.contextPath}/res/icons/chevron-right.png" alt="users drop down list">
                     Example Drop Down
                 </a>
                 <ul class="dropdown_list">
