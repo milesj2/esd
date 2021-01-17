@@ -58,8 +58,13 @@ public class SystemUserService {
         return systemUserDao.getUserByID(id);
     }
 
-    public SystemUser getUserByUserDetailsId(int id) throws SQLException, InvalidIdValueException {
-        return systemUserDao.getUserByUserDetailsID(id);
+    public SystemUser getUserByUserDetailsId(int id) {
+        try {
+            return systemUserDao.getUserByUserDetailsID(id);
+        } catch (SQLException | InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean updateUser(SystemUser systemUser) throws SQLException, InvalidIdValueException {

@@ -1,17 +1,17 @@
 package com.esd.controller.utils;
 
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AuthenticationUtils {
 
     public static UserGroup getCurrentUserGroup(HttpServletRequest request){
-        User user = (User)request.getSession().getAttribute("currentSessionUser");
+        SystemUser user = (SystemUser)request.getSession().getAttribute("currentSessionUser");
         return user.getUserGroup();
     }
-    public static User getCurrentUser(HttpServletRequest request){
-        return (User)request.getSession().getAttribute("currentSessionUser");
+    public static SystemUser getCurrentUser(HttpServletRequest request){
+        return (SystemUser)request.getSession().getAttribute("currentSessionUser");
     }
 }

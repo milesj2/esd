@@ -6,7 +6,6 @@ import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.WorkingHours;
-import com.esd.model.data.persisted.User;
 import org.joda.time.LocalTime;
 
 import java.sql.PreparedStatement;

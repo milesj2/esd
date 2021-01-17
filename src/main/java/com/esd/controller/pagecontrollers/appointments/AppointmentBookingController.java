@@ -5,12 +5,12 @@ import com.esd.controller.utils.AuthenticationUtils;
 import com.esd.controller.utils.UrlUtils;
 import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
+import com.esd.model.service.SystemUserService;
 import com.esd.model.service.UserDetailsService;
-import com.esd.model.service.UserService;
 import org.joda.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
@@ -49,7 +49,7 @@ public class AppointmentBookingController extends HttpServlet {
             }
             patientId = Integer.parseInt(request.getParameter("selectedUserId"));
         }else{
-            User user = AuthenticationUtils.getCurrentUser(request);
+            SystemUser user = AuthenticationUtils.getCurrentUser(request);
             if(user.getUserDetails() == null){
                     UserDetails details = UserDetailsService.getInstance().getUserDetailsByUserID(user.getId());
                     patientId = details.getId();
@@ -77,7 +77,22 @@ public class AppointmentBookingController extends HttpServlet {
         Map<Integer, List<AppointmentPlaceHolder>> doctorAppointmentsList = new HashMap<>();
         Map<Integer, List<AppointmentPlaceHolder>> nurseAppointmentsList = new HashMap<>();
 
-        request.setAttribute(ATTRIBUTE_AVAILABLE_APPOINTMENTS, placeHolderList);
+        for(Integer id : placeHolderList.keySet()){
+                SystemUser user = SystemUserService.getInstance().getUserByUserDetailsId(id);
+            if(user == null){
+                continue;
+            }
+
+            if(user.getUserGroup() == UserGroup.DOCTOR){
+                doctorAppointmentsList.put(id, placeHolderList.get(id));
+            }
+            if(user.getUserGroup() == UserGroup.NURSE){
+                nurseAppointmentsList.put(id, placeHolderList.get(id));
+            }
+        }
+
+        request.setAttribute(ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR, doctorAppointmentsList);
+        request.setAttribute(ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE, nurseAppointmentsList);
 
         RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBooking.jsp");
         view.forward(request, response);

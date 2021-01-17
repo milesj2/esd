@@ -8,7 +8,6 @@ import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.WorkingHours;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.User;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 

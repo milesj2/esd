@@ -1,6 +1,5 @@
 package com.esd.model.data;
 
-import com.esd.model.data.persisted.User;
 
 import java.util.Arrays;
 import java.util.List;
