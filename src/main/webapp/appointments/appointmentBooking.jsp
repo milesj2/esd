@@ -1,12 +1,14 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.esd.model.data.AppointmentPlaceHolder" %>
 <%@ page import="com.esd.controller.pagecontrollers.appointments.AppointmentBookingController" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
+<%@ page import="com.esd.model.service.UserDetailsService" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% User currentUser = (User) (session.getAttribute("currentSessionUser"));%>
+<% SystemUser currentUser = (SystemUser) (session.getAttribute("currentSessionUser"));%>
 <html>
 <head>
     <title>Appointment booking</title>
@@ -38,7 +40,7 @@
                         for(Integer id : doctorAppointments.keySet()){
                     %>
                     <div>
-                        <h2>Dr _____</h2>
+                        <h2>Dr <%=UserDetailsService.getInstance().getUserDetailsByID(id).getLastName()%></h2>
                         <% for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
                             <span style="border:1px solid black; margin-left: 10px">
                                 <%=placeHolder.getAppointmentTime()%>
@@ -57,7 +59,7 @@
                     for(Integer id : nurseAppointments.keySet()){
                 %>
                 <div>
-                    <h2>Dr _____</h2>
+                    <h2>Nurse <%=UserDetailsService.getInstance().getUserDetailsByID(id).getLastName()%></h2>
                     <% for(AppointmentPlaceHolder placeHolder : nurseAppointments.get(id)){%>
                     <span style="border:1px solid black; margin-left: 10px">
                                 <%=placeHolder.getAppointmentTime()%>
