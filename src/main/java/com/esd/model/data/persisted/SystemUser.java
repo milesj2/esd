@@ -6,7 +6,7 @@ import com.esd.model.data.UserGroup;
  * Original Author: Jordan Hellier
  * Use: This class is a simple data class used to store the data about a user
  */
-public class User {
+public class SystemUser {
 
     private int id;
     private String username;
@@ -15,10 +15,10 @@ public class User {
     private UserDetails userDetails;
     private boolean active = false;
 
-    public User() {
+    public SystemUser() {
     }
 
-    public User(int id, String username, String password, UserGroup userGroup, boolean active) {
+    public SystemUser(int id, String username, String password, UserGroup userGroup, boolean active) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -1,7 +1,6 @@
 package com.esd.controller.filters;
 
 import com.esd.controller.utils.UrlUtils;
-import com.esd.model.data.persisted.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

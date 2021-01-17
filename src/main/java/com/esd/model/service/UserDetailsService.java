@@ -13,6 +13,7 @@ import java.util.Map;
  * Use: This class is a singleton, The use of this class is to do any functionality needed for user details
  */
 public class UserDetailsService {
+
     private static UserDetailsService instance;
     private UserDetailsDao userDetailsDao;
 
@@ -30,6 +31,9 @@ public class UserDetailsService {
         return instance;
     }
 
+    public UserDetails getUserDetailsByID(int id) throws SQLException, InvalidIdValueException {
+        return userDetailsDao.getUserDetailsById(id);
+    }
 
     public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
         return userDetailsDao.getUserDetailsByUserId(userId);

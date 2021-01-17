@@ -1,6 +1,7 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -36,16 +37,16 @@
                     </tr>
                     <%
 
-                        ArrayList<User> users = (ArrayList<User>) (request.getAttribute("users"));
+                        ArrayList<SystemUser> systemUsers = (ArrayList<SystemUser>) (request.getAttribute("systemUsers"));
 
-                        for (User user:users){
+                        for (SystemUser systemUser : systemUsers){
                             out.print("<tr>");
-                            out.print(String.format("<td>%d</td>", user.getId()));
-                            out.print(String.format("<td>%s</td>", user.getUsername()));
-                            out.print(String.format("<td>%s</td>", user.getPassword()));
-                            out.print(String.format("<td>%s</td>", user.getUserGroup()));
-                            if (user.getUserGroup() != UserGroup.ADMIN){
-                                out.print(String.format("<td><a href='edit?id=%d'><img src='%s/res/icons/edit.png'/></a></td>", user.getId(), request.getContextPath()));
+                            out.print(String.format("<td>%d</td>", systemUser.getId()));
+                            out.print(String.format("<td>%s</td>", systemUser.getUsername()));
+                            out.print(String.format("<td>%s</td>", systemUser.getPassword()));
+                            out.print(String.format("<td>%s</td>", systemUser.getUserGroup()));
+                            if (systemUser.getUserGroup() != UserGroup.ADMIN){
+                                out.print(String.format("<td><a href='edit?id=%d'><img src='%s/res/icons/edit.png'/></a></td>", systemUser.getId(), request.getContextPath()));
                             } else {
                                 out.print("<td><p>Editing from this page is disabled for admin account</p></td>");
                             }

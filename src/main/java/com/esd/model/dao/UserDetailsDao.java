@@ -23,6 +23,7 @@ public class UserDetailsDao {
     private static final String INSERT_INTO_USERDETAILS = "insert into userDetails " +
             "(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) " +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     private static final String UPDATE_USER_DETAILS = "UPDATE USERDETAILS SET " +
             "firstname=?" +
             ",lastname=?" +
@@ -59,15 +60,29 @@ public class UserDetailsDao {
         );
     }
 
-    public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
+    public UserDetails getUserDetailsById(int id) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, id));
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         boolean resultFound = result.next();
         if(!resultFound){
             throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
+        }
+        return getUserDetailsFromResults(result);
+    }
+
+    public UserDetails getUserDetailsByUserId(int userId) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.SYSTEMUSER_ID_FK, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, userId));
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+        boolean resultFound = result.next();
+        if(!resultFound){
+            throw new InvalidIdValueException(String.format("No user details found for id '%d'", userId));
         }
         return getUserDetailsFromResults(result);
     }

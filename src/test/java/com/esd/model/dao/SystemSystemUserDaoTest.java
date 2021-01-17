@@ -1,7 +1,7 @@
 package com.esd.model.dao;
 
 
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.UserGroup;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class UserDaoTest {
+public class SystemSystemUserDaoTest {
 
     //TODO this test class needs updating to run in an in memory derbydb as opposed to production db,
     //this will require changes to the ConnectionManager function in some form.
@@ -22,13 +22,13 @@ public class UserDaoTest {
     private static final UserGroup VALID_USERGROUP = UserGroup.NHS_PATIENT;
     private static final String INVALID_USERNAME = "sdfsdf";
 
-    private UserDao target = UserDao.getInstance();
+    private SystemUserDao target = SystemUserDao.getInstance();
 
     @Test
     public void validUsernameTest() throws SQLException, InvalidUserCredentialsException {
         assertThat(target.getUserByUsername(VALID_USERNAME))
                 .as("User for valid username should be returned")
-        .isInstanceOf(User.class)
+        .isInstanceOf(SystemUser.class)
         .hasFieldOrPropertyWithValue("username", VALID_USERNAME)
         .hasFieldOrPropertyWithValue("userGroup", VALID_USERGROUP)
         .hasFieldOrPropertyWithValue("password", VALID_PASSWORD);

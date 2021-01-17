@@ -2,8 +2,8 @@ package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
-import com.esd.model.service.UserService;
+import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.service.SystemUserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,17 +34,17 @@ public class UserManageController extends HttpServlet {
 
         request.setAttribute("pageTitle", "Manage Users");
 
-        List<User> users;
+        List<SystemUser> systemUsers;
 
         try {
-            users = UserService.getInstance().getUsers();
+            systemUsers = SystemUserService.getInstance().getUsers();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
-        request.setAttribute("users", users);
+        request.setAttribute("users", systemUsers);
         RequestDispatcher view = request.getRequestDispatcher("/users/manageUserAccount.jsp");
         view.forward(request, response);
     }

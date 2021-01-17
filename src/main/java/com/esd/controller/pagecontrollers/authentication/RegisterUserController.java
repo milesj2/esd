@@ -3,9 +3,9 @@ package com.esd.controller.pagecontrollers.authentication;
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.service.UserService;
+import com.esd.model.service.SystemUserService;
 
 import javax.servlet.annotation.WebServlet;
 import org.joda.time.LocalDate;
@@ -35,14 +35,14 @@ public class RegisterUserController extends HttpServlet {
         String notify = "";
         try {
             response.setContentType("text/html;charset=UTF-8");
-            User user = createUserFromRequest(request);
+            SystemUser systemUser = createUserFromRequest(request);
             UserDetails userDetails = createUserDetailsFromRequest(request);
 
-            if (user.getUserGroup() == UserGroup.NHS_PATIENT || user.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
-                user.setActive(true);
+            if (systemUser.getUserGroup() == UserGroup.NHS_PATIENT || systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
+                systemUser.setActive(true);
             }
             
-            boolean userRegisterd = UserService.getInstance().createUser(user, userDetails);
+            boolean userRegisterd = SystemUserService.getInstance().createUser(systemUser, userDetails);
             if (userRegisterd) {
                 notify = REGISTER_SUCCESS;
             } else {
@@ -58,12 +58,12 @@ public class RegisterUserController extends HttpServlet {
         view.forward(request, response);
     }
 
-    private User createUserFromRequest(HttpServletRequest request) throws ParseException {
-        User user = new User();
-        user.setPassword(request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD));
-        user.setUserGroup(UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)));
-        user.setUsername(request.getParameter(DaoConsts.SYSTEMUSER_USERNAME));
-        return user;
+    private SystemUser createUserFromRequest(HttpServletRequest request) throws ParseException {
+        SystemUser systemUser = new SystemUser();
+        systemUser.setPassword(request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD));
+        systemUser.setUserGroup(UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)));
+        systemUser.setUsername(request.getParameter(DaoConsts.SYSTEMUSER_USERNAME));
+        return systemUser;
     }
 
     private UserDetails createUserDetailsFromRequest(HttpServletRequest request) throws ParseException {

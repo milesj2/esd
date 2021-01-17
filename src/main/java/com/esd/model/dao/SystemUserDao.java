@@ -1,17 +1,15 @@
 package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.joins.Joins;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.User;
-import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.exceptions.InvalidUserCredentialsException;
-import com.esd.model.exceptions.InvalidUserIdException;
-import java.util.Date;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,62 +20,75 @@ import java.util.List;
  * Modified by: Angela Jackson
  * Use: This class is a singleton, The use of this class is to all DAO operations in relation to users
  */
-public class UserDao {
+public class SystemUserDao {
 
-    private static UserDao instance;
+    private static SystemUserDao instance;
     private static final String INSERT_INTO_SYSTEMUSER = "insert into systemUser " +
             "(username, password, active, userGroup) values (?, ?, ?, ?)";
     private static final String UPDATE_USER = "UPDATE SYSTEMUSER SET " +
             "username=?,password=?,usergroup=?,active=? WHERE ID=?";
 
-    private UserDao() {
+    private SystemUserDao() {
     }
 
-    public List<User> getUsers() throws SQLException {
+    public List<SystemUser> getUsers() throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER);
 
         return extractUsersFromResultSet(queryBuilder.createStatement());
     }
 
-    public User getUserByUsername(String username) throws SQLException, InvalidUserCredentialsException {
+    public SystemUser getUserByUsername(String username) throws SQLException, InvalidUserCredentialsException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMUSER_USERNAME, username));
 
-        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
-        if(users.size() != 1){
+        List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
+        if(systemUsers.size() != 1){
             throw new InvalidUserCredentialsException("No user found for username");
         }
-        return users.get(0);
+        return systemUsers.get(0);
     }
 
-    public User getUserByID(int id) throws SQLException, InvalidIdValueException {
+    public SystemUser getUserByID(int id) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
-        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
-        if(users.size() != 1){
+        List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
+        if(systemUsers.size() != 1){
             throw new InvalidIdValueException(String.format("No user found for id '%d'", id));
         }
-        return users.get(0);
+        return systemUsers.get(0);
 
     }
 
-    public boolean updateUser(User user) throws SQLException, InvalidIdValueException {
+    public SystemUser getUserByUserDetailsID(int userDetailsid) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, DaoConsts.SYSTEMUSER_ID_FK, DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, userDetailsid));
+
+        List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
+        if(systemUsers.size() != 1){
+            throw new InvalidIdValueException(String.format("No user found for id '%d'", userDetailsid));
+        }
+        return systemUsers.get(0);
+
+    }
+
+    public boolean updateUser(SystemUser systemUser) throws SQLException, InvalidIdValueException {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_USER);
 
-        statement.setString(1, user.getUsername());
-        statement.setString(2, user.getPassword());
-        statement.setString(3, user.getUserGroup().name());
-        statement.setBoolean(4, user.isActive());
-        statement.setInt(5, user.getId());
+        statement.setString(1, systemUser.getUsername());
+        statement.setString(2, systemUser.getPassword());
+        statement.setString(3, systemUser.getUserGroup().name());
+        statement.setBoolean(4, systemUser.isActive());
+        statement.setInt(5, systemUser.getId());
 
         int userResult = statement.executeUpdate();
 
         if (userResult == 1){
             return true;
         } else if (userResult == 0){
-            throw new InvalidIdValueException(String.format("No user found for id '%d'", user.getId()));
+            throw new InvalidIdValueException(String.format("No user found for id '%d'", systemUser.getId()));
         } else{
             // Uknown Exception?
             return false;
@@ -88,21 +99,21 @@ public class UserDao {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.SYSTEMUSER_USERNAME, username));
 
-        List<User> users = extractUsersFromResultSet(queryBuilder.createStatement());
+        List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
 
-        return users.size() == 0;
+        return systemUsers.size() == 0;
     }
     
-    public void createSystemUser(User user){
+    public void createSystemUser(SystemUser systemUser){
 
         Connection con = ConnectionManager.getInstance().getConnection();
         
         try {
         PreparedStatement statement = con.prepareStatement(INSERT_INTO_SYSTEMUSER);
-        statement.setString(1, user.getUsername());
-        statement.setString(2, user.getPassword());
-        statement.setBoolean(3, user.isActive());
-        statement.setString(4, user.getUserGroup().name());
+        statement.setString(1, systemUser.getUsername());
+        statement.setString(2, systemUser.getPassword());
+        statement.setBoolean(3, systemUser.isActive());
+        statement.setString(4, systemUser.getUserGroup().name());
         int resultAdded = statement.executeUpdate();
         
         } catch(SQLException e) {
@@ -116,8 +127,8 @@ public class UserDao {
     
 
 
-    private List<User> extractUsersFromResultSet(PreparedStatement statement) throws SQLException {
-        List<User> returnValue = new ArrayList<>();
+    private List<SystemUser> extractUsersFromResultSet(PreparedStatement statement) throws SQLException {
+        List<SystemUser> returnValue = new ArrayList<>();
         ResultSet result = statement.executeQuery();
         while(result.next()){
             returnValue.add(getUserFromResults(result));
@@ -125,9 +136,9 @@ public class UserDao {
         return returnValue;
     }
 
-    public User getUserFromResults(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        return new User(
+    public SystemUser getUserFromResults(ResultSet resultSet) throws SQLException {
+        SystemUser systemUser = new SystemUser();
+        return new SystemUser(
                 resultSet.getInt(DaoConsts.ID),
                 resultSet.getString(DaoConsts.SYSTEMUSER_USERNAME),
                 resultSet.getString(DaoConsts.SYSTEMUSER_PASSWORD),
@@ -136,9 +147,9 @@ public class UserDao {
         );
     }
     
-    public synchronized static UserDao getInstance(){
+    public synchronized static SystemUserDao getInstance(){
         if(instance == null){
-            instance = new UserDao();
+            instance = new SystemUserDao();
         }
         return instance;
     }
