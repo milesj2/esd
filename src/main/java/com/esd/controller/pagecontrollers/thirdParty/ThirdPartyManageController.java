@@ -25,7 +25,8 @@ public class ThirdPartyManageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
-
+        
+        request.setAttribute("pageTitle", "Third Party Managment");
         List<ThirdParty> thirdParties;
 
         try {

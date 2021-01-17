@@ -11,7 +11,6 @@
     <script src="res/js/main.js"></script>
 </head>
 <body>
-<<<<<<< HEAD
     <div class="root_container">
         <%@ include file="res/components/sidebar.jsp" %>
         <div class="main_container">

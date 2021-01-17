@@ -31,6 +31,7 @@ public class ThirdPartyEditController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
+        request.setAttribute("pageTitle", "Edit Third Party");
 
         ThirdParty thirdParty;
 

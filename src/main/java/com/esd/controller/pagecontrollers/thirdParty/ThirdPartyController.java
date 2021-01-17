@@ -46,7 +46,7 @@ public class ThirdPartyController extends HttpServlet {
             ex.printStackTrace();
             notify = REQUEST_FAILURE;
         }
-      
+        
         request.setAttribute("notify",notify);
         RequestDispatcher view = request.getRequestDispatcher("/thirdPartyManagement/addThirdParty.jsp");
         view.forward(request, response);
@@ -68,6 +68,7 @@ public class ThirdPartyController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
+            req.setAttribute("pageTitle", "Add Third Party");
             RequestDispatcher view = req.getRequestDispatcher("/thirdPartyManagement/addThirdParty.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){

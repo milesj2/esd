@@ -83,6 +83,7 @@ public class RegisterUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
+            req.setAttribute("pageTitle", "Register");
             RequestDispatcher view = req.getRequestDispatcher("/register.jsp");
             view.forward(req,resp);
         }catch (ServletException | IOException e){
