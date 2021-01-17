@@ -73,7 +73,7 @@
                                     <input type="submit" value="Select User" />
                                 </form>
                                 <%}else{%>
-                                <a href='${pageContext.request.contextPath}/systemUsers/edit?id=<%=userDetails.getUserId()%>'>Search Users</a>
+                                <a href='${pageContext.request.contextPath}/users/edit?id=<%=userDetails.getUserId()%>'>Search Users</a>
                                 <%}%>
                             </td>
                         </tr>

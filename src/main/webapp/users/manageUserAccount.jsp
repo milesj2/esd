@@ -37,7 +37,7 @@
                     </tr>
                     <%
 
-                        ArrayList<SystemUser> systemUsers = (ArrayList<SystemUser>) (request.getAttribute("systemUsers"));
+                        ArrayList<SystemUser> systemUsers = (ArrayList<SystemUser>) (request.getAttribute("users"));
 
                         for (SystemUser systemUser : systemUsers){
                             out.print("<tr>");

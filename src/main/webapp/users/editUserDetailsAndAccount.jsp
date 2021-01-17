@@ -27,14 +27,14 @@
         <%
             if (systemUser.getUserGroup() == UserGroup.ADMIN) { %>
                 <h1>Editing User is disabled for admin accounts from this page.</h1>
-                <a href="${pageContext.request.contextPath}/systemUsers/manage">Return to User Management</a>
+                <a href="${pageContext.request.contextPath}/users/manage">Return to User Management</a>
             <%  return;
             }
             %>
             <h1>Editing User <%= systemUser.getUsername() %></h1>
             <h2>Name: <%= systemUser.getUserDetails().getFirstName() %></h2>
-            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/systemUsers/manage';">Cancel</button>
-            <form class="input_form" method="post" action="${pageContext.request.contextPath}/systemUsers/edit" id="userEdit">
+            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/manage';">Cancel</button>
+            <form class="input_form" method="post" action="${pageContext.request.contextPath}/users/edit" id="userEdit">
                 <input type="submit" name="saveEdit" value="Save">
                 <br>
                 <input type="hidden" name="id" value="<%= systemUser.getId() %>">
