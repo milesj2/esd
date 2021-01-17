@@ -31,6 +31,9 @@ public class UserDetailsService {
         return instance;
     }
 
+    public UserDetails getUserDetailsByID(int id) throws SQLException, InvalidIdValueException {
+        return userDetailsDao.getUserDetailsById(id);
+    }
 
     public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
         return userDetailsDao.getUserDetailsByUserId(userId);
