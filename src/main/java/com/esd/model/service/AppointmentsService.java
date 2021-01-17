@@ -251,6 +251,20 @@ public class AppointmentsService {
         return null;
     }
 
+    public Appointment getNextAppointment(int patientId) throws SQLException {
+        List<Appointment> appointments = appointmentDao.getPatientAppointmentsById(patientId);
+        if (appointments.isEmpty()) {
+            return null;
+        }
+        return appointments.stream()
+                .reduce((app1, app2)
+                        -> app1.getAppointmentDate().getDayOfYear() < app2.getAppointmentDate().getDayOfYear()
+                        && app1.getAppointmentDate().getYear() < app2.getAppointmentDate().getYear()
+                        ? app1
+                        : app2)
+                .get();
+    }
+
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }

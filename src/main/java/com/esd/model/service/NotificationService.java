@@ -16,14 +16,9 @@ public class NotificationService {
 
     public String getLastAddedAppointmentInfo() throws SQLException {
         Appointment app = appointmentsService.getLastAddedAppointment();
-        if (app == null) {
-            return "No appointments added yet.";
-        }
-        return "ID: " + app.getId()
-                + "<br>Date: " + app.getAppointmentDate() + ", " + app.getAppointmentTime()
-                + "<br>Status: " + app.getStatus().toString()
-                + "<br>Patient ID: " + app.getPatientId()
-                + "<br>Employee ID: " + app.getEmployeeId();
+        return app == null
+                ? "No appointments added yet."
+                : getAppointmentStrInfo(app);
     }
 
     public String getLastAddedInvoiceInfo() throws SQLException {
@@ -38,8 +33,23 @@ public class NotificationService {
                 + "<br>Appointment ID: " + inv.getAppointmentId();
     }
 
-    private NotificationService(AppointmentsService appointmentsService, InvoiceService invoiceService){
-        if (appointmentsService == null) {
+    public String getNextAppointment(int patientId) throws SQLException {
+        Appointment app = appointmentsService.getNextAppointment(patientId);
+        return app == null
+                ? "No pending appointments yet."
+                : getAppointmentStrInfo(app);
+    }
+
+    public String getAppointmentStrInfo(Appointment app) {
+        return  "ID: " + app.getId()
+                + "<br>Date: " + app.getAppointmentDate() + ", " + app.getAppointmentTime()
+                + "<br>Status: " + app.getStatus().toString()
+                + "<br>Patient ID: " + app.getPatientId()
+                + "<br>Employee ID: " + app.getEmployeeId();
+    }
+
+    private NotificationService(AppointmentsService appointmentService, InvoiceService invoiceService){
+        if (appointmentService == null) {
             throw new IllegalArgumentException("appointmentService cannot be null!");
         }
         if (invoiceService == null) {

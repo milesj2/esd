@@ -135,7 +135,7 @@ public class InvoiceService {
         }
     }
 
-    public Invoice getLastAddedInvoice() throws  SQLException {
+    public Invoice getLastAddedInvoice() throws SQLException {
         return invoiceDao.getInstance().getLastAddedInvoice();
     }
 }

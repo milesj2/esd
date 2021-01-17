@@ -67,7 +67,10 @@ public class DashboardController extends HttpServlet {
     }
 
     private void setQuickNotifications(HttpServletRequest request) throws SQLException {
+        SystemUser user = (SystemUser) request.getSession().getAttribute("currentSessionUser");
+
         request.setAttribute("lastAddedAppointmentInfo", notificationService.getLastAddedAppointmentInfo());
         request.setAttribute("lastAddedInvoiceInfo", notificationService.getLastAddedInvoiceInfo());
+        request.setAttribute("nextAppointment", notificationService.getNextAppointment(user.getId()));
     }
 }

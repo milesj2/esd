@@ -33,13 +33,20 @@
                 </div>
                 <div>
                     <h3>Quick Notifications</h3>
-                    <strong>Last added appointment:</strong>
-                    <br>
-                    <%=request.getAttribute("lastAddedAppointmentInfo")%>
-                    <br>
-                    <strong>Last added invoice:</strong>
-                    <br>
-                    <%=request.getAttribute("lastAddedInvoiceInfo")%>
+                    <% if (currentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)
+                        || currentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
+                        <strong>Your next pending appointment:</strong>
+                        <br>
+                        <%=request.getAttribute("nextAppointment")%>
+                    <% } else { %>
+                        <strong>Last added appointment:</strong>
+                        <br>
+                        <%=request.getAttribute("lastAddedAppointmentInfo")%>
+                        <br>
+                        <strong>Last added invoice:</strong>
+                        <br>
+                        <%=request.getAttribute("lastAddedInvoiceInfo")%>
+                    <% } %>
                 </div>
             </main>
         </div>
