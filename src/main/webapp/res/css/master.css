@@ -111,6 +111,8 @@ body{
 #############################################
 */
 
+
+
 main {
     margin: 0;
     padding: 20px;
@@ -118,6 +120,11 @@ main {
     width: calc(100vw - var(--nav-width) - 2*10px);
     background: #eeeeee;
     overflow: scroll;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
 }
 
 main .widgets {

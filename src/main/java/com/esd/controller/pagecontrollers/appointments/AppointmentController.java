@@ -38,15 +38,11 @@ public class AppointmentController extends HttpServlet {
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-            try {
                 // if referred with get url get appointments
-                if(request.getParameterMap().containsKey(DaoConsts.ID)) {
-                    int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
-                    Appointment appointment = appointmentsService.getAppointmentById(idVal);
-                    request.setAttribute("appointment", appointment);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if(request.getParameterMap().containsKey(DaoConsts.ID)) {
+                int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
+                Appointment appointment = appointmentsService.getAppointmentById(idVal);
+                request.setAttribute("appointment", appointment);
             }
             RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
             view.forward(request, response);

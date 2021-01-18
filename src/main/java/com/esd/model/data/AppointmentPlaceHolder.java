@@ -15,12 +15,14 @@ public class AppointmentPlaceHolder {
     private LocalTime appointmentTime;
 
 
-    public AppointmentPlaceHolder(int employeeId, UserDetails employeeDetails, LocalDate appointmentDate, LocalTime appointmentTime) {
+    public AppointmentPlaceHolder() {
+    }
+
+    public AppointmentPlaceHolder(int employeeId, LocalDate appointmentDate, LocalTime appointmentTime, int slots) {
         this.employeeId = employeeId;
         this.slots = slots;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
-        this.employeeDetails = employeeDetails;
     }
 
     public AppointmentPlaceHolder(int employeeId, LocalDate appointmentDate, LocalTime appointmentTime) {

@@ -130,8 +130,9 @@ public class AppointmentsService {
                 if(overlap){
                     return false;
                 }
-
             }
+
+            return true;
         } catch (SQLException | InvalidIdValueException e) {
             e.printStackTrace();
         }
@@ -219,8 +220,13 @@ public class AppointmentsService {
         return instance;
     }
 
-    public Appointment getAppointmentById(int AppointmentId) throws SQLException {
-        return appointmentDao.getAppointmentById(AppointmentId);
+    public Appointment getAppointmentById(int AppointmentId)  {
+        try {
+            return appointmentDao.getAppointmentById(AppointmentId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {

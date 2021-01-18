@@ -31,7 +31,6 @@ import java.util.Map;
 public class AppointmentBookingController extends HttpServlet {
 
     public static final String ATTRIBUTE_SELECTED_DATE = "selectedDate";
-    public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS = "availableAppointments";
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR = "availableAppointmentsDoctor";
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE = "availableAppointmentsNurse";
 
@@ -101,5 +100,8 @@ public class AppointmentBookingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
+
+        //TODO appointment confirmation page, and submission of data. Posting to this controller from confirmastion will page
+        //will finalise the appointment booking/amendment
     }
 }

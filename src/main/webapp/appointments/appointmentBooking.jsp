@@ -6,6 +6,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="com.esd.model.service.UserDetailsService" %>
+<%@ page import="com.esd.controller.utils.UrlUtils" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% SystemUser currentUser = (SystemUser) (session.getAttribute("currentSessionUser"));%>
@@ -21,31 +22,53 @@
     <div class="main_container">
         <%@ include file="../res/components/titlebar.jsp" %>
         <main>
-            <form>
-                <input type="date" value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE) %>">
+            <form action="${__SELF}">
+                <input onchange="submit()" name="<%= AppointmentBookingController.ATTRIBUTE_SELECTED_DATE %>" type="date" value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE) %>">
+                <% if(request.getParameter("selectedUserId") != null){ %>
+                    <input type="hidden" name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>">
+                <% } %>
+
+                <% if(request.getParameter("selectedAppointmentId") != null){ %>
+                <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>">
+                <% } %>
+
             </form>
             <%
                 Map<Integer, List<AppointmentPlaceHolder>> doctorAppointments =
                         (Map<Integer, List<AppointmentPlaceHolder>>) request.getAttribute(AppointmentBookingController.ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR);
 
                 Map<Integer, List<AppointmentPlaceHolder>> nurseAppointments =
-                        (Map<Integer, List<AppointmentPlaceHolder>>) request.getAttribute(AppointmentBookingController.ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR);
+                        (Map<Integer, List<AppointmentPlaceHolder>>) request.getAttribute(AppointmentBookingController.ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE);
             %>
 
                 <div>
                     <h1>Available Doctor Appointments</h1>
                     <% if(doctorAppointments.isEmpty()){%>
-                    Sorry there are no available appointments for this day
+                        Sorry there are no available appointments for this day
                     <% }else{
                         for(Integer id : doctorAppointments.keySet()){
                     %>
                     <div>
                         <h2>Dr <%=UserDetailsService.getInstance().getUserDetailsByID(id).getLastName()%></h2>
-                        <% for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
-                            <span style="border:1px solid black; margin-left: 10px">
-                                <%=placeHolder.getAppointmentTime()%>
-                            </span>
-                        <% }%>
+                        <form method="post" action="<%=UrlUtils.absoluteUrl(request, "appointments/confirm")%>">
+                            <input type="hidden" name="employeeId" value="<%=id%>"/>
+                            <input type="hidden" name="appointmentDate"
+                                   value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE)%>"/>
+                            <input type="hidden" name="slots" value="1"/>
+                            <input type="hidden" name="action" value="book"/>
+                            <% if(request.getParameter("selectedUserId") != null){ %>
+                            <input type="hidden" name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>"/>
+                            <% } %>
+
+                            <% if(request.getParameter("selectedAppointmentId") != null){ %>
+                                <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>"/>
+                            <% } %>
+
+                            <% for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
+                                <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
+                            <% }%>
+                        </form>
+
                     </div>
                     <% }
                     }%>
@@ -71,6 +94,6 @@
             </div>
         </main>
     </div>
-</div>♠
+</div>
 </body>
 </html>
