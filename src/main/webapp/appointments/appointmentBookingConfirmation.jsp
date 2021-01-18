@@ -28,7 +28,7 @@
             <% if(!(Boolean)request.getAttribute("confirmed")) {%>
                 <h1>Please confirm appointment details</h1>
             <% }else{ %>
-                <h1><%=request.getAttribute("confirmationMessage")%>></h1>
+                <h1><%=request.getAttribute("confirmationMessage")%></h1>
             <% } %>
 
         <% if(request.getAttribute("errorMessage") != null){ %>
@@ -64,7 +64,7 @@
                     UserDetails patient =
                         UserDetailsService.getInstance().getUserDetailsByID(Integer.parseInt(request.getParameter("selectedUserId")));
                 %>
-                    <input type="hidden" readonly name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>"/>
+                <input type="hidden" readonly name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>"/></br>
 
                     Patient: <%= patient.getFirstName() + patient.getLastName()%>
                 <% } %>

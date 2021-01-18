@@ -96,12 +96,4 @@ public class AppointmentBookingController extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBooking.jsp");
         view.forward(request, response);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-
-        //TODO appointment confirmation page, and submission of data. Posting to this controller from confirmastion will page
-        //will finalise the appointment booking/amendment
-    }
 }

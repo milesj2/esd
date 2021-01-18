@@ -83,11 +83,25 @@
                 %>
                 <div>
                     <h2>Nurse <%=UserDetailsService.getInstance().getUserDetailsByID(id).getLastName()%></h2>
-                    <% for(AppointmentPlaceHolder placeHolder : nurseAppointments.get(id)){%>
-                    <span style="border:1px solid black; margin-left: 10px">
-                                <%=placeHolder.getAppointmentTime()%>
-                            </span>
-                    <% }%>
+                    <form method="post" action="<%=UrlUtils.absoluteUrl(request, "appointments/confirm")%>">
+                        <input type="hidden" name="employeeId" value="<%=id%>"/>
+                        <input type="hidden" name="appointmentDate"
+                               value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE)%>"/>
+                        <input type="hidden" name="slots" value="1"/>
+                        <input type="hidden" name="action" value="book"/>
+                        <% if(request.getParameter("selectedUserId") != null){ %>
+                        <input type="hidden" name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>"/>
+                        <% } %>
+
+                        <% if(request.getParameter("selectedAppointmentId") != null){ %>
+                        <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>"/>
+                        <% } %>
+
+                        <% for(AppointmentPlaceHolder placeHolder : nurseAppointments.get(id)){%>
+                        <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
+                        <% }%>
+                    </form>
+
                 </div>
                 <% }
                 }%>

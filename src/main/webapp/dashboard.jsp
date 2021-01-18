@@ -15,7 +15,7 @@
         <%@ include file="res/components/sidebar.jsp" %>
         <div class="main_container">
             <%@ include file="res/components/titlebar.jsp" %>
-            <main class="nonav">
+            <main>
                 <h1>Dashboard</h1>
                 Welcome <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>
                 <br>
