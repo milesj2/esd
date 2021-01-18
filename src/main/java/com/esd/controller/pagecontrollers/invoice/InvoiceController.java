@@ -6,6 +6,7 @@ import com.esd.model.data.InvoiceOptions;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
+import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.service.InvoiceService;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Original Author: Trent meier
@@ -71,10 +73,18 @@ public class InvoiceController extends HttpServlet {
             invoice.setPrivatePatient(request.getParameter(DaoConsts.PRIVATE_PATIENT)=="true");
             invoice.setAppointmentId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID_FK)));
 
+            ArrayList<InvoiceItem> invoiceItems = new ArrayList<>();
+            //derive invoice related attributes
+            InvoiceItem invoiceItem = invoiceService.deriveInvoiceItemAttributes(invoice);
+            //add additional attributes
+            invoiceItem.setQuantity(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
+            invoiceItem.setDescription("Invoice For: "+  invoice.getInvoiceDate().toString());
+
+
             if(InvoiceOptions.valueOf(request.getParameter("option")) == InvoiceOptions.UPDATE) {
-                invoiceService.updateInvoice(invoice);
+                invoiceService.updateInvoice(invoice, invoiceItems);
             } else {
-                invoiceService.createInvoice(invoice);
+                invoiceService.createInvoice(invoice, invoiceItems);
             }
 
             request.setAttribute("message", "Success");
