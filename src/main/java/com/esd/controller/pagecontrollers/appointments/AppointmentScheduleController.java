@@ -6,6 +6,7 @@ import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UIAppointment;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.service.AppointmentsService;
 import org.joda.time.LocalDate;
 
@@ -31,13 +32,33 @@ public class AppointmentScheduleController extends HttpServlet {
             DaoConsts.ID)
     );
 
+    private boolean checkRequestContains(HttpServletRequest request, String key){
+        if(request.getParameterMap().containsKey(key) && !request.getParameter(key).isEmpty() && request.getParameter(key) != ""){
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
         Map<String, Object> args =  new HashMap<>();
-        for(String key: AppointmentKeys) {
 
+        SystemUser systemUser = (SystemUser)request.getSession().getAttribute("currentSessionUser");
+
+        if (systemUser.getUserGroup() == UserGroup.NHS_PATIENT
+                || systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT
+                || !checkRequestContains(request, "id"))
+        {
+            args.put("id", systemUser.getId());
+        } else {
+            for(String key: AppointmentKeys) {
+                if(checkRequestContains(request, key)){
+                    args.put(key, request.getParameter(key));
+                }
+            }
         }
 
         Calendar c = Calendar.getInstance();
