@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.invoice;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.UrlUtils;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.InvoiceOptions;
 import com.esd.model.data.InvoiceStatus;
@@ -9,6 +10,7 @@ import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
 import com.esd.model.service.InvoiceService;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 /**
  * Original Author: Angela Jackson
@@ -46,7 +49,12 @@ public class InvoicePaymentController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if(!request.getParameter(DaoConsts.ID).isEmpty()){           
+        if(request.getParameter("selectedInvoiceId") == null){
+            //TODO forward to search page
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "search")); //search page
+        return;
+        }
+              
             
             HttpSession session = request.getSession();
             request.setAttribute("pageTitle", "Invoice Payment");
@@ -54,26 +62,46 @@ public class InvoicePaymentController extends HttpServlet {
             session.setAttribute("currentPage", request.getServletPath());
 
             try{
-                Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-                InvoiceItem invoiceItem = invoiceService.getInvoiceItemById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
+                Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter("selectedInvoiceId")));
+                invoice.setItems(invoiceService.getAllInvoiceItemsForInvoiceId(invoice.getId()));
                 
+                SystemUser user = (SystemUser)request.getSession().getAttribute("currentSessionUser");
+                
+                if(Arrays.asList(UserGroup.NHS_PATIENT, UserGroup.PRIVATE_PATIENT).contains(user.getUserGroup())){
+                    UserDetails details = userDetailsService.getInstance().getUserDetailsByUserID(user.getId());
+                    if(details.getId() != invoice.getPatientId()){
+                        //TODO redirect probably dashboard?
+                        response.sendRedirect(UrlUtils.absoluteUrl(request, "dashboard")); //logged-in page
+                        System.out.println("Return Error");
+                        return;
+                    }
+                }
+                
+                //total the cost of the whole invoice
+                double total = 0.0d;
+                for(InvoiceItem item : invoice.getItems()){
+                    total += item.getTotalCost(); 
+                }
+                
+                request.setAttribute("totalDue", total);
                
-                SystemUser user = userService.getUserByID(Integer.parseInt(request.getParameter("uid")));
-                user.setUserDetails(userDetailsService.getUserDetailsByUserID(user.getId()));
+                SystemUser patient = userService.getUserByUserDetailsId(invoice.getPatientId());
+                patient.setUserDetails(userDetailsService.getUserDetailsByUserID(patient.getId()));
                 
-                SystemUser employee = userService.getUserByID(Integer.parseInt(request.getParameter("eid")));
+                SystemUser employee = userService.getUserByUserDetailsId(invoice.getEmployeeId());
                 employee.setUserDetails(userDetailsService.getUserDetailsByUserID(employee.getId()));
                 
                 request.setAttribute("invoice", invoice);
-                request.setAttribute("invoiceItem", invoiceItem);
-                request.setAttribute("user", user);
+                request.setAttribute("patient", patient);
                 request.setAttribute("employee", employee);
+                
             } catch (Exception e){
+                e.printStackTrace();
                 request.setAttribute("message", "could not find invoice");
             }
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/payInvoice.jsp");
             requestDispatcher.forward(request, response);
-        }
+        
     }
 
     @Override

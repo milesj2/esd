@@ -1,9 +1,9 @@
-<%@page import="com.esd.model.data.persisted.Appointment"%>
-<%@page import="com.esd.model.data.UserGroup"%>
-<%@page import="com.esd.model.data.InvoiceStatus"%>
-<%@page import="com.esd.model.data.persisted.InvoiceItem"%>
-<%@page import="com.esd.model.data.persisted.SystemUser"%>
-<%@page import="com.esd.model.data.persisted.UserDetails"%>
+<%@ page import="com.esd.model.data.persisted.Appointment" %>
+<%@ page import="com.esd.model.data.UserGroup" %>
+<%@ page import="com.esd.model.data.InvoiceStatus" %>
+<%@ page import="com.esd.model.data.persisted.InvoiceItem" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
+<%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Invoice" %>
 <%@ page import="com.esd.model.data.InvoiceOptions" %>
@@ -31,30 +31,59 @@
             <h2>Invoice Payment Information</h2>
             <a href='${pageContext.request.contextPath}/invoices/search'><button type="button">Back to Invoice Search</button></a><hr>
             <div class="row">
+            <script>
+            function cc_format(value) {
+              var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+              var matches = v.match(/\d{4,16}/g);
+              var match = matches && matches[0] || ''
+              var parts = []
+              for (i=0, len=match.length; i<len; i+=4) {
+                parts.push(match.substring(i, i+4))
+              }
+              if (parts.length) {
+                return parts.join(' ')
+              } else {
+                return value
+              }
+            }
+            
+            onload = function() {
+              document.getElementById('cardnumber').oninput = function() {
+                this.value = cc_format(this.value)
+              }
+            }
+            
+            function checkDigit(event) {
+                var code = (event.which) ? event.which : event.keyCode;
+
+                if ((code < 48 || code > 57) && (code > 31)) {
+                    return false;
+                }
+                return true;
+            }
+            </script>
                 
             <% try {
                 Invoice invoice = (Invoice)request.getAttribute("invoice");
-                InvoiceItem invoiceItem = (InvoiceItem)request.getAttribute("invoiceItem");
-                SystemUser user = (SystemUser)(request.getAttribute("user"));
+                SystemUser patient = (SystemUser)(request.getAttribute("patient"));
                 SystemUser employee = (SystemUser)(request.getAttribute("employee"));
             %>
             
-            <form method="post" action="${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>">
                 <div class="invoice-info">
                     <h3>Invoice Details For Appointment No. <%out.print(invoice.getAppointmentId());%></h3>
                     <table border="1" cellpadding="5" class="search_table invoice">
                         <tr>
                             <th>Patient's Name </th>
-                            <td><%= user.getUserDetails().getFirstName() %>
-                                <%=  user.getUserDetails().getLastName() %></td>
+                            <td><%= patient.getUserDetails().getFirstName() %>
+                                <%=  patient.getUserDetails().getLastName() %></td>
                         </tr>
                         <tr>
                             <th>Full Address </th>
-                            <td><%= user.getUserDetails().getAddressLine1() %>
-                                <%= user.getUserDetails().getAddressLine2() %>
-                                <%= user.getUserDetails().getAddressLine3() %><br>
-                                <%= user.getUserDetails().getTown() %>, 
-                                <%= user.getUserDetails().getPostCode() %></td>
+                            <td><%= patient.getUserDetails().getAddressLine1() %>
+                                <%= patient.getUserDetails().getAddressLine2() %>
+                                <%= patient.getUserDetails().getAddressLine3() %><br>
+                                <%= patient.getUserDetails().getTown() %>, 
+                                <%= patient.getUserDetails().getPostCode() %></td>
                         </tr>
                         <tr>
                             <th>Date & Time</th>
@@ -86,35 +115,37 @@
                         </tr>
                         <tr>
                             <th>Total Amount</th>
-                            <td>£<%out.print(invoiceItem.getCost());%></td>
+                            <td>£<%=(Double)request.getAttribute("totalDue")%></td>
                         </tr>
                     </table>
                 </div>
+                        
+                <form method="post" action="${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>">
                 <div class="invoice-pay">
                     <h3>Payment Details</h3>
                     <% if (invoice.getInvoiceStatus() != InvoiceStatus.PAID){%>
-                    <label for="fname">Accepted Cards</label>
-                    <div class="icon-container">
-                      <i class="fa fa-cc-visa" style="color:navy;"></i>
-                      <i class="fa fa-cc-amex" style="color:blue;"></i>
-                      <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                      <i class="fa fa-cc-discover" style="color:orange;"></i>
+                    <label style="padding:5px;" for="fname">Accepted Cards</label>
+                    <div class="icon-container" style="padding:5px;">
+                      <i class="fa fa-cc-visa fa-2x" style="color:navy;"></i>
+                      <i class="fa fa-cc-amex fa-2x" style="color:blue;"></i>
+                      <i class="fa fa-cc-mastercard fa-2x" style="color:red;"></i>
+                      <i class="fa fa-cc-discover fa-2x" style="color:orange;"></i>
                     </div><br>
                     <input type="text" name=<%=DaoConsts.ID%> value="<%out.print(invoice.getId());%>" size="10" hidden />
                     
-                    <label for="cardname">Name on Card*</label>
-                    <input type="text" id="cardname" name="cardname" placeholder="John More Doe" required><br>
+                    <div style="padding:5px;"><label for="cardname">Name on Card*</label>
+                    <input type="text" id="cardname" name="cardname" placeholder="John More Doe" required></div>
 
-                    <label for="cardnumber">Card number*</label>
-                    <input type="text" id="cardnumber" name="cardnumber" maxlength="16" placeholder="1111-2222-3333-4444" required><br>
+                    <div style="padding:5px;"><label for="cardnumber">Card number*</label>
+                    <input size="16" value="" id="cardnumber" name="cardnumber" placeholder="1111 2222 3333 4444" onkeypress="return checkDigit(event)" required></div>
 
-                    <label for="expiry">Expiry Date* (MM/YY)</label>
-                    <input type="number" id="monthexpiry" name="monthexpiry" min="01" max="12" maxlength="2" placeholder="MM" required><span>/</span>
-                    <input type="number" id="yearexpiry" name="yearexpiry" min="21" maxlength="2" placeholder="YY" required><br>
+                    <div style="padding:5px;"><label for="expiry">Expiry Date* (MM/YY)</label>
+                    <input type="number" id="monthexpiry" name="monthexpiry" min="01" max="12" maxlength="2" size="2" placeholder="MM" required><span>/</span>
+                    <input type="number" id="yearexpiry" name="yearexpiry" min="21" max="30" maxlength="2" size="2" placeholder="YY" required></div>
 
-                    <label for="cvv">CVV</label>
-                    <input type="text" id="cvv" name="cvv" placeholder="352"><br><br>
-                    <input type="submit" value="Pay £<%out.print(invoiceItem.getCost());%>" class="btn">
+                    <div style="padding:5px;"><label for="cvv">CVV*</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="352" size="3" maxlength="3" pattern="[0-9]{3}" required></div><br>
+                    <input type="submit" value="Pay £<%=(Double)request.getAttribute("totalDue")%>" class="btn">
                     <%}else{%>
                     <h5>Payment for this invoice is paid in full.</h4>
                     <%}%>

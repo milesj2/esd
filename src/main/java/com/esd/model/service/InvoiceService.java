@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Original Author: Trent Meier
@@ -35,8 +37,17 @@ public class InvoiceService {
         return instance;
     }
 
-    public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
+     public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
         return invoiceDao.getInvoiceById(id);
+    }
+     
+    public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id){
+       try {
+           return invoiceDao.getAllInvoiceItemsForInvoiceId(id);
+       } catch (SQLException ex) {
+           Logger.getLogger(InvoiceService.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       return new ArrayList<>();
     }
     
     public InvoiceItem getInvoiceItemById(int id) throws SQLException, InvalidIdValueException {

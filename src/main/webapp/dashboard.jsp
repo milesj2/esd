@@ -54,10 +54,12 @@
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
     items = [
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
     items = [
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
     ];
     <% } %>
 

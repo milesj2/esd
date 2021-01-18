@@ -86,7 +86,7 @@
                                 <input type="submit" value="Select Invoice" />
                             </form>
                             <%}else{%>
-                            <a href='${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>'>View/Pay</a>
+                            <a href='${pageContext.request.contextPath}/invoices/pay?selectedInvoiceId=<%=invoice.getId()%>'>View/Pay</a>
                             <%}%>
                         </td>
                     </tr>
