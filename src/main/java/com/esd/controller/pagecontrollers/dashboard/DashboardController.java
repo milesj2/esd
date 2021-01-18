@@ -4,6 +4,7 @@ import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.AuthenticationUtils;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.NotificationService;
 
 import javax.servlet.RequestDispatcher;
@@ -25,17 +26,15 @@ public class DashboardController extends HttpServlet {
     private NotificationService notificationService = NotificationService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, java.io.IOException
-    {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
+        SystemUser currentSystemUser = (SystemUser) request.getSession().getAttribute("currentSessionUser");
         try {
-            setQuickNotifications(request);
-        } catch (SQLException e) {
+            request.setAttribute("quickNotifications", notificationService.createQuickNotifications(currentSystemUser));
+        } catch (InvalidIdValueException | SQLException e) {
             e.printStackTrace();
         }
 
@@ -71,6 +70,6 @@ public class DashboardController extends HttpServlet {
 
         request.setAttribute("lastAddedAppointmentInfo", notificationService.getLastAddedAppointmentInfo());
         request.setAttribute("lastAddedInvoiceInfo", notificationService.getLastAddedInvoiceInfo());
-        request.setAttribute("nextAppointment", notificationService.getNextAppointment(user.getId()));
+        request.setAttribute("nextAppointment", notificationService.getNextPendingAppointment(user.getId()));
     }
 }

@@ -131,24 +131,8 @@ public class AppointmentDao {
         return appointments;
     }
 
-    public Appointment getLastAddedAppointment() throws SQLException {
+    public List<Appointment> getAllAppointments() throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
-
-        ResultSet result = queryBuilder.createStatement().executeQuery();
-        List<Appointment> appointments = new ArrayList<>();
-
-        while (result.next()) {
-            appointments.add(processResultSetForAppointment(result));
-        }
-        return appointments.stream()
-                .max(Comparator.comparing(Appointment::getId))
-                .orElse(null);
-    }
-
-    public List<Appointment> getPatientAppointmentsById(int patientId) throws SQLException {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
-        queryBuilder.and(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID, patientId));
-        queryBuilder.and(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_STATUS, AppointmentStatus.PENDING));
 
         ResultSet result = queryBuilder.createStatement().executeQuery();
         List<Appointment> appointments = new ArrayList<>();

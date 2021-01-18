@@ -18,6 +18,7 @@ import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -136,6 +137,8 @@ public class InvoiceService {
     }
 
     public Invoice getLastAddedInvoice() throws SQLException {
-        return invoiceDao.getInstance().getLastAddedInvoice();
+        return invoiceDao.getInstance().getAllInvoices().stream()
+                .max(Comparator.comparing(Invoice::getId))
+                .orElse(null);
     }
 }

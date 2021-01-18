@@ -172,7 +172,7 @@ public class InvoiceDao {
         return processResultSetForInvoices(true, queryBuilder.createStatement()).get(0);
     }
 
-    public Invoice getLastAddedInvoice() throws SQLException {
+    public List<Invoice> getAllInvoices() throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
 
         ResultSet result = queryBuilder.createStatement().executeQuery();
@@ -181,7 +181,7 @@ public class InvoiceDao {
         while (result.next()) {
             invoices.add(extractInvoiceFromResultSet(result));
         }
-        return invoices.stream().max(Comparator.comparing(Invoice::getId)).orElse(null);
+        return invoices;
     }
 
     public synchronized static InvoiceDao getInstance(){

@@ -6,6 +6,11 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% SystemUser currentSystemUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
+
+<%@ page import="com.esd.model.data.QuickNotification" %>
+<%@ page import="java.util.List" %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>User Dashboard</title>
@@ -33,19 +38,14 @@
                 </div>
                 <div>
                     <h3>Quick Notifications</h3>
-                    <% if (currentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)
-                        || currentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
-                        <strong>Your next pending appointment:</strong>
+                    <% List<QuickNotification> quickNotifications = (List<QuickNotification>) request.getAttribute("quickNotifications"); %>
+                    <% for (QuickNotification q: quickNotifications) { %>
+                        <strong><%= q.getTitle() %></strong>
+                        <% for (String line: q.getLines() ) { %>
+                            <br>
+                            <%= line %>
+                        <% } %>
                         <br>
-                        <%=request.getAttribute("nextAppointment")%>
-                    <% } else { %>
-                        <strong>Last added appointment:</strong>
-                        <br>
-                        <%=request.getAttribute("lastAddedAppointmentInfo")%>
-                        <br>
-                        <strong>Last added invoice:</strong>
-                        <br>
-                        <%=request.getAttribute("lastAddedInvoiceInfo")%>
                     <% } %>
                 </div>
             </main>

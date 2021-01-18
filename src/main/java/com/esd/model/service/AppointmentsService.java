@@ -77,16 +77,6 @@ public class AppointmentsService {
         return false;
     }
 
-    public boolean updateAppointment(Appointment appointment) {
-        try {
-            appointmentDao.updateAppointment(appointment);
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean updateAppointment(int appointmentId, AppointmentPlaceHolder placeholder, int patientId){
         if(!validateAppointmentSlotForEmployee(placeholder)){
             return false;
@@ -208,10 +198,6 @@ public class AppointmentsService {
         }
     }
 
-    public Appointment getLastAddedAppointment() throws SQLException {
-        return appointmentDao.getLastAddedAppointment();
-    }
-
     private List<LocalTime> generateAllPossibleSlots(List<WorkingHours> applicableWorkingHours, LocalDate date, int slotTime, int requestedSlotLength) {
         List<LocalTime> allSlots = new ArrayList<>();
 
@@ -251,8 +237,29 @@ public class AppointmentsService {
         return null;
     }
 
+    private boolean checkIfAptConflicts(Appointment appointment) throws SQLException {
+        //check if there are conflicting appointments
+        List<Appointment> conflictingApts = appointmentDao.getAppointmentsInPeriodWithStatus(
+                appointment.getAppointmentDate(),
+                appointment.getAppointmentDate(),
+                Optional.empty());
+        if(conflictingApts.size() > 0){
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkIfAptIsWorkingDay(Appointment appointment) {
+        //joda time day of week 6 or 7 is weekend (non working day)
+        int dayOfWeek = appointment.getAppointmentDate().getDayOfWeek();
+        if(dayOfWeek == 6 || dayOfWeek == 7){
+            return false;
+        }
+        return true;
+    }
+
     public Appointment getNextAppointment(int patientId) throws SQLException {
-        List<Appointment> appointments = appointmentDao.getPatientAppointmentsById(patientId);
+        List<Appointment> appointments = appointmentDao.getAllAppointments();
         if (appointments.isEmpty()) {
             return null;
         }
@@ -263,6 +270,47 @@ public class AppointmentsService {
                         ? app1
                         : app2)
                 .get();
+    }
+
+    public Appointment getLastAddedAppointment() throws SQLException {
+        return appointmentDao.getAllAppointments().stream()
+                .max(Comparator.comparing(Appointment::getId))
+                .orElse(null);
+    }
+
+    public Appointment getNextPendingAppointment(int patientId) throws SQLException {
+        List<Appointment> appointments = appointmentDao.getAllAppointments();
+        if (appointments.isEmpty()) {
+            return null;
+        }
+        return appointments.stream()
+                .filter(app -> app.getPatientId() == patientId && AppointmentStatus.PENDING.equals(app.getStatus()))
+                .reduce((app1, app2)
+                        -> app1.getAppointmentDate().getDayOfYear() < app2.getAppointmentDate().getDayOfYear()
+                        && app1.getAppointmentDate().getYear() < app2.getAppointmentDate().getYear()
+                        ? app1
+                        : app2)
+                .orElse(null);
+    }
+
+    public void createNewAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
+        if(!checkIfAptConflicts(appointment)){
+            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
+        }
+        if(!checkIfAptIsWorkingDay(appointment)){
+            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
+        }
+        appointmentDao.createAppointment(appointment);
+    }
+
+    public void updateAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
+        if(checkIfAptConflicts(appointment)){
+            throw new InvalidIdValueException("Appointment conflicts with existing appointment");
+        }
+        if(!checkIfAptIsWorkingDay(appointment)){
+            throw new InvalidIdValueException("Appointment cannot be for a non-working day");
+        }
+        appointmentDao.updateAppointment(appointment);
     }
 
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {

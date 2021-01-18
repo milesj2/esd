@@ -56,7 +56,11 @@ public class AppointmentInProgressController extends HttpServlet {
 
         if(appointment.getStatus() != AppointmentStatus.INPROGRESS){
             appointment.setStatus(AppointmentStatus.INPROGRESS);
-            AppointmentsService.getInstance().updateAppointment(appointment);
+            try {
+                AppointmentsService.getInstance().updateAppointment(appointment);
+            } catch (SQLException | InvalidIdValueException e) {
+                e.printStackTrace();
+            }
         }
         Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
 
@@ -111,7 +115,11 @@ public class AppointmentInProgressController extends HttpServlet {
 
             InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
 
-            AppointmentsService.getInstance().updateAppointment(appointment);
+            try {
+                AppointmentsService.getInstance().updateAppointment(appointment);
+            } catch (SQLException | InvalidIdValueException e) {
+                e.printStackTrace();
+            }
             String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
             response.sendRedirect(
                     UrlUtils.absoluteUrl(request, "/appointments/completed?" + selectedAppointmentIdParam));
