@@ -38,15 +38,11 @@ public class AppointmentController extends HttpServlet {
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-            try {
                 // if referred with get url get appointments
-                if(request.getParameterMap().containsKey(DaoConsts.ID)) {
-                    int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
-                    Appointment appointment = appointmentsService.getAppointmentById(idVal);
-                    request.setAttribute("appointment", appointment);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if(request.getParameterMap().containsKey(DaoConsts.ID)) {
+                int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
+                Appointment appointment = appointmentsService.getAppointmentById(idVal);
+                request.setAttribute("appointment", appointment);
             }
             RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
             view.forward(request, response);
@@ -67,11 +63,11 @@ public class AppointmentController extends HttpServlet {
             appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
             appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
 
-            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
-                appointmentsService.updateAppointment(appointment);
-            } else {
-                appointmentsService.createNewAppointment(appointment);
-            }
+//            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
+//                appointmentsService.updateAppointment(appointment);
+//            } else {
+//                appointmentsService.createNewAppointment(appointment);
+//            }
 
             request.setAttribute("message", "Success");
             appointment = appointmentsService.getAppointmentById(idVal);

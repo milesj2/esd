@@ -47,7 +47,7 @@ body{
     padding: 10px;
     height: calc(var(--logo-height) - 2*10px);
     width: calc(100vw - 250px);
-    background: #CCCCCC;
+    background: #E2E2E2;
     /*background: var(--background-color); */
     text-align: center;
 }
@@ -65,7 +65,7 @@ body{
 .sidebar_container {
     margin: 0;
     height: 100%;
-    background: #888888;
+    background: #dbdbdb;
     /*background: var(--background-color);*/
 
 }
@@ -73,6 +73,10 @@ body{
 .sidebar_container .logo {
     width: var(--nav-width);
     height: var(--logo-height);
+}
+
+.logo-image{
+    width: var(--nav-width);
 }
 
 .sidebar_container nav {
@@ -111,13 +115,25 @@ body{
 #############################################
 */
 
+
+
 main {
     margin: 0;
     padding: 20px;
     height: calc(100vh - var(--logo-height));
     width: calc(100vw - var(--nav-width) - 2*10px);
     background: #eeeeee;
-    overflow:scroll;
+    overflow: scroll;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
 }
 
 main .widgets {
@@ -293,4 +309,14 @@ main .widgets .whole-widget {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+/*
+#############################################
+############ Register #######################
+#############################################
+*/
+
+body.register-page nav {
+    display: none;
 }

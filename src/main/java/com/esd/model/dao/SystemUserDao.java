@@ -70,7 +70,6 @@ public class SystemUserDao {
             throw new InvalidIdValueException(String.format("No user found for id '%d'", userDetailsid));
         }
         return systemUsers.get(0);
-
     }
 
     public boolean updateUser(SystemUser systemUser) throws SQLException, InvalidIdValueException {
