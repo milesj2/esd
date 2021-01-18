@@ -9,6 +9,7 @@
 ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_EMPLOYEE_ID;
 ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_PATIENT_ID;
 ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_APPOINTMENT_ID;
+ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_THIRDPARTY_ID;
 ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_EMPLOYEE_ID;
 ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_PATIENT_ID;
 ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_APPOINTMENT_ID;
@@ -16,6 +17,7 @@ ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_EMPLOYEE_ID;
 ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_PATIENT_ID;
 ALTER TABLE INVOICEITEM DROP CONSTRAINT FK_INVOICEITEM_INVOICE_ID;
 ALTER TABLE USERDETAILS DROP CONSTRAINT FK_USERDETAILS_USER_ID;
+DROP TABLE THIRDPARTY;
 DROP TABLE PRESCRIPTIONS;
 DROP TABLE APPOINTMENTS;
 DROP TABLE INVOICE;
@@ -48,6 +50,18 @@ create table userDetails(
                             constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
 );
 
+create table thirdParty(
+                            id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                            thirdPartyName varchar(50) NOT NULL,
+                            addressLine1 varchar(255) NOT NULL,
+                            addressLine2 varchar(255) NOT NULL,
+                            addressLine3 varchar(255) NOT NULL,
+                            town varchar(255) NOT NULL,
+                            postCode varchar(7) NOT NULL,
+                            thirdPartyType varchar(20) NOT NULL,
+                            active boolean NOT NULL DEFAULT true
+);
+
 create table appointments
 (
     id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
@@ -57,6 +71,9 @@ create table appointments
     employeeId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
+    thirdPartyId INTEGER,
+
+    constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
     constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id)
 );
@@ -192,3 +209,15 @@ insert into systemSetting(settingKey, settingVal) values ('baseConsultationFeeDo
 insert into systemSetting(settingKey, settingVal) values ('baseConsultationFeeNurse', '100');
 insert into systemSetting(settingKey, settingVal) values ('consultationSlotTime', '10');
 
+--create third party items
+insert into thirdParty(thirdPartyName, addressLine1, addressLine2, addressLine3, town, postCode, thirdPartyType, active)
+VALUES ('Bristol Royal Infirmary', 'Upper Maudlin St', '', '', 'Bristol', 'BS28HW', 'HOSPITAL', true);
+
+insert into thirdParty(thirdPartyName, addressLine1, addressLine2, addressLine3, town, postCode, thirdPartyType, active)
+VALUES ('Southmead Hospital', 'Southmead Rd', '', '', 'Bristol', 'BS105NB', 'HOSPITAL', true);
+
+insert into thirdParty(thirdPartyName, addressLine1, addressLine2, addressLine3, town, postCode, thirdPartyType, active)
+VALUES ('Bristol Endodontic Clinic', '9 North View', '', '', 'Bristol', 'BS67PT', 'SPECIALIST_CLINIC', true);
+
+insert into thirdParty(thirdPartyName, addressLine1, addressLine2, addressLine3, town, postCode, thirdPartyType, active)
+VALUES ('Bristol Physiotherapy Clinic', 'Workout Harbourside', 'Welsh Back', '', 'Bristol', 'BS14JA', 'SPECIALIST_CLINIC', true);

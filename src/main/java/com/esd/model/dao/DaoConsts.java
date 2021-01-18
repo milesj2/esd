@@ -12,7 +12,10 @@ public class DaoConsts {
     public final static String APPOINTMENT_ID_FK = "appointmentid";
     public final static String EMPLOYEE_ID_FK = "employeeid";
     public final static String SYSTEMUSER_ID_FK = "userId";
-
+    
+    public static final String TABLE_THIRDPARTY = "thirdParty";
+    public static final String TABLE_THIRDPARTY_REFERENCE = TABLE_THIRDPARTY + ".";
+    
     public static final String TABLE_APPOINTMENTS = "appointments";
     public static final String TABLE_APPOINTMENTS_REFERENCE = TABLE_APPOINTMENTS + ".";
 
@@ -78,6 +81,16 @@ public class DaoConsts {
 
     public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";
     public final static String SYSTEMSETTING_SETTINGVALUE = "settingVal";
+    
+    public final static String THIRDPARTY_ID = "id";
+    public final static String THIRDPARTY_NAME = "thirdPartyName";
+    public final static String THIRDPARTY_ADDRESS1 = "addressline1";
+    public final static String THIRDPARTY_ADDRESS2 = "addressline2";
+    public final static String THIRDPARTY_ADDRESS3 = "addressline3";
+    public final static String THIRDPARTY_TOWN = "town";
+    public final static String THIRDPARTY_POSTCODE = "postCode";
+    public final static String THIRDPARTY_TYPE = "thirdPartyType";
+    public final static String THIRDPARTY_ACTIVE = "active";
 
 }
 

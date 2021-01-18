@@ -293,3 +293,13 @@ main .widgets .whole-widget {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/*
+#############################################
+############ Register #######################
+#############################################
+*/
+
+body.register-page nav {
+    display: none;
+}

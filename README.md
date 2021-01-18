@@ -16,6 +16,20 @@ when creating the schema it needs to be in caps to work no matter username, the 
 CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.systemUser.admin','pw');
 create schema ADMIN;
 
+# Glassfish server
+## Steps for updating glassfish server
+- Download glassfish server 5 from this link: https://javaee.github.io/glassfish/download and save it in a sensible place.
+- Go to Netbeans > Tools > Server > Add Server
+- Select GlassFish Server, enter a suitable name in the Name field and click Next >
+- On the Add Server Instance screen, click the Browse... button and navigate to your existing Glassfish 5 installation and select the top level directory, and click Choose.
+- Having done that you should see a message stating "Detected a Glassfish Server 5.0 install..."
+- Click the check box for "I have read and accept..." and click Next >
+- Accept the default values for the Domain Location settings and click Finish.
+- Now open Tools > Servers and select the server you just added.
+
+(Instructions are from this link: https://stackoverflow.com/questions/58080214/how-to-add-glassfish-5-0-server-in-netbeans-8-2 
+there are also screenshots there showing every step).
+
 ## merging of work
 Branches should not be merged to the main branch until everyone in the group has read over the content of the merge work and has confirmed they agree and like they changes, this achieves 2 things, Stops bad code entering the code base, allows everyone to know how everything is working
 ## Naming Standard
