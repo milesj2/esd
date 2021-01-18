@@ -78,7 +78,7 @@ public class UserEditController extends HttpServlet {
         if (referer.contains("my-account")){
             doEditUser = false;
             redirect = "my-account?";
-            userID = ((User)request.getSession().getAttribute("currentSessionUser")).getId();
+            userID = ((SystemUser)request.getSession().getAttribute("currentSessionUser")).getId();
             if (request.getParameter("password") != null){
                 doUpdatePassword = true;
                 doEditUserDetails = false;
@@ -133,7 +133,7 @@ public class UserEditController extends HttpServlet {
                 active
         );
 
-        return userService.updateUser(user);
+        return systemUserService.updateUser(systemUser);
 
     }
 
@@ -142,7 +142,7 @@ public class UserEditController extends HttpServlet {
 
         userDetails = new UserDetails(
                 -1,
-                    user.getId(),
+                userID,
                 request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
                 request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
                 request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
@@ -160,7 +160,7 @@ public class UserEditController extends HttpServlet {
 		SystemUser user = systemUserService.getUserByID(userID);
 
         if (user.getPassword().equals(request.getParameter("password")))
-            return userService.updatePassword(request.getParameter("new_password"), userID);
+            return systemUserService.updatePassword(request.getParameter("new_password"), userID);
         else
             return false;
     }

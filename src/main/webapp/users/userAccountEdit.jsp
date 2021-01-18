@@ -1,12 +1,5 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="com.esd.model.data.UserGroup" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%
-    User user = (User)(request.getAttribute("editUser"));
-    String[] userGroups = Arrays.toString(UserGroup.class.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
-%>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
+<% SystemUser user = (SystemUser)(request.getAttribute("editUser")); %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
