@@ -1,6 +1,6 @@
 <div class="sidebar_container">
     <a href="${pageContext.request.contextPath}/dashboard">
-        <img class="logo" src="${pageContext.request.contextPath}/res/images/logo_small.png" alt="SmartWare Logo">
+        <img class="logo" src="${pageContext.request.contextPath}/res/images/logo.png" alt="SmartWare Logo">
     </a>
     <nav>
         <a href="${pageContext.request.contextPath}/logout">

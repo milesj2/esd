@@ -1,57 +1,28 @@
-
 package com.esd.model.data.apis;
 
-import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Address {
-
-    @SerializedName("formatted_address")
-    @Expose
-    private List<String> formattedAddress = null;
-    @SerializedName("thoroughfare")
-    @Expose
+public class Address implements Serializable
+{
+    private String[] formattedAddress = null;
     private String thoroughfare;
-    @SerializedName("building_name")
-    @Expose
     private String buildingName;
-    @SerializedName("sub_building_name")
-    @Expose
     private String subBuildingName;
-    @SerializedName("sub_building_number")
-    @Expose
     private String subBuildingNumber;
-    @SerializedName("building_number")
-    @Expose
     private String buildingNumber;
-    @SerializedName("line_1")
-    @Expose
     private String line1;
-    @SerializedName("line_2")
-    @Expose
     private String line2;
-    @SerializedName("line_3")
-    @Expose
     private String line3;
-    @SerializedName("line_4")
-    @Expose
     private String line4;
-    @SerializedName("locality")
-    @Expose
     private String locality;
-    @SerializedName("town_or_city")
-    @Expose
     private String townOrCity;
-    @SerializedName("county")
-    @Expose
     private String county;
-    @SerializedName("district")
-    @Expose
     private String district;
-    @SerializedName("country")
-    @Expose
     private String country;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final static long serialVersionUID = -3959039178437972566L;
 
     /**
      * No args constructor for use in serialization
@@ -60,25 +31,7 @@ public class Address {
     public Address() {
     }
 
-    /**
-     *
-     * @param country
-     * @param townOrCity
-     * @param line4
-     * @param locality
-     * @param county
-     * @param thoroughfare
-     * @param subBuildingName
-     * @param buildingName
-     * @param formattedAddress
-     * @param district
-     * @param buildingNumber
-     * @param line3
-     * @param line2
-     * @param line1
-     * @param subBuildingNumber
-     */
-    public Address(List<String> formattedAddress, String thoroughfare, String buildingName, String subBuildingName, String subBuildingNumber, String buildingNumber, String line1, String line2, String line3, String line4, String locality, String townOrCity, String county, String district, String country) {
+    public Address(String[] formattedAddress, String thoroughfare, String buildingName, String subBuildingName, String subBuildingNumber, String buildingNumber, String line1, String line2, String line3, String line4, String locality, String townOrCity, String county, String district, String country) {
         super();
         this.formattedAddress = formattedAddress;
         this.thoroughfare = thoroughfare;
@@ -97,11 +50,11 @@ public class Address {
         this.country = country;
     }
 
-    public List<String> getFormattedAddress() {
+    public String[] getFormattedAddress() {
         return formattedAddress;
     }
 
-    public void setFormattedAddress(List<String> formattedAddress) {
+    public void setFormattedAddress(String[] formattedAddress) {
         this.formattedAddress = formattedAddress;
     }
 
@@ -215,6 +168,14 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
 }

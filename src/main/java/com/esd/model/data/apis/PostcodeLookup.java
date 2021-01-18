@@ -1,23 +1,18 @@
 package com.esd.model.data.apis;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.Map;
 
-public class PostcodeLookup {
-
-    @SerializedName("postcode")
-    @Expose
+public class PostcodeLookup implements Serializable
+{
     private String postcode;
-    @SerializedName("latitude")
-    @Expose
     private Double latitude;
-    @SerializedName("longitude")
-    @Expose
     private Double longitude;
-    @SerializedName("addresses")
-    @Expose
     private List<Address> addresses = null;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final static long serialVersionUID = -5411542499439244587L;
 
     /**
      * No args constructor for use in serialization
@@ -26,13 +21,6 @@ public class PostcodeLookup {
     public PostcodeLookup() {
     }
 
-    /**
-     *
-     * @param addresses
-     * @param latitude
-     * @param postcode
-     * @param longitude
-     */
     public PostcodeLookup(String postcode, Double latitude, Double longitude, List<Address> addresses) {
         super();
         this.postcode = postcode;
@@ -71,5 +59,13 @@ public class PostcodeLookup {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 }

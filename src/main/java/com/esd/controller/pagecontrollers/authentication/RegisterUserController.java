@@ -8,9 +8,12 @@ import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.SystemUserService;
 
 import javax.servlet.annotation.WebServlet;
+
+import com.esd.model.service.webserviceapis.AddressLookupService;
 import org.joda.time.LocalDate;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,25 +31,37 @@ public class RegisterUserController extends HttpServlet {
     private static final String REGISTER_SUCCESS = "Successfully Registered! Please Sign in with the link below.";
     private static final String USER_EXISTS_ERROR = "Error: Username already exists, please choose another username or sign in with the existing username";
     private static final String REGISTER_FAILURE = "Error: User creation failed, please try again. If problem persists contact admin.";
+    private static final String POSTCODE_MUST_EXIST = "Error: Postcode does not exist! The postcode must be valid to sign up";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         String notify = "";
-        try {
-            response.setContentType("text/html;charset=UTF-8");
-            SystemUser systemUser = createUserFromRequest(request);
-            UserDetails userDetails = createUserDetailsFromRequest(request);
+        response.setContentType("text/html;charset=UTF-8");
 
-            if (systemUser.getUserGroup() == UserGroup.NHS_PATIENT || systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
-                systemUser.setActive(true);
-            }
-            
-            boolean userRegisterd = SystemUserService.getInstance().createUser(systemUser, userDetails);
-            if (userRegisterd) {
-                notify = REGISTER_SUCCESS;
+        try {
+            if(request.getParameter("postCodeSearch") != null){
+
+                String postcode = request.getParameter("postCodeValue");
+                if(! AddressLookupService.getInstance().validatePostCodeExists(postcode)) {
+                    notify = POSTCODE_MUST_EXIST;
+                } else {
+                    request.setAttribute("ValidatedPostcode", postcode);
+                }
             } else {
-              notify = USER_EXISTS_ERROR;
+
+                User user = createUserFromRequest(request);
+                UserDetails userDetails = createUserDetailsFromRequest(request);
+
+                if (user.getUserGroup() == UserGroup.NHS_PATIENT || user.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
+                    user.setActive(true);
+                }
+
+                boolean userRegisterd = UserService.getInstance().createUser(user, userDetails);
+                if (userRegisterd) {
+                    notify = REGISTER_SUCCESS;
+                } else {
+                    notify = USER_EXISTS_ERROR;
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
