@@ -57,6 +57,7 @@ public class InvoicePaymentController extends HttpServlet {
                 Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 InvoiceItem invoiceItem = invoiceService.getInvoiceItemById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 
+               
                 SystemUser user = userService.getUserByID(Integer.parseInt(request.getParameter("uid")));
                 user.setUserDetails(userDetailsService.getUserDetailsByUserID(user.getId()));
                 
