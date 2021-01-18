@@ -13,7 +13,6 @@ import com.esd.model.service.webserviceapis.AddressLookupService;
 import org.joda.time.LocalDate;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,14 +48,14 @@ public class RegisterUserController extends HttpServlet {
                 }
             } else {
 
-                User user = createUserFromRequest(request);
+                SystemUser systemUser = createUserFromRequest(request);
                 UserDetails userDetails = createUserDetailsFromRequest(request);
 
-                if (user.getUserGroup() == UserGroup.NHS_PATIENT || user.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
-                    user.setActive(true);
+                if (systemUser.getUserGroup() == UserGroup.NHS_PATIENT || systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT) {
+                    systemUser.setActive(true);
                 }
 
-                boolean userRegisterd = UserService.getInstance().createUser(user, userDetails);
+                boolean userRegisterd = SystemUserService.getInstance().createUser(systemUser, userDetails);
                 if (userRegisterd) {
                     notify = REGISTER_SUCCESS;
                 } else {
