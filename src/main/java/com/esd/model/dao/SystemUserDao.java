@@ -62,7 +62,7 @@ public class SystemUserDao {
 
     public SystemUser getUserByUserDetailsID(int userDetailsid) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_SYSTEMUSER)
-                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, DaoConsts.SYSTEMUSER_ID_FK, DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID))
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, DaoConsts.SYSTEMUSER_ID_FK, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID))
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, userDetailsid));
 
         List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
@@ -70,7 +70,6 @@ public class SystemUserDao {
             throw new InvalidIdValueException(String.format("No user found for id '%d'", userDetailsid));
         }
         return systemUsers.get(0);
-
     }
 
     public boolean updateUser(SystemUser systemUser) throws SQLException, InvalidIdValueException {

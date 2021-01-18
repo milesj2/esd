@@ -50,16 +50,29 @@ create table userDetails(
                             constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
 );
 
-create table thirdParty(
-                            id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-                            thirdPartyName varchar(50) NOT NULL,
-                            addressLine1 varchar(255) NOT NULL,
-                            addressLine2 varchar(255) NOT NULL,
-                            addressLine3 varchar(255) NOT NULL,
-                            town varchar(255) NOT NULL,
-                            postCode varchar(7) NOT NULL,
-                            thirdPartyType varchar(20) NOT NULL,
-                            active boolean NOT NULL DEFAULT true
+create table thirdParty
+(
+    id             INTEGER      NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key,
+    thirdPartyName varchar(50)  NOT NULL,
+    addressLine1   varchar(255) NOT NULL,
+    addressLine2   varchar(255) NOT NULL,
+    addressLine3   varchar(255) NOT NULL,
+    town           varchar(255) NOT NULL,
+    postCode       varchar(7)   NOT NULL,
+    thirdPartyType varchar(20)  NOT NULL,
+    active         boolean      NOT NULL DEFAULT true
+);
+create table workingHours(
+                             id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                             workingDays varchar(255) NOT NULL,
+                             startTime TIME NOT NULL,
+                             endTime TIME NOT NULL
+);
+create table workingHoursJT(
+                               employeeId INTEGER NOT NULL,
+                               workingHoursId INTEGER NOT NULL,
+                               constraint fk_workingHoursjt_workinghours_id foreign key(workingHoursId) references workingHours(id),
+                               constraint fk_workingHoursjt_employee_id foreign key(employeeId) references userDetails(id)
 );
 
 create table appointments
@@ -149,6 +162,10 @@ values (5,'Jim', 'Smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('199
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (6,'Jane', 'Jones', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DATE('2001-07-11'));
+
+insert into workingHours(workingDays, startTime, endTime) values('1,2,3,4,5', TIME('9:00:00'), TIME('17:00:00'));
+insert into workingHoursJT(employeeId, workingHoursId) values (3,1);
+insert into workingHoursJT(employeeId, workingHoursId) values (4,1);
 
 --create 2 days of appointments
 

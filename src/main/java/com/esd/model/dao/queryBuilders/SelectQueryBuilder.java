@@ -81,8 +81,4 @@ public class SelectQueryBuilder{
         }
         return statement;
     }
-
-    public SelectQueryBuilder joinTable(String invoiceItem, String s, String invoiceItemId) {
-        return this;
-    }
 }

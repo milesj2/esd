@@ -16,11 +16,10 @@ public class AppointmentDao {
     private static AppointmentDao instance;
 
     private static String INSERT_APPOINTMENT = "insert into appointments " +
-            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
-            " values (?,?,?,?,?,?,?)";
+            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
+            " values (?,?,?,?,?,?)";
 
     private static String UPDATE_APPOINTMENT = "update appointments set" +
-            " id = ?," +
             " appointmentdate = ?," +
             " appointmenttime = ?," +
             " slots = ?," +
@@ -36,14 +35,14 @@ public class AppointmentDao {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
         statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
-        statement.setTime(2, Time.valueOf(appointment.getAppointmentTime().toString()));
+        statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
         statement.setInt(3, appointment.getSlots());
         statement.setInt(4, appointment.getEmployeeId());
         statement.setInt(5, appointment.getPatientId());
         statement.setString(6, appointment.getStatus().toString());
         //where id
         statement.setInt(7, appointment.getId());
-        statement.executeQuery();
+        statement.executeUpdate();
     }
 
     public void createAppointment(Appointment appointment) throws SQLException {
@@ -52,14 +51,13 @@ public class AppointmentDao {
         }
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(INSERT_APPOINTMENT);
-        statement.setInt(1, appointment.getId());
-        statement.setDate(2, Date.valueOf(appointment.getAppointmentDate().toString()));
-        statement.setTime(3, Time.valueOf(appointment.getAppointmentTime().toString()));
-        statement.setInt(4, appointment.getSlots());
-        statement.setInt(5, appointment.getEmployeeId());
-        statement.setInt(6, appointment.getPatientId());
-        statement.setString(7, appointment.getStatus().toString());
-        statement.executeQuery();
+        statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
+        statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
+        statement.setInt(3, appointment.getSlots());
+        statement.setInt(4, appointment.getEmployeeId());
+        statement.setInt(5, appointment.getPatientId());
+        statement.setString(6, appointment.getStatus().toString());
+        statement.executeUpdate();
     }
 
     public List<Appointment> getAppointmentsInPeriodWithStatus(LocalDate start, LocalDate end, Optional<AppointmentStatus> status) throws SQLException {

@@ -12,10 +12,11 @@ public class DaoConsts {
     public final static String APPOINTMENT_ID_FK = "appointmentid";
     public final static String EMPLOYEE_ID_FK = "employeeid";
     public final static String SYSTEMUSER_ID_FK = "userId";
-    
+    public final static String WORKINGHOURS_ID_FK = "workingHoursId";
+
     public static final String TABLE_THIRDPARTY = "thirdParty";
     public static final String TABLE_THIRDPARTY_REFERENCE = TABLE_THIRDPARTY + ".";
-    
+
     public static final String TABLE_APPOINTMENTS = "appointments";
     public static final String TABLE_APPOINTMENTS_REFERENCE = TABLE_APPOINTMENTS + ".";
 
@@ -37,10 +38,21 @@ public class DaoConsts {
     public static final String TABLE_USERDETAILS = "userDetails";
     public static final String TABLE_USERDETAILS_REFERENCE = TABLE_USERDETAILS + ".";
 
+    public static final String TABLE_WORKINGHOURS = "workingHours";
+    public static final String TABLE_WORKINGHOURS_REFERENCE = TABLE_WORKINGHOURS + ".";
+
+    public static final String TABLE_WORKINGHOURS_JT = "workingHoursJT";
+    public static final String TABLE_WORKINGHOURS_JT_REFERENCE = TABLE_WORKINGHOURS_JT + ".";
+
     //foreign_keys
     public final static String INVOICE_ID = "invoiceId";
     public final static String PATIENT_ID = "patientid";
     public final static String EMPLOYEE_ID = "employeeid";
+
+
+    public static final String WORKINGHOURS_STARTTIME = "startTime";
+    public static final String WORKINGHOURS_ENDTIME = "endTime";
+    public static final String WORKINGHOURS_WORKINGDAYS = "workingDays";
 
     public final static String SYSTEMUSER_ID = "Id";
     public final static String SYSTEMUSER_USERNAME = "username";
@@ -55,7 +67,6 @@ public class DaoConsts {
     public final static String USERDETAILS_ADDRESS3 = "addressline3";
     public final static String USERDETAILS_TOWN = "town";
     public final static String USERDETAILS_POSTCODE = "postcode";
-    public final static String USERDETAILS_USERGROUP = "usergroup";
     public final static String USERDETAILS_DOB = "dob";
 
     public static final String INVOICE_STATUS_CHANGE_DATE = "statusChangeDate";
@@ -91,6 +102,4 @@ public class DaoConsts {
     public final static String THIRDPARTY_POSTCODE = "postCode";
     public final static String THIRDPARTY_TYPE = "thirdPartyType";
     public final static String THIRDPARTY_ACTIVE = "active";
-
 }
-
