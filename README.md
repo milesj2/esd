@@ -1,13 +1,19 @@
 # ESD
 The below is guidance for various aspects of the project
 
-# code style
+#Contributors
+Jordan Hellier - Jordan2.Hellier@live.uwe.ac.uk - 17019992  \
+Trent Meier - Trent2.Meier@live.uwe.ac.uk - 17026432 \
+Angela Jackson - Angela2.Asif@live.uwe.ac.uk - 12007734\
+Miles Jarvis - Miles2.Jarvis@live.uwe.ac.uk - 17029773\
+Sam Barbra - Samuele2.Barba@live.uwe.ac.uk- 17043938 
+
+#Code style
 For consistency it's important we all follow the same code style, this involves formatting code in a certain way, here is a link to googles Java code style which we will follow throughout the project https://google.github.io/styleguide/javaguide.html pay particular attention to package naming, class naming, function names etc. 
 
 # Derby DB
 ## creating Users
 Creating a database systemUser is done in 2 steps execute the 2 below commands as root systemUser to create a new systemUser:
-
 CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.systemUser.\<username\>','\<password\>');
 create schema <USERNAME>
 
