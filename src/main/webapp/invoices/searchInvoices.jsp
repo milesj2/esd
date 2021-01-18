@@ -21,6 +21,10 @@
         <main>
             <h2>Invoice Search page</h2>
             <h3>Enter your search terms to retrieve the invoice details</h3>
+            <%  String msg = request.getParameter("msg");
+            if (msg != null){%>
+            <strong><% out.print(msg);%></strong><br>
+            <%} %><br>
 
                 <table border="1" cellpadding="5" class="search_table">
                     <tr>
@@ -82,7 +86,7 @@
                                 <input type="submit" value="Select Invoice" />
                             </form>
                             <%}else{%>
-                            <a href='${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>&aid=<%=invoice.getAppointmentId()%>'>View/Pay</a>
+                            <a href='${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>'>View/Pay</a>
                             <%}%>
                         </td>
                     </tr>

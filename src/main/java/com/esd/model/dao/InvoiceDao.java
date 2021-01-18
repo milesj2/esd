@@ -164,13 +164,14 @@ public class InvoiceDao {
         statement.executeUpdate();
     }
     
-    public void updateInvoiceStatus(Invoice invoice) throws SQLException, InvalidIdValueException {
-        if(invoice.getId()==0){
+    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws SQLException, InvalidIdValueException {
+        if(id==0){
             throw new InvalidIdValueException("invoice id must be populated to update invoice");
         }
-        PreparedStatement statement = setInsertUpdateStatement(invoice, UPDATE_INVOICE);
-        statement.setString(1, invoice.getInvoiceStatus().name()); 
-        statement.setInt(2, invoice.getId()); //key to id update
+        Connection con = connectionManager.getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_INVOICE_STATUS);
+        statement.setString(1, invoiceStatus); 
+        statement.setInt(2, id); //key to id update
         statement.executeUpdate();
     }
 

@@ -8,11 +8,12 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
-import com.esd.model.data.persisted.User;
+import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
 import com.esd.model.service.InvoiceService;
 import com.esd.model.service.UserDetailsService;
-import com.esd.model.service.UserService;
+import com.esd.model.service.SystemUserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -35,7 +37,7 @@ import java.text.SimpleDateFormat;
 public class InvoicePaymentController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
-    private UserService userService = UserService.getInstance();
+    private SystemUserService userService = SystemUserService.getInstance();
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
     
@@ -47,6 +49,7 @@ public class InvoicePaymentController extends HttpServlet {
         if(!request.getParameter(DaoConsts.ID).isEmpty()){           
             
             HttpSession session = request.getSession();
+            request.setAttribute("pageTitle", "Invoice Payment");
             session.setAttribute("previousPage", session.getAttribute("currentPage"));
             session.setAttribute("currentPage", request.getServletPath());
 
@@ -54,19 +57,16 @@ public class InvoicePaymentController extends HttpServlet {
                 Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 InvoiceItem invoiceItem = invoiceService.getInvoiceItemById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
                 
-                User user = userService.getUserByID(Integer.parseInt(request.getParameter("uid")));
+                SystemUser user = userService.getUserByID(Integer.parseInt(request.getParameter("uid")));
                 user.setUserDetails(userDetailsService.getUserDetailsByUserID(user.getId()));
                 
-                User employee = userService.getUserByID(Integer.parseInt(request.getParameter("eid")));
+                SystemUser employee = userService.getUserByID(Integer.parseInt(request.getParameter("eid")));
                 employee.setUserDetails(userDetailsService.getUserDetailsByUserID(employee.getId()));
-                
-                Appointment appointment = appointmentsService.getAppointmentById(Integer.parseInt(request.getParameter("aid")));
                 
                 request.setAttribute("invoice", invoice);
                 request.setAttribute("invoiceItem", invoiceItem);
                 request.setAttribute("user", user);
                 request.setAttribute("employee", employee);
-                request.setAttribute("appointment", appointment);
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
@@ -78,23 +78,20 @@ public class InvoicePaymentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
-
-            Invoice invoice = new Invoice();
-            invoice.setInvoiceStatus(InvoiceStatus.PAID);
-            invoiceService.updateInvoiceStatus(invoice);
+            int id = Integer.parseInt(request.getParameter(DaoConsts.ID));
+            String status = (InvoiceStatus.PAID).name();
             
-            request.setAttribute("message", "Payment Success");
-            invoice = invoiceService.getInvoiceById(idVal);
-            request.setAttribute("appointment", invoice);
+            invoiceService.updateInvoiceStatus(id, status);
+            
+            response.sendRedirect("search?msg=" + "Payment Successful");
 
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            response.sendRedirect("search?msg=" + e.getMessage());
+            System.out.println(e.getMessage());
+        } catch (InvalidIdValueException e) {
+            response.sendRedirect("search?msg=" + "Invalid invoice Id");
+            System.out.println(e.getMessage());
         }
-
-        // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/invoices/payInvoice.jsp");
-        view.forward(request, response);
     }
 
 }

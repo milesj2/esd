@@ -1,6 +1,7 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.InvoiceDao;
+import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.exceptions.InvalidIdValueException;
@@ -54,12 +55,12 @@ public class InvoiceService {
     public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().createInvoice(invoice);
     }
-
+    
     public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().updateInvoice(invoice);
     }
     
-    public void updateInvoiceStatus(Invoice invoice) throws InvalidIdValueException, SQLException {
-        invoiceDao.getInstance().updateInvoice(invoice);
+    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().updateInvoiceStatus(id, invoiceStatus);
     }
 }
