@@ -50,7 +50,6 @@ public class InvoicePaymentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if(request.getParameter("selectedInvoiceId") == null){
-            //TODO forward to search page
             response.sendRedirect(UrlUtils.absoluteUrl(request, "search")); //search page
         return;
         }
@@ -70,7 +69,6 @@ public class InvoicePaymentController extends HttpServlet {
                 if(Arrays.asList(UserGroup.NHS_PATIENT, UserGroup.PRIVATE_PATIENT).contains(user.getUserGroup())){
                     UserDetails details = userDetailsService.getInstance().getUserDetailsByUserID(user.getId());
                     if(details.getId() != invoice.getPatientId()){
-                        //TODO redirect probably dashboard?
                         response.sendRedirect(UrlUtils.absoluteUrl(request, "dashboard")); //logged-in page
                         System.out.println("Return Error");
                         return;
