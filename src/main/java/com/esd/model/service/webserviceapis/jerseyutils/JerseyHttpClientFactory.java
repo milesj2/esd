@@ -10,6 +10,11 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * Original Author: Trent Meier
+ * Use: Http client to manage api calls
+ */
+
 public class JerseyHttpClientFactory {
 
     public JerseyHttpClientFactory(){

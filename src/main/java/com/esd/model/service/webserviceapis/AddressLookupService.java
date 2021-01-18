@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Original Author: Trent Meier
+ * Use: service to manages API calls to postcode validation
+ */
 
 public class AddressLookupService {
     private static AddressLookupService instance;

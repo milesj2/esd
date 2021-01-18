@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Original Author: Trent Meier
+ * Use: Plain old java object for mapping json
+ */
+
 public class Address implements Serializable
 {
     private String[] formattedAddress = null;
@@ -177,5 +182,4 @@ public class Address implements Serializable
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
 }

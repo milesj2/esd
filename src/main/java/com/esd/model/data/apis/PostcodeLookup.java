@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Original Author: Trent Meier
+ * Use: Plain old java object for mapping json
+ */
+
 public class PostcodeLookup implements Serializable
 {
     private String postcode;
