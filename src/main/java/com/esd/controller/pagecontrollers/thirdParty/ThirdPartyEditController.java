@@ -55,8 +55,9 @@ public class ThirdPartyEditController extends HttpServlet {
             throws ServletException, java.io.IOException {
 
         boolean active = false;
-        if (request.getParameter(DaoConsts.THIRDPARTY_ACTIVE) != null)
+        if (request.getParameter(DaoConsts.THIRDPARTY_ACTIVE) != null) {
             active = true;
+        }
 
         ThirdParty thirdParty = new ThirdParty(
                 Integer.parseInt(request.getParameter(DaoConsts.THIRDPARTY_ID)),
