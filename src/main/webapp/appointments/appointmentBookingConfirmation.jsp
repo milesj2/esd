@@ -47,13 +47,13 @@
                 UserDetails patient =
                         UserDetailsService.getInstance().getUserDetailsByID(Integer.parseInt(request.getParameter("selectedUserId")));
             %>
-                Patient: <%= patient.getFirstName() + patient.getLastName()%>
+                Patient: <%= patient.getFirstName() + patient.getLastName()%></br>
             <% } %>
 
-            With: <%= group==UserGroup.DOCTOR ? "dr ":"Nurse "%> <%=employeeDetails.getLastName()%>
-            Appointment Date: <%=originalAppointment.getAppointmentDate() %>
-            Appointment Time: <%=originalAppointment.getAppointmentTime() %>
-            Slots: <%=originalAppointment.getSlots() %>
+            With: <%= group==UserGroup.DOCTOR ? "Dr ":"Nurse "%> <%=employeeDetails.getLastName()%></br>
+            Appointment Date: <%=originalAppointment.getAppointmentDate() %></br>
+            Appointment Time: <%=originalAppointment.getAppointmentTime() %></br>
+            Slots: <%=originalAppointment.getSlots() %></br>
 
             <% } %>
             <h1>Appointment details</h1>
