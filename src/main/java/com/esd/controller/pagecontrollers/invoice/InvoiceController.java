@@ -7,6 +7,8 @@ import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.service.InvoiceService;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 /**
  * Original Author: Trent meier
@@ -29,8 +30,6 @@ import java.text.SimpleDateFormat;
 public class InvoiceController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -57,15 +56,15 @@ public class InvoiceController extends HttpServlet {
             int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
 
             Invoice invoice = new Invoice();
-            invoice.setInvoiceDate(dateFormat.parse(request.getParameter(DaoConsts.INVOICE_DATE)));
-            //invoice.setInvoiceTime(dateFormat.parse("14:15:00")); //todo figure out time format
+            invoice.setInvoiceDate(LocalDate.parse(request.getParameter(DaoConsts.INVOICE_DATE)));
+            invoice.setInvoiceTime(LocalTime.parse(request.getParameter(DaoConsts.INVOICE_TIME)));
             invoice.setInvoiceStatus(InvoiceStatus.valueOf(request.getParameter(DaoConsts.INVOICE_STATUS)));
             if(InvoiceOptions.valueOf(request.getParameter("option")) == InvoiceOptions.UPDATE){
                 invoice.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-                invoice.setInvoiceStatusChangeDate(dateFormat.parse("2020-10-10"));//today's date
+                invoice.setInvoiceStatusChangeDate(LocalDate.now());
             } else {
                 invoice.setId(0);
-                invoice.setInvoiceStatusChangeDate(dateFormat.parse(request.getParameter(DaoConsts.INVOICE_STATUS_CHANGE_DATE)));
+                invoice.setInvoiceStatusChangeDate(LocalDate.parse(request.getParameter(DaoConsts.INVOICE_STATUS_CHANGE_DATE)));
             }
             invoice.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
             invoice.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));

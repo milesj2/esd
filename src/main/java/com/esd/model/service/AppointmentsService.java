@@ -3,17 +3,16 @@ package com.esd.model.service;
 import com.esd.model.dao.AppointmentDao;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.dao.WorkingHoursDao;
-import com.esd.model.data.AppointmentPlaceHolder;
-import com.esd.model.data.AppointmentStatus;
-import com.esd.model.data.UserGroup;
-import com.esd.model.data.WorkingHours;
+import com.esd.model.data.*;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
@@ -91,9 +90,14 @@ public class AppointmentsService {
         appointment.setSlots(placeholder.getSlots());
         appointment.setStatus(AppointmentStatus.PENDING);
         try {
+            // generate invoice if appointment is complete
+            if(appointment.getStatus() == AppointmentStatus.COMPLETE)
+            {
+                InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
+            }
             appointmentDao.updateAppointment(appointment);
             return true;
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidIdValueException e) {
             e.printStackTrace();
         }
         return false;
@@ -211,7 +215,6 @@ public class AppointmentsService {
         }
         return allSlots;
     }
-
 
     public synchronized static AppointmentsService getInstance(){
         if(instance == null){

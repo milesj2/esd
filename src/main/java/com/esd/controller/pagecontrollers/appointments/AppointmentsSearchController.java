@@ -48,7 +48,7 @@ public class AppointmentsSearchController extends HttpServlet {
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/appointments/scheduleAppointment.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
         requestDispatcher.forward(request, response);
     }
 
