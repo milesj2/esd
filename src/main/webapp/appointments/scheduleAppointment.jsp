@@ -17,7 +17,7 @@
             <%@ include file="../res/components/titlebar.jsp" %>
             <main>
                 <h2>Appointments</h2>
-                <form method="post" action="${pageContext.request.contextPath}/appointments/schedule">
+                <form method="post" action="${pageContext.request.contextPath}/appointments/search">
                     <table class="search_table" >
                         <tr>
                             <th>From Date</th>

@@ -1,5 +1,11 @@
 let previous_sort_header;
 
+function startOfWeek(date)
+{
+    var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+    return new Date(date.setDate(diff));
+
+}
 
 function onDropDownClick(section) {
     if (section.tag === "img")

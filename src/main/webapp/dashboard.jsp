@@ -49,7 +49,7 @@
         { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Appointments", link: "appointments/schedule" + "?fromDate=" + startOfWeek(new Date()), icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
     items = [
@@ -60,7 +60,13 @@
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
     ];
     <% } %>
-
+    var i;
+    for (i = 0; i < items.length; i++){
+        if (items[i].name === "Appointments"){
+            var date = startOfWeek(new Date()).toISOString();
+            items[i].link = items[i].link + "?fromDate=" + date.split("T")[0];
+        }
+    }
     generateWidgets(items);
 
 </script>
