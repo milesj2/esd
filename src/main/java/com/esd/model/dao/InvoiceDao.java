@@ -32,6 +32,10 @@ public class InvoiceDao {
             "privatepatient=?, "+
             "appointmentid=? "+
             "where id =?";
+    
+    private static String UPDATE_INVOICE_STATUS = "update invoice set "+
+            "invoicestatus=? "+
+            "where id =?";
 
     private InvoiceDao() {}
 
@@ -131,7 +135,7 @@ public class InvoiceDao {
 
         return invoice;
     }
-
+    
     public List<Invoice> getFilteredDetails(Map<String, Object> args) throws SQLException {
         ArrayList<Invoice> invoiceList = new ArrayList<Invoice>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
@@ -159,6 +163,17 @@ public class InvoiceDao {
         statement.setInt(9, invoice.getId()); //key to id update
         statement.executeUpdate();
     }
+    
+    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws SQLException, InvalidIdValueException {
+        if(id==0){
+            throw new InvalidIdValueException("invoice id must be populated to update invoice");
+        }
+        Connection con = connectionManager.getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_INVOICE_STATUS);
+        statement.setString(1, invoiceStatus); 
+        statement.setInt(2, id); //key to id update
+        statement.executeUpdate();
+    }
 
     public void createInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
         if(invoice.getId()!=0){
@@ -177,6 +192,17 @@ public class InvoiceDao {
             throw new InvalidIdValueException("could not find invoice by id: "+ id);
         }
         return extractInvoiceFromResultSet(resultSet);
+    }
+    
+    public InvoiceItem getInvoiceItemById(int id) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICEITEM);
+        queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet resultSet = statement.executeQuery();
+        if(!resultSet.next()){
+            throw new InvalidIdValueException("could not find invoice item by id: "+ id);
+        }
+        return extractInvoiceItemFromResultSet(resultSet);
     }
 
     public synchronized static InvoiceDao getInstance(){
