@@ -1,11 +1,5 @@
-var weekday = new Array(7);
-weekday[0] = "Sunday";
-weekday[1] = "Monday";
-weekday[2] = "Tuesday";
-weekday[3] = "Wednesday";
-weekday[4] = "Thursday";
-weekday[5] = "Friday";
-weekday[6] = "Saturday";
+const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function get(name){
     if(name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
@@ -136,12 +130,6 @@ function generateAppointments(appointments){
     }
 }
 
-function initialise_day_schedule(){
-    let day = new Date(get("fromDate"));
-    generateDayScheduleDayContainers();
-    generateDayScheduleAppointments();
-}
-
 function generateDayScheduleDayContainers(){
     let dayScheduleContainer = document.getElementById("day_schedule");
     let day = new Date(get("fromDate"));
@@ -179,8 +167,6 @@ function appendAppointmentToDaySchedule(appointment, date){
 }
 
 function generateDayScheduleAppointments(){
-    let fromDate = new Date(get("fromDate"));
-
     var i;
     for (i = 0; i < appointments.length; i++){
         var appointment = appointments[i];
@@ -203,10 +189,19 @@ function generateDayScheduleAppointments(){
     }
 }
 
+function initialise_day_schedule(){
+    generateDayScheduleDayContainers();
+    generateDayScheduleAppointments();
+}
 
 function initialise_schedule(){
     generateTimes(8, 18);
     generateDaysOfWeek();
     generateAppointments(appointments);
     move_appointments(8, 18, 10);
+    viewDay();
+
+    let day = new Date(get("fromDate"));
+    var date = months[day.getMonth()] + " " + day.getDate() + " " + day.getFullYear();
+    document.getElementById("week_beginning").innerHTML = "WB - " + date
 }

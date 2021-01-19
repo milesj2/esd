@@ -317,6 +317,10 @@ main .widgets .whole-widget {
     overflow: auto;
 }
 
+.day_schedule {
+    margin-top: 20px;
+}
+
 .day_headers {
     margin-left: 80px;
     display: flex;

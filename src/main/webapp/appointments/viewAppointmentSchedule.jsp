@@ -16,6 +16,7 @@
         <div class="main_container">
             <%@ include file="../res/components/titlebar.jsp" %>
             <main>
+                <h3 id="week_beginning"></h3>
                 <div id="schedule_switch">
                     <button onclick="viewDay();" >Day View</button>
                     <button onclick="viewWeek();">Week View</button>
