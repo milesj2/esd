@@ -128,10 +128,10 @@ function generateAppointments(appointments){
 
         div.appendChild(h2);
         div.appendChild(h3);
-        console.log(div);
+
         var timeDiff = Math.abs(new Date(appointment.date).getTime() - fromDate.getTime());
         var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-        console.log(diffDays);
+
         day_containers[diffDays].appendChild(div);
     }
 }
@@ -200,7 +200,6 @@ function generateDayScheduleAppointments(){
         div.appendChild(title);
 
         appendAppointmentToDaySchedule(div, new Date(appointment.date));
-
     }
 }
 

@@ -22,7 +22,6 @@
                 </div>
                 <div id="week_schedule" class="week_schedule">
                     <div id="day_headers" class="day_headers">
-
                     </div>
                     <div id="schedule_main" class="schedule_main">
                         <div id="times" class="times_container">

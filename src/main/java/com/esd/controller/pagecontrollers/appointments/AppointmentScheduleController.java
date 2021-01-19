@@ -37,6 +37,8 @@ public class AppointmentScheduleController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
+        request.setAttribute("pageTitle", "Schedule");
+
         SystemUser systemUser = (SystemUser)request.getSession().getAttribute("currentSessionUser");
 
         Calendar c = Calendar.getInstance();
@@ -79,10 +81,19 @@ public class AppointmentScheduleController extends HttpServlet {
                 SystemUser employee = systemUserService.getUserByID(appointment.getEmployeeId());
                 SystemUser patient = systemUserService.getUserByID(appointment.getPatientId());
                 patient.setUserDetails(userDetailsService.getUserDetailsByUserID(patient.getId()));
-                String employeeName = userDetailsService.getUserDetailsByUserID(employee.getId()).getFirstName();
+                employee.setUserDetails(userDetailsService.getUserDetailsByUserID(employee.getId()));
+
+                StringBuilder title = new StringBuilder();
+                title.append(patient.getUserDetails().getFirstName());
+                title.append(" ");
+                title.append(patient.getUserDetails().getLastName());
+                title.append(" to see ");
+                title.append(employee.getUserGroup().toString().toLowerCase());
+                title.append(" ");
+                title.append(employee.getUserDetails().getLastName());
 
                 uiAppointment.setId(appointment.getId());
-                uiAppointment.setTitle(patient.getUserDetails().getFirstName() + " to see " + employeeName);
+                uiAppointment.setTitle(title.toString());
                 uiAppointment.setPatient(patient);
                 uiAppointment.setEmployee(employee);
                 uiAppointment.setSlots(appointment.getSlots());
