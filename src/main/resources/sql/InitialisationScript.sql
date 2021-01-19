@@ -49,7 +49,7 @@ create table userDetails(
     postCode varchar(7) NOT NULL,
     dob DATE NOT NULL,
 
-    constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
+                            constraint fk_userdetails_user_id foreign key(userId) references systemUser(id) ON DELETE CASCADE
 );
 
 create table thirdParty(
@@ -90,8 +90,8 @@ create table appointments
     notes LONG VARCHAR,
 
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
-    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id)
+    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE
 );
 
 create table invoice(
@@ -105,8 +105,8 @@ create table invoice(
     privatePatient BOOLEAN not null,
     appointmentId integer not null,
 
-    constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id),
+                        constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
+                        constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE,
     constraint fk_invoice_appointment_id foreign key(appointmentId) references appointments(id)
 );
 
@@ -135,8 +135,8 @@ create table prescriptions
     appointmentId INTEGER NOT NULL,
     issueDate DATE NOT NULL,
 
-    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id),
+    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id) on delete cascade,
+    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id) on delete cascade,
     constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id),
     constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id)
 );

@@ -28,6 +28,7 @@ public class SystemUserDao {
     private static final String UPDATE_USER = "UPDATE SYSTEMUSER SET " +
             "username=?,password=?,usergroup=?,active=? WHERE ID=?";
     private static final String UPDATE_USER_PASSWORD = "UPDATE SYSTEMUSER SET password=? WHERE ID = ?";
+    private static final String DELETE_USER = "DELETE FROM SYSTEMUSER WHERE ID=?";
 
     private SystemUserDao() {
     }
@@ -120,6 +121,16 @@ public class SystemUserDao {
         List<SystemUser> systemUsers = extractUsersFromResultSet(queryBuilder.createStatement());
 
         return systemUsers.size() == 0;
+    }
+
+    public boolean deleteUser(int id) throws SQLException {
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(DELETE_USER);
+
+        statement.setInt(1, id);
+
+        int result = statement.executeUpdate();
+        return result != 0;
     }
     
     public void createSystemUser(SystemUser systemUser){

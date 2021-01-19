@@ -75,6 +75,10 @@ public class SystemUserService {
         return systemUserDao.updatePassword(password, userId);
     }
 
+    public boolean deleteUser(int id) throws SQLException {
+        return systemUserDao.deleteUser(id);
+    }
+
     public synchronized static SystemUserService getInstance(){
         if(instance == null){
             instance = new SystemUserService();

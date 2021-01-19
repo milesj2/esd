@@ -3,6 +3,7 @@ package com.esd.controller.pagecontrollers.user;
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.SystemUserService;
 
 import javax.servlet.RequestDispatcher;
@@ -20,9 +21,11 @@ import java.util.UUID;
  * Original Author: Miles Jarvis
  * Use: 
  */
-@WebServlet("/users/manage")
+@WebServlet("/users/delete")
 @Authentication(userGroups = {UserGroup.ADMIN})
-public class UserManageController extends HttpServlet {
+public class UserDeleteController extends HttpServlet {
+
+    private SystemUserService systemUserService = SystemUserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,14 +35,23 @@ public class UserManageController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
+
+        UUID uuid = UUID.randomUUID();
+        session.setAttribute("deleteHash", uuid.toString());
+        request.setAttribute("deleteHash", uuid.toString());
+
         request.setAttribute("pageTitle", "Delete User");
 
-        session.setAttribute("deleteHash", UUID.randomUUID().toString());
 
-        List<SystemUser> systemUsers;
+        try {
+            SystemUser systemUser = systemUserService.getUserByID(Integer.parseInt(request.getParameter("userID")));
+            request.setAttribute("user", systemUser);
+        } catch (SQLException | InvalidIdValueException throwables) {
+            throwables.printStackTrace();
+        }
 
-        request.setAttribute("users", systemUsers);
-        RequestDispatcher view = request.getRequestDispatcher("/users/manageUserAccount.jsp");
+
+        RequestDispatcher view = request.getRequestDispatcher("/users/userDelete.jsp");
         view.forward(request, response);
     }
 	
@@ -47,14 +59,25 @@ public class UserManageController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException
     {
+        String requestUUID= request.getParameter("deleteHash");
+        String sessionUUID = (String) request.getSession().getAttribute("deleteHash");
+
+        request.getSession().removeAttribute("deleteHash");
+
+        System.out.println("Received Hash: " + requestUUID + " | Stored Hash: " +  sessionUUID);
 		
-		if (request.getAttribute("deleteHash") == session.getAttribute("deleteHash")){
-			// delete 
+		if (requestUUID.equals(sessionUUID)){
+            try {
+                systemUserService.deleteUser(Integer.parseInt(request.getParameter("userID")));
+            } catch (SQLException throwables) {
+                response.sendRedirect("manage?errMsg=" + throwables.getMessage());
+            }
+            response.sendRedirect("manage?errMsg=" + "User deleted.");
 		} else {
 			response.sendRedirect("manage?errMsg=" + "Unauthorised delete request");
 			return;
 		}
-		response.sendRedirect("manage?errMsg=" + "User deleted.");
+
 		
 		
 	}
