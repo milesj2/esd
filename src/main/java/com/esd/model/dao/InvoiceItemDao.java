@@ -25,15 +25,15 @@ public class InvoiceItemDao {
             " (invoiceid, itemcost, quantity, description) " +
             "values (?,?,?,?)";
     private static  String UPDATE_INVOICEITEM = "update invoiceitem set "+
-            "invoiceid = ?, itemcost = ?, quantity = ?, description = ?";
+            "invoiceid = ?, itemcost = ?, quantity = ?, description = ? where id=?";
     
     public InvoiceItemDao(){
         
     }
 
-    private PreparedStatement InsertUpdateStatementInvoiceItem(InvoiceItem invoiceItem, String statemetnString) throws SQLException {
+    private PreparedStatement InsertUpdateStatementInvoiceItem(InvoiceItem invoiceItem, String statementString) throws SQLException {
         Connection con = connectionManager.getConnection();
-        PreparedStatement statement = con.prepareStatement(statemetnString);
+        PreparedStatement statement = con.prepareStatement(statementString);
         statement.setInt(1, invoiceItem.getInvoiceId());
         statement.setDouble(2,invoiceItem.getCost());
         statement.setInt(3, invoiceItem.getQuantity());
@@ -73,6 +73,7 @@ public class InvoiceItemDao {
 
     public void updateInvoiceItem(InvoiceItem invoiceItem) throws SQLException {
         PreparedStatement statement = InsertUpdateStatementInvoiceItem(invoiceItem, UPDATE_INVOICEITEM);
+        statement.setInt(5, invoiceItem.getId());
         statement.executeUpdate();
     }
 

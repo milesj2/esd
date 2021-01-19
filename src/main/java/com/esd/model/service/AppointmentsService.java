@@ -115,14 +115,9 @@ public class AppointmentsService {
         appointment.setSlots(placeholder.getSlots());
         appointment.setStatus(AppointmentStatus.PENDING);
         try {
-            // generate invoice if appointment is complete
-            if(appointment.getStatus() == AppointmentStatus.COMPLETE)
-            {
-                InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
-            }
             appointmentDao.updateAppointment(appointment);
             return true;
-        } catch (SQLException | InvalidIdValueException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

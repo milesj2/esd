@@ -42,9 +42,9 @@ public class InvoiceDao {
 
     private PreparedStatement InsertUpdateStatementInvoice(Invoice invoice, String statementString) throws SQLException {
         Connection con = connectionManager.getConnection();
-        PreparedStatement statement = con.prepareStatement(statementString);
+        PreparedStatement statement = con.prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
         statement.setDate(1, Date.valueOf(invoice.getInvoiceDate().toString()));
-        statement.setTime(2, Time.valueOf(invoice.getInvoiceTime().toString()));
+        statement.setTime(2, new Time(invoice.getInvoiceTime().toDateTimeToday().getMillis()));
         statement.setString(3, invoice.getInvoiceStatus().toString());
         statement.setString(4, invoice.getInvoiceStatusChangeDate().toString());
         statement.setInt(5, invoice.getEmployeeId());
@@ -163,7 +163,7 @@ public class InvoiceDao {
         statement.setInt(9, invoice.getId()); //key to id update
         statement.executeUpdate();
         for(InvoiceItem invoiceItem: invoice.getItems()){
-            invoiceItem.setId(invoice.getId());
+            invoiceItem.setInvoiceId(invoice.getId());
             invoiceItemDao.updateInvoiceItem(invoiceItem);
         }
     }
@@ -185,9 +185,11 @@ public class InvoiceDao {
         }
         PreparedStatement statement = InsertUpdateStatementInvoice(invoice, INSERT_INVOICE);
         statement.executeUpdate();
-        Invoice createdInvoice = getInvoiceByAppointmentId(invoice.getAppointmentId());
+        ResultSet keys = statement.getGeneratedKeys();
+        keys.next();
+        invoice.setId(keys.getInt(1));
         for(InvoiceItem invoiceItem: invoice.getItems()){
-            invoiceItem.setInvoiceId(createdInvoice.getId());
+            invoiceItem.setInvoiceId(invoice.getId());
             invoiceItemDao.createInvoiceItem(invoiceItem);
         }
     }
