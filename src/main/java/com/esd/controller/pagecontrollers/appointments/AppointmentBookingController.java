@@ -31,7 +31,6 @@ public class AppointmentBookingController extends HttpServlet {
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR = "availableAppointmentsDoctor";
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE = "availableAppointmentsNurse";
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserGroup usergroup = AuthenticationUtils.getCurrentUserGroup(request);

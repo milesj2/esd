@@ -43,7 +43,6 @@
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
     items = [
         { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
@@ -52,7 +51,6 @@
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NURSE)) { %>
     items = [
         { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
