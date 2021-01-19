@@ -43,7 +43,6 @@ public class UserSearchController extends GenericSearchController2 {
         selectedKey = "selectedUserId";
     }
 
-
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
         List<UserDetails> userDetails = userDetailsService.getUserDetailsFromFilteredRequest(args);

@@ -136,4 +136,23 @@ public class AppointmentDao {
         }
         return instance;
     }
+
+    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {.
+        ArrayList<Appointment> appointmentsList = new ArrayList<>();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+
+        Iterator mapIter = args.entrySet().iterator();
+        while(mapIter.hasNext()) {
+            Map.Entry pair = (Map.Entry)mapIter.next();
+            queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
+    }
 }
