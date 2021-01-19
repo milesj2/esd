@@ -1,7 +1,7 @@
 package com.esd.controller.pagecontrollers.prescriptions;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.pagecontrollers.GenericSearchController2;
+import com.esd.controller.pagecontrollers.GenericSearchController;
 import com.esd.controller.pagecontrollers.search.SearchColumn;
 import com.esd.controller.pagecontrollers.search.searchrow.PrescriptionSearchRow;
 import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 @WebServlet("/prescriptions/search")
 @Authentication(userGroups = {UserGroup.ALL})
-public class PrescriptionSearchController extends GenericSearchController2 {
+public class PrescriptionSearchController extends GenericSearchController {
 
     public PrescriptionSearchController() {
         columns = Arrays.asList(

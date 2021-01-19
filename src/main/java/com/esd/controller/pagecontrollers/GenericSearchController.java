@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GenericSearchController2 extends HttpServlet {
+public abstract class GenericSearchController extends HttpServlet {
 
     protected List<SearchColumn> columns;
     protected String selectedKey;

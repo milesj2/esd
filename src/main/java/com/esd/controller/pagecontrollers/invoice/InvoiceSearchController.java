@@ -1,16 +1,14 @@
 package com.esd.controller.pagecontrollers.invoice;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.pagecontrollers.GenericSearchController2;
+import com.esd.controller.pagecontrollers.GenericSearchController;
 import com.esd.controller.pagecontrollers.search.SearchColumn;
 import com.esd.controller.pagecontrollers.search.searchrow.InvoiceSearchRow;
 import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
-import com.esd.controller.pagecontrollers.search.searchrow.UserDetailsSearchRow;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.SystemUser;
-import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.InvoiceService;
 
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +21,7 @@ import java.util.*;
  */
 @WebServlet("/invoices/search")
 @Authentication(userGroups = {UserGroup.ALL})
-public class InvoiceSearchController extends GenericSearchController2 {
+public class InvoiceSearchController extends GenericSearchController {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
 

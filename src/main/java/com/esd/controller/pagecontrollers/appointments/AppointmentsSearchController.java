@@ -1,27 +1,19 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.pagecontrollers.GenericSearchController2;
+import com.esd.controller.pagecontrollers.GenericSearchController;
 import com.esd.controller.pagecontrollers.search.SearchColumn;
 import com.esd.controller.pagecontrollers.search.searchrow.AppointmentSearchRow;
-import com.esd.controller.pagecontrollers.search.searchrow.InvoiceSearchRow;
 import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.service.AppointmentsService;
 
 import com.esd.model.service.InvoiceService;
-import org.joda.time.LocalDate;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
+
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -32,7 +24,7 @@ import java.util.*;
 
 @WebServlet("/appointments/schedule")
 @Authentication(userGroups = {UserGroup.ALL})
-public class AppointmentsSearchController extends GenericSearchController2 {
+public class AppointmentsSearchController extends GenericSearchController {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
 

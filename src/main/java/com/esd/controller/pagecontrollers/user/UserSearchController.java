@@ -1,7 +1,7 @@
 package com.esd.controller.pagecontrollers.user;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.pagecontrollers.GenericSearchController2;
+import com.esd.controller.pagecontrollers.GenericSearchController;
 import com.esd.controller.pagecontrollers.search.SearchColumn;
 import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
 import com.esd.controller.pagecontrollers.search.searchrow.UserDetailsSearchRow;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @WebServlet("/users/search")
 @Authentication(userGroups = {UserGroup.ALL})
-public class UserSearchController extends GenericSearchController2 {
+public class UserSearchController extends GenericSearchController {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
 
