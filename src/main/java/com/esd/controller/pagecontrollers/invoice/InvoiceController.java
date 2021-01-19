@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Original Author: Trent meier
@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * page
  */
 
-@WebServlet("/invoices/view")
+@WebServlet("/invoices/edit")
 @Authentication(userGroups = {UserGroup.ALL})
 public class InvoiceController extends HttpServlet {
 
@@ -53,7 +53,7 @@ public class InvoiceController extends HttpServlet {
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/editInvoice.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -67,44 +67,34 @@ public class InvoiceController extends HttpServlet {
             invoice.setInvoiceDate(LocalDate.parse(request.getParameter(DaoConsts.INVOICE_DATE)));
             invoice.setInvoiceTime(LocalTime.parse(request.getParameter(DaoConsts.INVOICE_TIME)));
             invoice.setInvoiceStatus(InvoiceStatus.valueOf(request.getParameter(DaoConsts.INVOICE_STATUS)));
-            if(InvoiceOptions.valueOf(request.getParameter("option")) == InvoiceOptions.UPDATE){
-                invoice.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-                invoice.setInvoiceStatusChangeDate(LocalDate.now());
-            } else {
-                invoice.setId(0);
-                invoice.setInvoiceStatusChangeDate(LocalDate.parse(request.getParameter(DaoConsts.INVOICE_STATUS_CHANGE_DATE)));
-            }
+            invoice.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
+            invoice.setInvoiceStatusChangeDate(LocalDate.now());
             invoice.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
             invoice.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
             invoice.setPrivatePatient(request.getParameter(DaoConsts.PRIVATE_PATIENT)==null);
             invoice.setAppointmentId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID_FK)));
 
-            InvoiceItem invoiceItem = new InvoiceItem();
+            List<InvoiceItem> invoiceItems = invoiceService.getInvoiceById(invoice.getId()).getItems();
+            invoiceItems.get(0).setQuantity(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
+            invoiceItems.get(0).setDescription("Invoice Item: Appointment on "+ invoice.getInvoiceDate().toString());
+
             SystemUser employeeUser = SystemUserDao.getInstance().getUserByID(invoice.getEmployeeId());
             if(employeeUser.getUserGroup() == UserGroup.DOCTOR){
-                invoiceItem.setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
+                invoiceItems.get(0).setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
             } else if(employeeUser.getUserGroup() == UserGroup.NURSE){
-                invoiceItem.setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeNurse"));
+                invoiceItems.get(0).setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeNurse"));
             } else {
                 request.setAttribute("message", appointmentError);
                 throw new InvalidIdValueException(appointmentError);
             }
-            invoiceItem.setQuantity(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
-            invoiceItem.setDescription("Invoice Item: Appointment on "+ invoice.getInvoiceDate().toString());
-
-            ArrayList<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
-            invoiceItems.add(invoiceItem);
             invoice.setItems(invoiceItems);
 
-            if(InvoiceOptions.valueOf(request.getParameter("option")) == InvoiceOptions.UPDATE) {
-                invoiceService.updateInvoice(invoice);
-            } else {
-                invoiceService.createInvoice(invoice);
-            }
+            //update
+            invoiceService.updateInvoice(invoice);
 
             request.setAttribute("message", "Success");
-            invoice = invoiceService.getInvoiceById(idVal);
-            request.setAttribute("appointment", invoice);
+            Invoice updatedInvoice = invoiceService.getInvoiceById(idVal);
+            request.setAttribute("invoice", updatedInvoice);
 
         } catch (Exception e){
             request.setAttribute("message", "Something went wrong. If this persists please contact your administrator");
@@ -112,7 +102,7 @@ public class InvoiceController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/editInvoice.jsp");
         view.forward(request, response);
     }
 }

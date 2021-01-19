@@ -73,7 +73,7 @@
                                 <input type="submit" value="Select Invoice" />
                             </form>
                             <%}else{%>
-                            <a href='${pageContext.request.contextPath}/invoices/view?id=<%=invoice.getId()%>'>Search Invoice</a>
+                            <a href='${pageContext.request.contextPath}/invoices/edit?id=<%=invoice.getId()%>'>Edit Details</a>
                             <%}%>
                             </td>
                     </tr>
