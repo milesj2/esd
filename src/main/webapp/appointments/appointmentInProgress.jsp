@@ -41,7 +41,7 @@
                 <% }else{
                     Prescription prescription = (Prescription) request.getAttribute("prescription");
                 %>
-                    Prescription issued: <a href="">Download prescription</a>
+                    Prescription issued: <a href="">Download prescription</a> <input type="submit" name="editPrescription" value="Edit Prescription"/>
                 <% } %>
 
                 <input type="submit" name="completeAppointment" value="Complete Appointment"/>

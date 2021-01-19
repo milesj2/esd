@@ -31,7 +31,7 @@ public class AppointmentInProgressController extends HttpServlet {
 
         //We need a patient ID to start the booking process.
         if( request.getParameter("selectedAppointmentId") == null){
-            //TODO return to schedule
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
             return;
         }
 
@@ -50,7 +50,7 @@ public class AppointmentInProgressController extends HttpServlet {
         Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
 
         if(appointment.getStatus() == AppointmentStatus.COMPLETE){
-            //TODO return to shceudle
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
             return;
         }
 
@@ -78,11 +78,20 @@ public class AppointmentInProgressController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if( request.getParameter("selectedAppointmentId") == null){
-            //return to schedule
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
             return;
         }
+        if(request.getParameter("editPrescription") != null) {
+            String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
+            int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
+            Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
+            Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
 
-        if(request.getParameter("issuePrescription") != null){
+            response.sendRedirect(
+                    UrlUtils.absoluteUrl(request, "/prescriptions/edit?selectedPrescriptionId=" + prescription.getId() + "&redirect=" +
+                            UrlUtils.absoluteUrl(request, "/appointments/inprogress?" + selectedAppointmentIdParam)));
+            return;
+        }else if(request.getParameter("issuePrescription") != null){
             HttpSession session = request.getSession(false);
             FormData formData = new FormData(request.getParameter("notes"), Integer.parseInt(request.getParameter("referalId")));
             session.setAttribute("persistentFormData", formData);
@@ -103,7 +112,7 @@ public class AppointmentInProgressController extends HttpServlet {
             AppointmentsService.getInstance().updateAppointment(appointment);
             String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
             response.sendRedirect(
-                    UrlUtils.absoluteUrl(request, "/appointments/complete?" + selectedAppointmentIdParam));
+                    UrlUtils.absoluteUrl(request, "/appointments/completed?" + selectedAppointmentIdParam));
             return;
         }
         doGet(request, response);

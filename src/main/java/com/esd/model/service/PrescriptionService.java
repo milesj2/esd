@@ -3,16 +3,13 @@ package com.esd.model.service;
 import com.esd.model.dao.PrescriptionDao;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.PrescriptionRepeat;
-import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Original Author: Angela Jackson
@@ -52,13 +49,28 @@ public class PrescriptionService {
         return instance;
     }
 
-    public void updatePrescription(Prescription prescription) throws InvalidIdValueException, SQLException {
-        prescriptionDao.updatePrescription(prescription);
+    public void updatePrescription(Prescription prescription)  {
+        try {
+            prescriptionDao.updatePrescription(prescription);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
     }
 
     public Prescription getPrescriptionForAppointment(int appointmentId) {
         try {
-            return prescriptionDao.getPrescriptionForAppointment(appointmentId);
+            return prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public Prescription getPrescriptionById(int appointmentId) {
+        try {
+            return prescriptionDao.getPrescriptionById(appointmentId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -93,4 +105,6 @@ public class PrescriptionService {
             }
         }
     }
+
+
 }

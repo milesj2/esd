@@ -29,25 +29,15 @@
             <h1>Issue Prescription</h1>
             <form method="POST" action="${__SELF}">
                 <% if(request.getAttribute("redirect") != null){ %>
-                    <input type="hidden" name="redirect" value="<%=request.getParameter("redirect")%>">
+                <input type="hidden" name="redirect" value="<%=request.getParameter("redirect")%>">
                 <% } %>
-                <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>">
+                <input type="hidden" name="selectedPrescriptionId" value="<%=request.getParameter("selectedPrescriptionId")%>">
+                prescription Details</br>
+                <textarea name="details" rows="20" cols="50"><%=request.getAttribute("details")%></textarea></br>
 
-               prescription Details</br>
-                <textarea name="details" rows="20" cols="50"></textarea></br>
-                Issue Date:
-                <input type="date" name="issueDate" value="<%=new LocalDate()%>">
-                Repeat:
-                <select name="repeat">
-                    <% for(PrescriptionRepeat repeat : PrescriptionRepeat.values()){ %>
-                        <option value="<%=repeat.name()%>"><%=repeat.name()%></option>
-                    <% } %>
-                </select></br>
-                Repeat until: <input type="date" name="repeatUntil" value="<%=new LocalDate()%>"></br>
-                <input type="submit" name="issue" value="Issue"/>
-
+                <input type="submit" name="submit" value="Submit"/>
                 <% if(request.getAttribute("redirect") != null){ %>
-                    <input type="submit" name="cancel" value="Cancel"/>
+                <input type="submit" name="cancel" value="Cancel"/>
                 <% } %>
             </form>
         </main>

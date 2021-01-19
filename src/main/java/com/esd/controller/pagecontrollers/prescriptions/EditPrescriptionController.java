@@ -20,43 +20,33 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-@WebServlet("/prescriptions/issue")
+@WebServlet("/prescriptions/edit")
 @Authentication(userGroups = {UserGroup.DOCTOR, UserGroup.NURSE})
-public class IssuePrescriptionController extends HttpServlet {
+public class EditPrescriptionController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher view = request.getRequestDispatcher("/prescriptions/issuePrescription.jsp");
+        if(request.getParameter("selectedPrescriptionId") == null){
+            return;
+        }
+        int prescriptionId = Integer.parseInt(request.getParameter("selectedPrescriptionId"));
+        Prescription prescription = PrescriptionService.getInstance().getPrescriptionById(prescriptionId);
+        request.setAttribute("details", prescription.getPrescriptionDetails());
+
+        RequestDispatcher view = request.getRequestDispatcher("/prescriptions/editPrescription.jsp");
         view.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getParameter("cancel") == null){
+        if(request.getParameter("cancel") == null) {
             String prescriptionDetails = request.getParameter("details");
-            int appointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
+            int prescriptionId = Integer.parseInt(request.getParameter("selectedPrescriptionId"));
 
-            Appointment appointment = AppointmentsService.getInstance()
-                    .getAppointmentById(appointmentId);
-            int employeeId = appointment.getEmployeeId();
-            int patientId = appointment.getPatientId();
-
-            LocalDate issueDate = new LocalDate(request.getParameter("issueDate"));
-            LocalDate repeatUntil = new LocalDate(request.getParameter("repeatUntil"));
-
-            PrescriptionRepeat repeat = PrescriptionRepeat.valueOf(request.getParameter("repeat"));
-
-            Prescription prescription = new Prescription();
+            Prescription prescription = PrescriptionService.getInstance().getPrescriptionById(prescriptionId);
             prescription.setPrescriptionDetails(prescriptionDetails);
-            prescription.setAppointmentId(appointmentId);
-            prescription.setIssueDate(issueDate);
-            prescription.setEmployeeId(employeeId);
-            prescription.setPatientId(patientId);
-
-            PrescriptionService.getInstance().createPrescription(prescription);
-            PrescriptionService.getInstance().repeatPrescription(prescription, repeat, repeatUntil);
+            PrescriptionService.getInstance().updatePrescription(prescription);
         }
-
         if(request.getParameter("redirect") != null){
             URIBuilder redirectURIBuilder = null;
             try {

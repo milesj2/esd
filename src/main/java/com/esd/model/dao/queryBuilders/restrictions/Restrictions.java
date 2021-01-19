@@ -29,4 +29,8 @@ public class Restrictions {
     public static Restriction in(String field, Object... values){
         return new InRestriction(field, values);
     }
+
+    public static Restriction nullRestriction(String field) {
+        return new NullRestriction(field);
+    }
 }

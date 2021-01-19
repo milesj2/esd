@@ -9,7 +9,7 @@ import org.joda.time.LocalDate;
  */
 public class Prescription {
     private int id;
-    private int originatingPrescriptionId;
+    private Integer originatingPrescriptionId;
     private int employeeId;
     private int patientId;
     private String prescriptionDetails;
@@ -19,7 +19,7 @@ public class Prescription {
     public Prescription() {
     }
 
-    public int getOriginatingPrescriptionId() {
+    public Integer getOriginatingPrescriptionId() {
         return originatingPrescriptionId;
     }
 
