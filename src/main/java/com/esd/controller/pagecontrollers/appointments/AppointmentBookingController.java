@@ -7,7 +7,6 @@ import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
-import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
 import com.esd.model.service.SystemUserService;
 import com.esd.model.service.UserDetailsService;
@@ -20,8 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,6 @@ public class AppointmentBookingController extends HttpServlet {
     public static final String ATTRIBUTE_SELECTED_DATE = "selectedDate";
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR = "availableAppointmentsDoctor";
     public static final String ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE = "availableAppointmentsNurse";
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,11 +48,13 @@ public class AppointmentBookingController extends HttpServlet {
             if(user.getUserDetails() == null){
                     UserDetails details = UserDetailsService.getInstance().getUserDetailsByUserID(user.getId());
                     patientId = details.getId();
+            }else{
+                patientId = user.getUserDetails().getId();
             }
         }
 
         if(patientId == -1){
-            UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
             return;
         }
 

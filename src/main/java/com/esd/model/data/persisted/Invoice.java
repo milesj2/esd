@@ -19,14 +19,14 @@ public class Invoice {
 
     private boolean privatePatient;
     private Date invoiceDate;
-    private Date invoiceTime; //Could use the Joda time libary which is a little nicer....
+    private Date invoiceTime;
     private List<InvoiceItem> items;
     private InvoiceStatus invoiceStatus;
 
     public Invoice() {
     }
 
-    public void AddInvoiceItem(InvoiceItem invoiceItem){
+    public void addInvoiceItem(InvoiceItem invoiceItem){
         this.items.add(invoiceItem);
     }
 

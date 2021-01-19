@@ -15,8 +15,8 @@ public class Appointment {
     private int slots = 1;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
-    private LocalTime appointmentEndTime;
     private AppointmentStatus status;
+    private String notes;
 
     public Appointment() {
     }
@@ -85,5 +85,13 @@ public class Appointment {
 
     public boolean isCancled() {
        return this.status.equals(AppointmentStatus.CANCELED);
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

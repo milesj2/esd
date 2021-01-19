@@ -7,6 +7,7 @@ import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -64,7 +65,9 @@ public class SelectQueryBuilder{
                 query += " " + restriction.getOperator() + " ";
             }
             query +=  restriction.generateSql();
-            theMap.addAll(Arrays.asList(o));
+            if(o != null){
+                theMap.addAll(Arrays.asList(o));
+            }
             currentCount ++;
         }
         System.out.println(query);

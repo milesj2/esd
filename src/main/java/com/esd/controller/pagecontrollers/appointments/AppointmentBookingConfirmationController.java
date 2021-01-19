@@ -1,16 +1,10 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.utils.AuthenticationUtils;
-import com.esd.controller.utils.UrlUtils;
 import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.SystemUser;
-import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.AppointmentsService;
-import com.esd.model.service.SystemUserService;
-import com.esd.model.service.UserDetailsService;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -21,9 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @WebServlet("/appointments/confirm")
 @Authentication(userGroups = {UserGroup.ALL})

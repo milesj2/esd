@@ -29,13 +29,8 @@ public class ThirdPartyManageController extends HttpServlet {
         request.setAttribute("pageTitle", "Third Party Managment");
         List<ThirdParty> thirdParties;
 
-        try {
             thirdParties = ThirdPartyService.getInstance().getThirdParties();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
+
 
         request.setAttribute("thirdParties", thirdParties);
         RequestDispatcher view = request.getRequestDispatcher("/thirdPartyManagement/manageThirdParty.jsp");

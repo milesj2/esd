@@ -16,8 +16,8 @@ public class AppointmentDao {
     private static AppointmentDao instance;
 
     private static String INSERT_APPOINTMENT = "insert into appointments " +
-            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
-            " values (?,?,?,?,?,?)";
+            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus, notes)" +
+            " values (?,?,?,?,?,?,?)";
 
     private static String UPDATE_APPOINTMENT = "update appointments set" +
             " appointmentdate = ?," +
@@ -25,7 +25,8 @@ public class AppointmentDao {
             " slots = ?," +
             " employeeid = ?," +
             " patientid = ?," +
-            " appointmentstatus = ? " +
+            " appointmentstatus = ?, " +
+            " notes = ? " +
             "where id = ?";
 
     public void updateAppointment(Appointment appointment) throws SQLException {
@@ -40,8 +41,9 @@ public class AppointmentDao {
         statement.setInt(4, appointment.getEmployeeId());
         statement.setInt(5, appointment.getPatientId());
         statement.setString(6, appointment.getStatus().toString());
+        statement.setString(7, appointment.getNotes());
         //where id
-        statement.setInt(7, appointment.getId());
+        statement.setInt(8, appointment.getId());
         statement.executeUpdate();
     }
 
@@ -57,6 +59,7 @@ public class AppointmentDao {
         statement.setInt(4, appointment.getEmployeeId());
         statement.setInt(5, appointment.getPatientId());
         statement.setString(6, appointment.getStatus().toString());
+        statement.setString(7, appointment.getNotes());
         statement.executeUpdate();
     }
 
@@ -87,6 +90,7 @@ public class AppointmentDao {
         appointment.setAppointmentTime(LocalTime.parse(resultSet.getString(DaoConsts.APPOINTMENT_TIME)));
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
         appointment.setStatus(AppointmentStatus.valueOf(resultSet.getString(DaoConsts.APPOINTMENT_STATUS)));
+        appointment.setNotes(resultSet.getString(DaoConsts.APPOINTMENT_NOTES));
         return appointment;
     }
 
@@ -131,5 +135,24 @@ public class AppointmentDao {
             instance = new AppointmentDao();
         }
         return instance;
+    }
+
+    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {
+        ArrayList<Appointment> appointmentsList = new ArrayList<>();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+
+        Iterator mapIter = args.entrySet().iterator();
+        while(mapIter.hasNext()) {
+            Map.Entry pair = (Map.Entry)mapIter.next();
+            queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
     }
 }

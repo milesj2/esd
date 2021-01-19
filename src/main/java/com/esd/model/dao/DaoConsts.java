@@ -82,12 +82,14 @@ public class DaoConsts {
     public final static String PRESCRIPTION_ID = "prescriptionid";
     public final static String PRESCRIPTION_DETAILS = "prescriptiondetails";
     public final static String PRESCRIPTION_ISSUE_DATE = "issuedate";
+    public final static String PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID = "originatingPrescriptionId";
 
     public final static String PRIVATE_PATIENT = "privatepatient";
 
     public static final String APPOINTMENT_DATE = "appointmentdate";
     public static final String APPOINTMENT_TIME = "appointmenttime";
     public static final String APPOINTMENT_SLOTS = "slots";
+    public static final String APPOINTMENT_NOTES = "notes";
     public static final String APPOINTMENT_STATUS = "appointmentStatus";
 
     public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";

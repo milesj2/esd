@@ -87,6 +87,7 @@ create table appointments
     patientId INTEGER NOT NULL,
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
+    notes LONG VARCHAR,
 
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
@@ -127,6 +128,7 @@ create table systemSetting(
 create table prescriptions
 (
     id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+    originatingPrescriptionId INTEGER ,
     employeeId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
     prescriptionDetails  LONG VARCHAR NOT NULL,
@@ -135,7 +137,8 @@ create table prescriptions
 
     constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id),
     constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id),
-    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id)
+    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id),
+    constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id)
 );
 
 --The order of these are important they link to the above records

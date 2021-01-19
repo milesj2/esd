@@ -1,19 +1,25 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.AppointmentDao;
+import com.esd.model.dao.DaoConsts;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.dao.WorkingHoursDao;
+import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.WorkingHours;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
@@ -71,6 +77,16 @@ public class AppointmentsService {
         appointment.setStatus(AppointmentStatus.PENDING);
         try {
             appointmentDao.createAppointment(appointment);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateAppointment(Appointment appointment) {
+        try {
+            appointmentDao.updateAppointment(appointment);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -231,5 +247,14 @@ public class AppointmentsService {
 
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
+    }
+
+    public List<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args)  {
+        try {
+            appointmentDao.getAppointmentsByFilteredResults(args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }
