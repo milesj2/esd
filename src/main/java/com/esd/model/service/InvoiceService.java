@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Original Author: Trent Meier
@@ -42,8 +44,21 @@ public class InvoiceService {
         return instance;
     }
 
-    public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
+     public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
         return invoiceDao.getInvoiceById(id);
+    }
+     
+    public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id){
+       try {
+           return invoiceDao.getAllInvoiceItemsForInvoiceId(id);
+       } catch (SQLException ex) {
+           Logger.getLogger(InvoiceService.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       return new ArrayList<>();
+    }
+    
+    public InvoiceItem getInvoiceItemById(int id) throws SQLException, InvalidIdValueException {
+        return invoiceDao.getInvoiceItemById(id);
     }
 
     public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) {
@@ -58,11 +73,10 @@ public class InvoiceService {
     public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().createInvoice(invoice);
     }
-
+    
     public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().updateInvoice(invoice);
     }
-
 
     public void createInvoiceFromAppointment(Appointment appointment) throws InvalidIdValueException, SQLException {
 
@@ -96,5 +110,10 @@ public class InvoiceService {
         invoice.setItems(invoiceItems);
 
         createInvoice(invoice);
+    }
+    
+    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().updateInvoiceStatus(id, invoiceStatus);
+
     }
 }
