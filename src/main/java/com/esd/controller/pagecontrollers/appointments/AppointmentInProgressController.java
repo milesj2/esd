@@ -8,6 +8,7 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.*;
 
 import javax.servlet.RequestDispatcher;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/appointments/inprogress")
 @Authentication(userGroups = {UserGroup.DOCTOR, UserGroup.NURSE})
@@ -104,9 +106,11 @@ public class AppointmentInProgressController extends HttpServlet {
 
             int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
             Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
-            //TODO generate invoice
             appointment.setStatus(AppointmentStatus.COMPLETE);
             appointment.setNotes(request.getParameter("notes"));
+
+            InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
+
             AppointmentsService.getInstance().updateAppointment(appointment);
             String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
             response.sendRedirect(

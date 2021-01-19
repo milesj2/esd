@@ -97,37 +97,41 @@ public class InvoiceService {
         return invoiceItem;
     }
 
-    public void createInvoiceFromAppointment(Appointment appointment) throws InvalidIdValueException, SQLException {
+    public void createInvoiceFromAppointment(Appointment appointment) {
 
-        //create invoice
-        Invoice invoice = new Invoice();
-        invoice.setInvoiceDate(appointment.getAppointmentDate());
-        invoice.setInvoiceTime(appointment.getAppointmentTime());
-        invoice.setInvoiceStatus(InvoiceStatus.UNPAID);
-        invoice.setInvoiceStatusChangeDate(appointment.getAppointmentDate());
-        invoice.setEmployeeId(appointment.getEmployeeId());
-        invoice.setPatientId(appointment.getPatientId());
-        SystemUser systemUser = SystemUserService.getInstance().getUserByID(appointment.getPatientId());
-        invoice.setPrivatePatient(systemUser.getUserGroup().equals(DaoConsts.PRIVATE_PATIENT));
-        invoice.setAppointmentId(appointment.getId());
+        try {
+            //create invoice
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceDate(appointment.getAppointmentDate());
+            invoice.setInvoiceTime(appointment.getAppointmentTime());
+            invoice.setInvoiceStatus(InvoiceStatus.UNPAID);
+            invoice.setInvoiceStatusChangeDate(appointment.getAppointmentDate());
+            invoice.setEmployeeId(appointment.getEmployeeId());
+            invoice.setPatientId(appointment.getPatientId());
+            SystemUser systemUser = SystemUserService.getInstance().getUserByID(appointment.getPatientId());
+            invoice.setPrivatePatient(systemUser.getUserGroup().equals(DaoConsts.PRIVATE_PATIENT));
+            invoice.setAppointmentId(appointment.getId());
 
-        //create invoice items
-        SystemUser employeeUser = SystemUserDao.getInstance().getUserByID(invoice.getEmployeeId());
-        ArrayList<InvoiceItem> invoiceItems = new ArrayList<>();
-        InvoiceItem invoiceItem = new InvoiceItem();
-        invoiceItem.setQuantity(appointment.getSlots());
-        invoiceItem.setDescription("Invoice for appointment on: " + appointment.getAppointmentDate().toString());
-        if(employeeUser.getUserGroup() == UserGroup.DOCTOR){
-            invoiceItem.setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
-        } else if(employeeUser.getUserGroup() == UserGroup.NURSE){
-            invoiceItem.setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeNurse"));
-        } else {
-            throw new InvalidIdValueException("appointment employee must be doctor or nurse");
+            //create invoice items
+            SystemUser employeeUser = SystemUserDao.getInstance().getUserByID(invoice.getEmployeeId());
+            ArrayList<InvoiceItem> invoiceItems = new ArrayList<>();
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.setQuantity(appointment.getSlots());
+            invoiceItem.setDescription("Invoice for appointment on: " + appointment.getAppointmentDate().toString());
+            if (employeeUser.getUserGroup() == UserGroup.DOCTOR) {
+                invoiceItem.setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
+            } else if (employeeUser.getUserGroup() == UserGroup.NURSE) {
+                invoiceItem.setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeNurse"));
+            } else {
+                throw new InvalidIdValueException("appointment employee must be doctor or nurse");
+            }
+
+            invoiceItems.add(invoiceItem);
+            invoice.setItems(invoiceItems);
+
+            createInvoice(invoice);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        invoiceItems.add(invoiceItem);
-        invoice.setItems(invoiceItems);
-
-        createInvoice(invoice);
     }
 }
