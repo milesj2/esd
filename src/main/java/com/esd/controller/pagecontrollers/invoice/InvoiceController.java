@@ -2,11 +2,15 @@ package com.esd.controller.pagecontrollers.invoice;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.dao.SystemSettingDao;
+import com.esd.model.dao.SystemUserDao;
 import com.esd.model.data.InvoiceOptions;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
+import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.InvoiceService;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -32,6 +36,8 @@ import java.util.ArrayList;
 public class InvoiceController extends HttpServlet {
 
     private InvoiceService invoiceService = InvoiceService.getInstance();
+    private SystemSettingDao systemSettingDao = SystemSettingDao.getInstance();
+    private String appointmentError = "Appointment employee must be doctor or nurse!";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -70,21 +76,30 @@ public class InvoiceController extends HttpServlet {
             }
             invoice.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
             invoice.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
-            invoice.setPrivatePatient(request.getParameter(DaoConsts.PRIVATE_PATIENT)=="true");
+            invoice.setPrivatePatient(request.getParameter(DaoConsts.PRIVATE_PATIENT)==null);
             invoice.setAppointmentId(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_ID_FK)));
 
-            ArrayList<InvoiceItem> invoiceItems = new ArrayList<>();
-            //derive invoice related attributes
-            InvoiceItem invoiceItem = invoiceService.deriveInvoiceItemAttributes(invoice);
-            //add additional attributes
+            InvoiceItem invoiceItem = new InvoiceItem();
+            SystemUser employeeUser = SystemUserDao.getInstance().getUserByID(invoice.getEmployeeId());
+            if(employeeUser.getUserGroup() == UserGroup.DOCTOR){
+                invoiceItem.setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
+            } else if(employeeUser.getUserGroup() == UserGroup.NURSE){
+                invoiceItem.setCost(systemSettingDao.getDoubleSettingValueByKey("baseConsultationFeeNurse"));
+            } else {
+                request.setAttribute("message", appointmentError);
+                throw new InvalidIdValueException(appointmentError);
+            }
             invoiceItem.setQuantity(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
-            invoiceItem.setDescription("Invoice For: "+  invoice.getInvoiceDate().toString());
+            invoiceItem.setDescription("Invoice Item: Appointment on "+ invoice.getInvoiceDate().toString());
 
+            ArrayList<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
+            invoiceItems.add(invoiceItem);
+            invoice.setItems(invoiceItems);
 
             if(InvoiceOptions.valueOf(request.getParameter("option")) == InvoiceOptions.UPDATE) {
-                invoiceService.updateInvoice(invoice, invoiceItems);
+                invoiceService.updateInvoice(invoice);
             } else {
-                invoiceService.createInvoice(invoice, invoiceItems);
+                invoiceService.createInvoice(invoice);
             }
 
             request.setAttribute("message", "Success");
@@ -92,6 +107,7 @@ public class InvoiceController extends HttpServlet {
             request.setAttribute("appointment", invoice);
 
         } catch (Exception e){
+            request.setAttribute("message", "Something went wrong. If this persists please contact your administrator");
             e.printStackTrace();
         }
 

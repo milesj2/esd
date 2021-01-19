@@ -22,6 +22,7 @@ public class InvoiceDao {
     private ConnectionManager connectionManager = ConnectionManager.getInstance();
     private InvoiceItemDao invoiceItemDao = InvoiceItemDao.getInstance();
     private static InvoiceDao instance;
+
     private static String INSERT_INVOICE = "insert into invoice "+
             "(invoicedate, invoicetime, invoicestatus, statuschangedate, employeeid, patientid, privatepatient, appointmentid)"+
             "values(?,?,?,?,?,?,?,?)";
@@ -36,9 +37,6 @@ public class InvoiceDao {
             "appointmentid=? "+
             "where id =?";
     
-    private static String UPDATE_INVOICE_STATUS = "update invoice set "+
-            "invoicestatus=? "+
-            "where id =?";
 
     private InvoiceDao() {}
 
@@ -157,14 +155,15 @@ public class InvoiceDao {
         return processResultSetForInvoices(true, queryBuilder.createStatement());
     }
 
-    public void updateInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) throws SQLException, InvalidIdValueException {
+    public void updateInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
         if(invoice.getId()==0){
             throw new InvalidIdValueException("invoice id must be populated to update invoice");
         }
         PreparedStatement statement = InsertUpdateStatementInvoice(invoice, UPDATE_INVOICE);
         statement.setInt(9, invoice.getId()); //key to id update
         statement.executeUpdate();
-        for(InvoiceItem invoiceItem: invoiceItems){
+        for(InvoiceItem invoiceItem: invoice.getItems()){
+            invoiceItem.setId(invoice.getId());
             invoiceItemDao.updateInvoiceItem(invoiceItem);
         }
     }
@@ -180,13 +179,15 @@ public class InvoiceDao {
         statement.executeUpdate();
     }
 
-    public void createInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) throws SQLException, InvalidIdValueException {
+    public void createInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
         if(invoice.getId()!=0){
             throw new InvalidIdValueException("invoice id cannot be populated to create invoice");
         }
         PreparedStatement statement = InsertUpdateStatementInvoice(invoice, INSERT_INVOICE);
         statement.executeUpdate();
-        for(InvoiceItem invoiceItem: invoiceItems){
+        Invoice createdInvoice = getInvoiceByAppointmentId(invoice.getAppointmentId());
+        for(InvoiceItem invoiceItem: invoice.getItems()){
+            invoiceItem.setInvoiceId(createdInvoice.getId());
             invoiceItemDao.createInvoiceItem(invoiceItem);
         }
     }

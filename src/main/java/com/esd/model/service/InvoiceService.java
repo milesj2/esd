@@ -25,7 +25,8 @@ import java.util.logging.Logger;
 
 /**
  * Original Author: Trent Meier
- * Use: This class is a singleton, used to access invoice data objs
+ * Use: This class is a singleton, used to access invoice data objects
+ * Always access invoiceItems through invoice and invoiceService
  */
 
 public class InvoiceService {
@@ -73,16 +74,16 @@ public class InvoiceService {
         return new ArrayList<>();
     }
 
-    public void createInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) throws InvalidIdValueException, SQLException {
-        invoiceDao.getInstance().createInvoice(invoice, invoiceItems);
+    public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().createInvoice(invoice);
     }
     
     public void updateInvoiceStatus(Integer id, String invoiceStatus) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().updateInvoiceStatus(id, invoiceStatus);
     }
 
-    public void updateInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) throws InvalidIdValueException, SQLException {
-        invoiceDao.getInstance().updateInvoice(invoice, invoiceItems);
+    public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
+        invoiceDao.getInstance().updateInvoice(invoice);
     }
 
     public void updateInvoice(Invoice invoice) {
@@ -130,17 +131,21 @@ public class InvoiceService {
         invoice.setPrivatePatient(systemUser.getUserGroup().equals(DaoConsts.PRIVATE_PATIENT));
         invoice.setAppointmentId(appointment.getId());
 
-        //create Invoice Item List from appointment
-        ArrayList<InvoiceItem> invoiceItems = new ArrayList<>();
-        InvoiceItem invoiceItem = deriveInvoiceItemAttributes(invoiceDao.getInstance().getInvoiceByAppointmentId(appointment.getId()));
+        //invoice items from appointment
+        invoice.getItems().get(0).setQuantity(appointment.getSlots());
+        invoice.getItems().get(0).setDescription("Invoice for: " + appointment.getAppointmentDate().toString());
 
-        //additional non-invoice derived attributes
-        invoiceItem.setInvoiceId(invoice.getId());
-        invoiceItem.setQuantity(appointment.getSlots());
-        invoiceItem.setDescription("Invoice for: " + appointment.getAppointmentDate().toString());
+        SystemUser employeeUser = SystemUserDao.getInstance().getUserByID(invoice.getEmployeeId());
+        if(employeeUser.getUserGroup() == UserGroup.DOCTOR){
+            invoice.getItems().get(0).setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeDoctor"));
+        } else if(employeeUser.getUserGroup() == UserGroup.NURSE){
+            invoice.getItems().get(0).setCost(SystemSettingDao.getInstance().getDoubleSettingValueByKey("baseConsultationFeeNurse"));
+        } else {
+            throw new InvalidIdValueException("appointment employee must be doctor or nurse");
+        }
 
-        invoiceItems.add(invoiceItem);
+        invoice.getItems().get(0).setDescription("Invoice Item: Appointment on "+ appointment.getAppointmentDate().toString());
 
-        createInvoice(invoice, invoiceItems);
+        createInvoice(invoice);
     }
 }
