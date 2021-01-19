@@ -42,15 +42,13 @@ public class AppointmentsSearchController extends GenericSearchController {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
-
-        HttpSession session = request.getSession();
-        session.setAttribute("previousPage", session.getAttribute("currentPage"));
-        session.setAttribute("currentPage", request.getServletPath());
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
-        requestDispatcher.forward(request, response);
+    public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
+        List<Appointment> invoices = AppointmentsService.getInstance().getAppointmentsByFilteredResults(args);
+        List<SearchRow> searchRows = new ArrayList<>();
+        for(Appointment appointment : invoices){
+            searchRows.add(new AppointmentSearchRow(appointment));
+        }
+        return new ArrayList<>();
     }
 
 }

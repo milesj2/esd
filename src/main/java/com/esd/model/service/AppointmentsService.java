@@ -6,7 +6,13 @@ import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.dao.WorkingHoursDao;
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
-import com.esd.model.data.*;
+import com.esd.model.data.AppointmentPlaceHolder;
+import com.esd.model.data.AppointmentStatus;
+import com.esd.model.data.UserGroup;
+import com.esd.model.data.WorkingHours;
+import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.Invoice;
+import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import org.joda.time.LocalDate;
@@ -14,7 +20,6 @@ import org.joda.time.LocalTime;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import javax.swing.*;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
@@ -222,6 +227,7 @@ public class AppointmentsService {
         }
         return allSlots;
     }
+
 
     public synchronized static AppointmentsService getInstance(){
         if(instance == null){
