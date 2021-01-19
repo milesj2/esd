@@ -82,9 +82,6 @@
                     } %>
                 </table>
             </form>
-            <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
-            <a href='${pageContext.request.contextPath}/TODOCHANGETHISTOAPPOINTMENTBOOKING'><button>Create Invoice for Appointment</button></a>
-            <%}%>
         </main>
     </div>
 </div>
