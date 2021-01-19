@@ -31,30 +31,22 @@ function viewWeek(){
 }
 
 function move_appointments(timeStart, timeStop, appointmentLength){
-    const day_containers = document.getElementsByClassName("appointments_day_container");
-    const time_container = document.getElementById("times");
-    const height = time_container.offsetHeight;
-    const hourHeight = Math.floor(height / (timeStop - timeStart + 1));
-    const minuteHeight = Math.floor(hourHeight / (60 / appointmentLength));
-    const offset = time_container.offsetTop;
-    console.log(offset);
-    console.log(hourHeight, timeStart, timeStop, height);
+    let day_containers = document.getElementsByClassName("appointments_day_container");
+    let time_container = document.getElementById("times");
 
-    var day, i, appointment;
+    let day, i, appointment;
     for (day = 0; day < day_containers.length; day++){
         for (i = 0; i < day_containers[day].childElementCount; i++) {
             appointment = day_containers[day].children[i];
-            var time = appointment.getAttribute("time");
+            let time = appointment.getAttribute("time");
             if (time == null){
                 continue;
             }
-            var hour = time.split(":")[0];
-            var minute = time.split(":")[1];
-            // appointment.style.height = minuteHeight.toString();
-            var hourPos = hourHeight * (hour - timeStart);
-            var minutePos = minuteHeight/60 * minute;
-            console.log(hourPos, minutePos);
-            appointment.style.top = (offset + hourPos + minutePos).toString();
+            let hour = time.split(":")[0];
+            let minute = time.split(":")[1];
+            let current_time_container = time_container.children[hour - timeStart];
+            let minutePos = current_time_container.offsetHeight/60 * minute;
+            appointment.style.top = (current_time_container.offsetTop + minutePos).toString();
         }
     }
 }
@@ -189,19 +181,34 @@ function generateDayScheduleAppointments(){
     }
 }
 
+function moveTimeBar(timeStart){
+    let time_container = document.getElementById("times");
+    let time = new Date();
+    let timeBar = document.getElementById("time_bar");
+    let hourPos = time.getHours() - timeStart;
+    if (hourPos >= time_container.childElementCount){
+        return;
+    }
+    let current_time_container = time_container.children[hourPos];
+    let minutePos = current_time_container.offsetHeight/60 * time.getMinutes();
+    timeBar.style.top = (current_time_container.offsetTop + minutePos).toString();
+
+}
+
 function initialise_day_schedule(){
     generateDayScheduleDayContainers();
     generateDayScheduleAppointments();
 }
 
 function initialise_schedule(){
+    let day = new Date(get("fromDate"));
+    var date = months[day.getMonth()] + " " + day.getDate() + " " + day.getFullYear();
+    document.getElementById("week_beginning").innerHTML = "WB - " + date
+
     generateTimes(8, 18);
     generateDaysOfWeek();
     generateAppointments(appointments);
     move_appointments(8, 18, 10);
+    moveTimeBar(8);
     viewDay();
-
-    let day = new Date(get("fromDate"));
-    var date = months[day.getMonth()] + " " + day.getDate() + " " + day.getFullYear();
-    document.getElementById("week_beginning").innerHTML = "WB - " + date
 }

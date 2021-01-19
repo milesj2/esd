@@ -18,10 +18,14 @@
             <main>
                 <h3 id="week_beginning"></h3>
                 <div id="schedule_switch">
-                    <button onclick="viewDay();" >Day View</button>
-                    <button onclick="viewWeek();">Week View</button>
+                    <button onclick="viewDay();" >List View</button>
+                    <button onclick="viewWeek();">Grid View</button>
                 </div>
                 <div id="week_schedule" class="week_schedule">
+                    <div id="time_bar">
+                        <div class="circle"></div>
+                        <div class="line"></div>
+                    </div>
                     <div id="day_headers" class="day_headers">
                     </div>
                     <div id="schedule_main" class="schedule_main">

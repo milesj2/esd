@@ -308,6 +308,30 @@ main .widgets .whole-widget {
 
 }
 
+#time_bar {
+    position: absolute;
+    top: 275px;
+    left: 330px;
+    width: 100%;
+}
+
+#time_bar .circle {
+    background-color: darkred;
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+}
+
+#time_bar .line {
+    background-color: darkred;
+    position: absolute;
+    height: 6px;
+    width: 80%;
+    margin-top: 6px;
+
+}
+
 #schedule_switch button {
     height: 40px;
 }
@@ -370,11 +394,13 @@ main .widgets .whole-widget {
 
 .week_schedule .appointment_container {
     background-color: var(--background-color);
+    border-radius: 5px;
     position: absolute;
     padding: 5px;
 }
 
 .week_schedule .appointment_container h2 {
+    font-size: 10px;
     margin: 0;
 }
 
