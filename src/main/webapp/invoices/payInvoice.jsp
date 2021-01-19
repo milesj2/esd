@@ -115,7 +115,7 @@
                         </tr>
                         <tr>
                             <th>Total Amount</th>
-                            <td>£<%=(Double)request.getAttribute("totalDue")%></td>
+                            <td>Â£<%=(Double)request.getAttribute("totalDue")%></td>
                         </tr>
                     </table>
                 </div>
@@ -145,7 +145,7 @@
 
                     <div style="padding:5px;"><label for="cvv">CVV*</label>
                         <input type="text" id="cvv" name="cvv" placeholder="352" size="3" maxlength="3" pattern="[0-9]{3}" required></div><br>
-                    <input type="submit" value="Pay £<%=(Double)request.getAttribute("totalDue")%>" class="btn">
+                    <input type="submit" value="Pay Â£<%=(Double)request.getAttribute("totalDue")%>" class="btn">
                     <%}else{%>
                     <h5>Payment for this invoice is paid in full.</h4>
                     <%}%>
