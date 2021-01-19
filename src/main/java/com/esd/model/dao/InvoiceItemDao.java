@@ -11,6 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Original Author: Trent Meier
+ * Use: This class is a singleton, The use of this class is to all DAO operations in relation to invoceItems
+ */
+
 public class InvoiceItemDao {
     
     private ConnectionManager connectionManager = ConnectionManager.getInstance();
@@ -19,12 +24,14 @@ public class InvoiceItemDao {
     private static String INSERT_INVOICEITEM = "insert into invoiceitem" +
             " (invoiceid, itemcost, quantity, description) " +
             "values (?,?,?,?)";
+    private static  String UPDATE_INVOICEITEM = "update invoiceitem set "+
+            "invoiceid = ?, itemcost = ?, quantity = ?, description = ?";
     
     public InvoiceItemDao(){
         
     }
 
-    private PreparedStatement InserUpdateStatementInvoiceItem(InvoiceItem invoiceItem, String statemetnString) throws SQLException {
+    private PreparedStatement InsertUpdateStatementInvoiceItem(InvoiceItem invoiceItem, String statemetnString) throws SQLException {
         Connection con = connectionManager.getConnection();
         PreparedStatement statement = con.prepareStatement(statemetnString);
         statement.setInt(1, invoiceItem.getInvoiceId());
@@ -60,17 +67,19 @@ public class InvoiceItemDao {
     }
 
     public void createInvoiceItem(InvoiceItem invoiceItem) throws SQLException {
-        PreparedStatement statement = InserUpdateStatementInvoiceItem(invoiceItem, INSERT_INVOICEITEM);
+        PreparedStatement statement = InsertUpdateStatementInvoiceItem(invoiceItem, INSERT_INVOICEITEM);
         statement.executeUpdate();
     }
-    
+
+    public void updateInvoiceItem(InvoiceItem invoiceItem) throws SQLException {
+        PreparedStatement statement = InsertUpdateStatementInvoiceItem(invoiceItem, UPDATE_INVOICEITEM);
+        statement.executeUpdate();
+    }
+
     public synchronized static InvoiceItemDao getInstance(){
         if(instance == null){
             instance = new InvoiceItemDao();
         }
         return instance;
-    }
-
-    public void updateInvoiceItem(InvoiceItem invoiceItem) {
     }
 }

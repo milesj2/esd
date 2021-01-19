@@ -2,7 +2,11 @@
 <%@ page import="com.esd.model.data.persisted.Invoice" %>
 
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.esd.model.data.UserGroup" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<% SystemUser currentSystemUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -78,6 +82,9 @@
                     } %>
                 </table>
             </form>
+            <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
+            <a href='${pageContext.request.contextPath}/TODOCHANGETHISTOAPPOINTMENTBOOKING'><button>Create Invoice for Appointment</button></a>
+            <%}%>
         </main>
     </div>
 </div>
