@@ -1,5 +1,6 @@
 package com.esd.model.data;
 
+import com.esd.model.data.persisted.SystemUser;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -10,6 +11,12 @@ public class UIAppointment {
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private AppointmentStatus status;
+    private SystemUser patient;
+    private SystemUser employee;
+
+    public SystemUser getPatient() { return patient; }
+
+    public void setPatient(SystemUser patient) { this.patient = patient; }
 
     public AppointmentStatus getStatus() {
         return status;
@@ -58,4 +65,8 @@ public class UIAppointment {
     public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
+
+    public SystemUser getEmployee() { return employee; }
+
+    public void setEmployee(SystemUser employee) { this.employee = employee; }
 }

@@ -117,7 +117,7 @@ function getContextPath() {
 }
 
 function onAppointmentClick(e){
-    window.location = getContextPath() + "/appointments/view?id=" + e.currentTarget.id;
+    window.location = getContextPath() + "/appointments/viewAppointment?id=" + e.currentTarget.id;
 }
 
 function initialise_schedule(){

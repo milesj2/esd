@@ -7,7 +7,11 @@ import com.esd.model.data.UIAppointment;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.data.persisted.UserDetails;
+import com.esd.model.exceptions.InvalidIdValueException;
 import com.esd.model.service.AppointmentsService;
+import com.esd.model.service.SystemUserService;
+import com.esd.model.service.UserDetailsService;
 import org.joda.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
@@ -26,40 +30,14 @@ import java.util.*;
 public class AppointmentScheduleController extends HttpServlet {
 
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
-    private static final ArrayList<String> AppointmentKeys = new ArrayList<>(Arrays.asList(
-            DaoConsts.APPOINTMENT_SLOTS,
-            DaoConsts.APPOINTMENT_STATUS,
-            DaoConsts.ID)
-    );
-
-    private boolean checkRequestContains(HttpServletRequest request, String key){
-        if(request.getParameterMap().containsKey(key) && !request.getParameter(key).isEmpty() && request.getParameter(key) != ""){
-            return true;
-        }
-        return false;
-    }
-
-
+    private SystemUserService systemUserService = SystemUserService.getInstance();
+    private UserDetailsService userDetailsService = UserDetailsService.getInstance();
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        Map<String, Object> args =  new HashMap<>();
-
         SystemUser systemUser = (SystemUser)request.getSession().getAttribute("currentSessionUser");
-
-        if (systemUser.getUserGroup() == UserGroup.NHS_PATIENT
-                || systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT
-                || !checkRequestContains(request, "id"))
-        {
-            args.put("id", systemUser.getId());
-        } else {
-            for(String key: AppointmentKeys) {
-                if(checkRequestContains(request, key)){
-                    args.put(key, request.getParameter(key));
-                }
-            }
-        }
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,6 +46,7 @@ public class AppointmentScheduleController extends HttpServlet {
         LocalDate toDate;
 
         fromDate = LocalDate.parse(request.getParameter("fromDate"));
+
         try {
             c.setTime(sdf.parse(request.getParameter("fromDate")));
         } catch(ParseException e){
@@ -79,12 +58,30 @@ public class AppointmentScheduleController extends HttpServlet {
         ArrayList<UIAppointment> appointments = new ArrayList<>();
 
         try {
-            List<Appointment> appointmentList = appointmentsService.getAppointmentsInRange(fromDate, toDate, Optional.ofNullable(args));
+            List<Appointment> appointmentList;
+            if (request.getParameter("employeeID") != null){
+                appointmentList = appointmentsService.getEmployeeAppointments(fromDate, toDate, Integer.parseInt(request.getParameter("employeeID")));
+            } else if (request.getParameter("patientID") != null){
+                appointmentList = appointmentsService.getPatientsAppointments(fromDate, toDate, Integer.parseInt(request.getParameter("patientID")));
+            } else if (systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT ||
+                    systemUser.getUserGroup() == UserGroup.NHS_PATIENT){
+                appointmentList = appointmentsService.getPatientsAppointments(fromDate, toDate, systemUser.getId());
+            } else {
+                appointmentList = appointmentsService.getEmployeeAppointments(fromDate, toDate, systemUser.getId());
+            }
+
             for (Appointment appointment: appointmentList){
                 UIAppointment uiAppointment = new UIAppointment();
 
+                SystemUser employee = systemUserService.getUserByID(appointment.getEmployeeId());
+                SystemUser patient = systemUserService.getUserByID(appointment.getPatientId());
+                patient.setUserDetails(userDetailsService.getUserDetailsByUserID(patient.getId()));
+                String employeeName = userDetailsService.getUserDetailsByUserID(employee.getId()).getFirstName();
+
                 uiAppointment.setId(appointment.getId());
-                uiAppointment.setTitle(String.valueOf(appointment.getPatientId()));
+                uiAppointment.setTitle(patient.getUserDetails().getFirstName() + " to see " + employeeName);
+                uiAppointment.setPatient(patient);
+                uiAppointment.setEmployee(employee);
                 uiAppointment.setSlots(appointment.getSlots());
                 uiAppointment.setAppointmentDate(appointment.getAppointmentDate());
                 uiAppointment.setAppointmentTime(appointment.getAppointmentTime());
@@ -92,7 +89,7 @@ public class AppointmentScheduleController extends HttpServlet {
 
                 appointments.add(uiAppointment);
             }
-        } catch (SQLException throwables) {
+        } catch (SQLException | InvalidIdValueException throwables) {
             throwables.printStackTrace();
         }
 

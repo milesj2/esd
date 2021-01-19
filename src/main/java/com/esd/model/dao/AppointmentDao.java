@@ -18,7 +18,6 @@ public class AppointmentDao {
     private static String INSERT_APPOINTMENT = "insert into appointments " +
             "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
             " values (?,?,?,?,?,?,?)";
-
     private static String UPDATE_APPOINTMENT = "update appointments set" +
             " id = ?," +
             " appointmentdate = ?," +
@@ -28,6 +27,9 @@ public class AppointmentDao {
             " patientid = ?," +
             " appointmentstatus = ? " +
             "where id = ?";
+    private static String GET_PATIENT_APPOINTMENTS = "SELECT * FROM appointments WHERE appointmentdate>=? AND appointmentdate<=? AND patientID=?";
+    private static String GET_EMPLOYEE_APPOINTMENTS = "SELECT * FROM appointments WHERE appointmentdate>=? AND appointmentdate<=? AND employeeID=?";
+
 
     public void updateAppointment(Appointment appointment) throws SQLException {
         if(appointment.getId()==0){
@@ -101,6 +103,37 @@ public class AppointmentDao {
             throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
         }
         return processResultSetForAppointment(result);
+    }
+
+    public List<Appointment> getPatientAppointments(LocalDate start, LocalDate end, int patientID) throws SQLException {
+        return getAppointments(start, end, patientID, false);
+    }
+
+    public List<Appointment> getEmployeeAppointments(LocalDate start, LocalDate end, int employeeID) throws SQLException {
+        return getAppointments(start, end, employeeID, true);
+    }
+
+    private List<Appointment> getAppointments(LocalDate start, LocalDate end, int userID, boolean employee) throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement;
+        if (employee) {
+            statement = con.prepareStatement(GET_EMPLOYEE_APPOINTMENTS);
+        } else {
+            statement = con.prepareStatement(GET_PATIENT_APPOINTMENTS);
+        }
+
+        statement.setString(1, start.toString());
+        statement.setString(2, end.toString());
+        statement.setInt(3, userID);
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointments.add(processResultSetForAppointment(result));
+        }
+        return appointments;
     }
 
     public List<Appointment> getAppointmentsInPeriodWithArgs(LocalDate start, LocalDate end,  Optional<Map<String, Object>> args)

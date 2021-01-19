@@ -122,7 +122,7 @@ insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2,
 values (2,'Casandra', 'Smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (3,'Jake', 'Docotor', '52 John Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
+values (3,'Jake', 'Doctor', '52 John Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20'));
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
 values (4,'Sandra', 'Johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13'));
@@ -136,22 +136,22 @@ values (6,'Jane', 'Jones', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DAT
 --create 2 days of appointments
 
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2020-11-30', '14:00:00', 3, 1);
+VALUES ('2020-11-30', '14:00:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2020-11-30', '14:15:00', 3, 1);
+VALUES ('2020-11-30', '14:15:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2020-11-30', '14:30:00', 3, 1);
+VALUES ('2020-11-30', '14:30:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2020-11-30', '14:45:00', 3, 1);
+VALUES ('2020-11-30', '14:45:00', 3, 5);
 
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2021-01-18', '14:00:00', 3, 1);
+VALUES ('2021-01-18', '14:00:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2021-01-19', '14:15:00', 3, 1);
+VALUES ('2021-01-19', '14:15:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID)
-VALUES ('2021-01-20', '14:30:00', 3, 1);
+VALUES ('2021-01-20', '14:30:00', 3, 5);
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID, appointmentStatus)
-VALUES ('2021-01-21', '14:45:00', 3, 1, 'CANCELED');
+VALUES ('2021-01-21', '14:45:00', 3, 5, 'CANCELED');
 
 --create an invoice for each appointment,
 insert into INVOICE(INVOICEDATE, INVOICETIME, EMPLOYEEID,PATIENTID,INVOICESTATUS, PRIVATEPATIENT, APPOINTMENTID, STATUSCHANGEDATE)

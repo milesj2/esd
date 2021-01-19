@@ -61,6 +61,14 @@ public class AppointmentsService {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
+    public List<Appointment> getEmployeeAppointments(LocalDate fromDate, LocalDate toDate, int employeeID) throws SQLException {
+        return appointmentDao.getEmployeeAppointments(fromDate, toDate, employeeID);
+    }
+
+    public List<Appointment> getPatientsAppointments(LocalDate fromDate, LocalDate toDate, int patientID) throws SQLException {
+        return appointmentDao.getPatientAppointments(fromDate, toDate, patientID);
+    }
+
     public void createNewAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
         if(!checkIfAptConflicts(appointment)){
             throw new InvalidIdValueException("Appointment conflicts with existing appointment");
