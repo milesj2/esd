@@ -19,6 +19,7 @@ public class InvoiceSearchRow extends SearchRow{
                     String.valueOf(invoice.getPatientId())
             );
             searchActions = new HashMap<>();
-            searchActions.put("/invoice/view?selectedInvoiceId="+invoice.getId(), "View Invoice Details");
+            searchActions.put("/invoices/view?selectedInvoiceId="+invoice.getId(), "View Invoice Details");
+            searchActions.put("invoices/pay?selectedInvoiceId="+invoice.getId(), "Pay invoice");
     }
 }

@@ -1,12 +1,9 @@
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
 <%@ page import="com.esd.model.data.InvoiceStatus" %>
-<%@ page import="com.esd.model.data.persisted.InvoiceItem" %>
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
-<%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Invoice" %>
-<%@ page import="com.esd.model.data.InvoiceOptions" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,7 +117,8 @@
                     </table>
                 </div>
                         
-                <form method="post" action="${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>">
+                <form method="post" action="${pageContext.request.contextPath}/invoices/pay">
+                    <input type="hidden" name="selectedInvoiceId" value="<%=invoice.getId()%>">
                 <div class="invoice-pay">
                     <h3>Payment Details</h3>
                     <% if (invoice.getInvoiceStatus() != InvoiceStatus.PAID){%>

@@ -2,11 +2,8 @@ package com.esd.controller.pagecontrollers.invoice;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.UrlUtils;
-import com.esd.model.dao.DaoConsts;
-import com.esd.model.data.InvoiceOptions;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.data.persisted.SystemUser;
@@ -53,8 +50,7 @@ public class InvoicePaymentController extends HttpServlet {
             response.sendRedirect(UrlUtils.absoluteUrl(request, "search")); //search page
         return;
         }
-              
-            
+
             HttpSession session = request.getSession();
             request.setAttribute("pageTitle", "Invoice Payment");
             session.setAttribute("previousPage", session.getAttribute("currentPage"));
@@ -62,7 +58,6 @@ public class InvoicePaymentController extends HttpServlet {
 
             try{
                 Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter("selectedInvoiceId")));
-                invoice.setItems(invoiceService.getAllInvoiceItemsForInvoiceId(invoice.getId()));
                 
                 SystemUser user = (SystemUser)request.getSession().getAttribute("currentSessionUser");
                 
@@ -103,13 +98,14 @@ public class InvoicePaymentController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         try {
-            int id = Integer.parseInt(request.getParameter(DaoConsts.ID));
-            String status = (InvoiceStatus.PAID).name();
-            
-            invoiceService.updateInvoiceStatus(id, status);
-            
+            int invoiceId = Integer.parseInt(request.getParameter("selectedInvoiceId"));
+
+            Invoice invoice = invoiceService.getInvoiceById(invoiceId);
+            invoice.setInvoiceStatus(InvoiceStatus.PAID);
+            invoiceService.updateInvoice(invoice);
+
             response.sendRedirect("search?msg=" + "Payment Successful");
 
         } catch (SQLException e) {

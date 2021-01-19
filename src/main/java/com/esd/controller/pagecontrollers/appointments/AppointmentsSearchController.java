@@ -50,5 +50,4 @@ public class AppointmentsSearchController extends GenericSearchController {
         }
         return new ArrayList<>();
     }
-
 }
