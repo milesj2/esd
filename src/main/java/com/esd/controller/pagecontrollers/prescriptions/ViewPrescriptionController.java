@@ -34,7 +34,7 @@ public class ViewPrescriptionController extends HttpServlet {
 
         if(UserGroup.patients.contains(AuthenticationUtils.getCurrentUserGroup(request))){
             if(currentUserDetails.getId() != prescription.getPatientId()){
-                UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN);
+                response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN));
                 return;
             }
         }

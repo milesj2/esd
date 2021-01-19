@@ -137,7 +137,7 @@ public class AppointmentDao {
         return instance;
     }
 
-    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {.
+    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {
         ArrayList<Appointment> appointmentsList = new ArrayList<>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
 

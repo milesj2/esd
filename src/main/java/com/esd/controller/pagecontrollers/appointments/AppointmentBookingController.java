@@ -49,11 +49,13 @@ public class AppointmentBookingController extends HttpServlet {
             if(user.getUserDetails() == null){
                     UserDetails details = UserDetailsService.getInstance().getUserDetailsByUserID(user.getId());
                     patientId = details.getId();
+            }else{
+                patientId = user.getUserDetails().getId();
             }
         }
 
         if(patientId == -1){
-            UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
             return;
         }
 
