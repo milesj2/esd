@@ -118,7 +118,7 @@ body{
 main {
     margin: 0;
     padding: 20px;
-    height: calc(100vh - var(--logo-height));
+    height: calc(100vh - var(--logo-height) - 2*20px);
     width: calc(100vw - var(--nav-width) - 2*10px);
     background: #eeeeee;
 }
@@ -304,7 +304,15 @@ main .widgets .whole-widget {
 #############################################
 */
 
-.schedule {
+#schedule_switch {
+
+}
+
+#schedule_switch button {
+    height: 40px;
+}
+
+.week_schedule {
     width: auto;
     overflow: auto;
 
@@ -353,20 +361,45 @@ main .widgets .whole-widget {
     min-width: 130px;
 }
 
-.appointment {
+.appointment_container:hover {
+    cursor: pointer;
+}
+
+.week_schedule .appointment_container {
     background-color: var(--background-color);
     position: absolute;
     padding: 5px;
 }
 
-.appointment:hover {
-    cursor: pointer;
-}
-
-.appointment h2 {
+.week_schedule .appointment_container h2 {
     margin: 0;
 }
 
-.appointment h3 {
+
+.week_schedule .appointment_container h3 {
     margin: 0;
 }
+
+
+.day_schedule .day_header_container {
+    display: flex;
+    justify-content: space-between;
+    width: 120px;
+    margin-right: 20px;
+}
+
+.day_schedule .day_header_container h3 {
+    margin-right: 5px;
+}
+
+.day_schedule .day_container {
+    display: flex;
+}
+.day_schedule .appointment_container {
+    display: flex;
+}
+
+.day_schedule .appointment_container h2 {
+    margin-right: 30px;
+}
+

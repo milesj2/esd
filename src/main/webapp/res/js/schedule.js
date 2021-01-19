@@ -12,6 +12,30 @@ function get(name){
         return decodeURIComponent(name[1]);
 }
 
+function getContextPath() {
+    return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+}
+
+function onAppointmentClick(e){
+    window.location = getContextPath() + "/appointments/viewAppointment?id=" + e.currentTarget.id;
+}
+
+function viewDay(){
+    let weekView = document.getElementById("week_schedule");
+    let dayView = document.getElementById("day_schedule");
+
+    weekView.style.display = "none";
+    dayView.style.display = "block";
+}
+
+function viewWeek(){
+    let weekView = document.getElementById("week_schedule");
+    let dayView = document.getElementById("day_schedule");
+
+    weekView.style.display = "block";
+    dayView.style.display = "none";
+}
+
 function move_appointments(timeStart, timeStop, appointmentLength){
     const day_containers = document.getElementsByClassName("appointments_day_container");
     const time_container = document.getElementById("times");
@@ -32,7 +56,7 @@ function move_appointments(timeStart, timeStop, appointmentLength){
             }
             var hour = time.split(":")[0];
             var minute = time.split(":")[1];
-            appointment.style.height = minuteHeight.toString();
+            // appointment.style.height = minuteHeight.toString();
             var hourPos = hourHeight * (hour - timeStart);
             var minutePos = minuteHeight/60 * minute;
             console.log(hourPos, minutePos);
@@ -93,14 +117,14 @@ function generateAppointments(appointments){
         var h2 = document.createElement("h2");
         var h3 = document.createElement("h3");
 
-        div.classList.add("appointment");
+        div.classList.add("appointment_container");
         div.setAttribute("id", appointment.id);
         div.setAttribute("time", appointment.time);
         div.onclick = function(e) {
             onAppointmentClick(e)
         };
         h2.innerHTML = appointment.title;
-        h3.innerHTML = appointment.slots;
+        // h3.innerHTML = appointment.slots;
 
         div.appendChild(h2);
         div.appendChild(h3);
@@ -112,13 +136,74 @@ function generateAppointments(appointments){
     }
 }
 
-function getContextPath() {
-    return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+function initialise_day_schedule(){
+    let day = new Date(get("fromDate"));
+    generateDayScheduleDayContainers();
+    generateDayScheduleAppointments();
 }
 
-function onAppointmentClick(e){
-    window.location = getContextPath() + "/appointments/viewAppointment?id=" + e.currentTarget.id;
+function generateDayScheduleDayContainers(){
+    let dayScheduleContainer = document.getElementById("day_schedule");
+    let day = new Date(get("fromDate"));
+    var i;
+    for(i = day.getDay(); i < day.getDay() + 7; i++) {
+        var div = document.createElement("div");
+        div.classList.add("day_container");
+
+        var headerDiv = document.createElement("div")
+        headerDiv.classList.add("day_header_container");
+
+        var h3 = document.createElement("h3");
+        h3.innerHTML = weekday[i % 7];
+
+        var vl = document.createElement("div");
+        vl.classList.add("vl");
+
+        var innerDiv = document.createElement("div");
+
+        headerDiv.appendChild(h3);
+        headerDiv.appendChild(vl);
+        div.appendChild(headerDiv);
+        div.appendChild(innerDiv);
+
+        dayScheduleContainer.appendChild(div);
+    }
 }
+
+function appendAppointmentToDaySchedule(appointment, date){
+    let dayScheduleContainer = document.getElementById("day_schedule");
+    let fromDate = new Date(get("fromDate"));
+    var pos = date.getDay() - fromDate.getDay();
+
+    dayScheduleContainer.children[pos + 1].children[1].appendChild(appointment);
+}
+
+function generateDayScheduleAppointments(){
+    let fromDate = new Date(get("fromDate"));
+
+    var i;
+    for (i = 0; i < appointments.length; i++){
+        var appointment = appointments[i];
+        var div = document.createElement("div");
+        div.classList.add("appointment_container")
+        div.setAttribute("id", appointment.id);
+        div.onclick = function(e) {
+            onAppointmentClick(e)
+        };
+
+        var title = document.createElement("h2");
+        var time = document.createElement("h2");
+
+        time.innerHTML = appointment.time.split(":").slice(0,2).join(":");
+        title.innerHTML = appointment.title;
+        div.appendChild(time);
+        div.appendChild(title);
+
+        appendAppointmentToDaySchedule(div, new Date(appointment.date));
+
+    }
+}
+
 
 function initialise_schedule(){
     generateTimes(8, 18);

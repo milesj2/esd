@@ -2,6 +2,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.esd.model.data.UIAppointment" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% ArrayList<UIAppointment> appointments = (ArrayList<UIAppointment>)request.getAttribute("appointments"); %>
 <html>
 <head>
     <title>Template</title>
@@ -15,7 +16,11 @@
         <div class="main_container">
             <%@ include file="../res/components/titlebar.jsp" %>
             <main>
-                <div class="schedule">
+                <div id="schedule_switch">
+                    <button onclick="viewDay();" >Day View</button>
+                    <button onclick="viewWeek();">Week View</button>
+                </div>
+                <div id="week_schedule" class="week_schedule">
                     <div id="day_headers" class="day_headers">
 
                     </div>
@@ -36,22 +41,18 @@
                             <div class="appointments_day_container">
                             </div>
                             <div class="appointments_day_container">
-                                <div class="appointment">
-                                    <h2>Example</h2>
-                                    <h3>09:10 - 09:20</h3>
-                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- ./week_schedule -->
+                <div id="day_schedule" class="day_schedule">
+                </div> <!-- ./day_schedule -->
             </main>
         </div>
     </div>
 <script>
     var appointments = [
 <%
-
-    ArrayList<UIAppointment> appointments = (ArrayList<UIAppointment>)request.getAttribute("appointments");
     if (appointments != null){
         for (UIAppointment appointment:appointments){
             out.print("{ ");
@@ -68,6 +69,7 @@
 </script>
 <script>
     initialise_schedule();
+    initialise_day_schedule();
 </script>
 </body>
 </html>

@@ -27,8 +27,9 @@ public class AppointmentDao {
             " patientid = ?," +
             " appointmentstatus = ? " +
             "where id = ?";
-    private static String GET_PATIENT_APPOINTMENTS = "SELECT * FROM appointments WHERE appointmentdate>=? AND appointmentdate<=? AND patientID=?";
-    private static String GET_EMPLOYEE_APPOINTMENTS = "SELECT * FROM appointments WHERE appointmentdate>=? AND appointmentdate<=? AND employeeID=?";
+    private static String GET_APPOINTMENTS = "SELECT * FROM appointments WHERE appointmentdate>=? AND appointmentdate<=? ";
+    private static String GET_PATIENT_APPOINTMENTS = GET_APPOINTMENTS + "AND patientID=?";
+    private static String GET_EMPLOYEE_APPOINTMENTS = GET_APPOINTMENTS + "AND employeeID=?";
 
 
     public void updateAppointment(Appointment appointment) throws SQLException {
@@ -135,6 +136,25 @@ public class AppointmentDao {
         }
         return appointments;
     }
+
+    public List<Appointment> getAllAppointments(LocalDate start, LocalDate end) throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+
+        Connection con = ConnectionManager.getInstance().getConnection();
+        PreparedStatement statement = con.prepareStatement(GET_APPOINTMENTS);
+
+        statement.setString(1, start.toString());
+        statement.setString(2, end.toString());
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointments.add(processResultSetForAppointment(result));
+        }
+        return appointments;
+    }
+
+
 
     public List<Appointment> getAppointmentsInPeriodWithArgs(LocalDate start, LocalDate end,  Optional<Map<String, Object>> args)
             throws SQLException {

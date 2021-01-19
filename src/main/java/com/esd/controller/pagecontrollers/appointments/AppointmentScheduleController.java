@@ -32,7 +32,7 @@ public class AppointmentScheduleController extends HttpServlet {
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
     private SystemUserService systemUserService = SystemUserService.getInstance();
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
@@ -66,7 +66,10 @@ public class AppointmentScheduleController extends HttpServlet {
             } else if (systemUser.getUserGroup() == UserGroup.PRIVATE_PATIENT ||
                     systemUser.getUserGroup() == UserGroup.NHS_PATIENT){
                 appointmentList = appointmentsService.getPatientsAppointments(fromDate, toDate, systemUser.getId());
-            } else {
+            } else if (systemUser.getUserGroup() == UserGroup.ADMIN){
+                appointmentList = appointmentsService.getAllAppointments(fromDate, toDate);
+            }
+            else {
                 appointmentList = appointmentsService.getEmployeeAppointments(fromDate, toDate, systemUser.getId());
             }
 
