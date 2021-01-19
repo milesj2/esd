@@ -8,6 +8,7 @@
 <%@ page import="com.esd.model.service.UserDetailsService" %>
 <%@ page import="com.esd.controller.utils.UrlUtils" %>
 <%@ page import="com.esd.model.data.persisted.ThirdParty" %>
+<%@ page import="com.esd.model.data.persisted.Prescription" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% SystemUser currentUser = (SystemUser) (session.getAttribute("currentSessionUser"));%>
@@ -35,7 +36,14 @@
                         <option value="<%=thirdParty.getId()%>" <%=(Integer)request.getAttribute("referalId") == thirdParty.getId() ? "selected" : ""%>><%=thirdParty.getName()%></option>
                     <% } %>
                 </select></br>
-                <input type="submit" name="issuePrescription" value="Issue Prescription"/>
+                <% if(request.getAttribute("prescription") == null){ %>
+                    <input type="submit" name="issuePrescription" value="Issue Prescription"/>
+                <% }else{
+                    Prescription prescription = (Prescription) request.getAttribute("prescription");
+                %>
+                    Prescription issued: <a href="">Download prescription</a>
+                <% } %>
+
                 <input type="submit" name="completeAppointment" value="Complete Appointment"/>
             </form>
 

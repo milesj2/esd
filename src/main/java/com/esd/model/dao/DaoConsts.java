@@ -82,6 +82,7 @@ public class DaoConsts {
     public final static String PRESCRIPTION_ID = "prescriptionid";
     public final static String PRESCRIPTION_DETAILS = "prescriptiondetails";
     public final static String PRESCRIPTION_ISSUE_DATE = "issuedate";
+    public final static String PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID = "originatingPrescriptionId";
 
     public final static String PRIVATE_PATIENT = "privatepatient";
 

@@ -9,10 +9,8 @@ import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Prescription;
-import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.*;
-import org.joda.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,9 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @WebServlet("/appointments/inprogress")
 @Authentication(userGroups = {UserGroup.DOCTOR, UserGroup.NURSE})
@@ -36,6 +31,7 @@ public class AppointmentInProgressController extends HttpServlet {
 
         //We need a patient ID to start the booking process.
         if( request.getParameter("selectedAppointmentId") == null){
+            //TODO return to schedule
             return;
         }
 
@@ -54,6 +50,7 @@ public class AppointmentInProgressController extends HttpServlet {
         Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
 
         if(appointment.getStatus() == AppointmentStatus.COMPLETE){
+            //TODO return to shceudle
             return;
         }
 
@@ -81,6 +78,7 @@ public class AppointmentInProgressController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if( request.getParameter("selectedAppointmentId") == null){
+            //return to schedule
             return;
         }
 
@@ -89,7 +87,12 @@ public class AppointmentInProgressController extends HttpServlet {
             FormData formData = new FormData(request.getParameter("notes"), Integer.parseInt(request.getParameter("referalId")));
             session.setAttribute("persistentFormData", formData);
 
-            System.out.println("Issueing prescription");
+            String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
+
+            response.sendRedirect(
+                    UrlUtils.absoluteUrl(request, "/prescriptions/issue?" + selectedAppointmentIdParam + "&redirect=" +
+                    UrlUtils.absoluteUrl(request, "/appointments/inprogress?" + selectedAppointmentIdParam)));
+            return;
         }else if(request.getParameter("completeAppointment") != null){
 
             int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
@@ -98,7 +101,10 @@ public class AppointmentInProgressController extends HttpServlet {
             appointment.setStatus(AppointmentStatus.COMPLETE);
             appointment.setNotes(request.getParameter("notes"));
             AppointmentsService.getInstance().updateAppointment(appointment);
-
+            String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
+            response.sendRedirect(
+                    UrlUtils.absoluteUrl(request, "/appointments/complete?" + selectedAppointmentIdParam));
+            return;
         }
         doGet(request, response);
     }

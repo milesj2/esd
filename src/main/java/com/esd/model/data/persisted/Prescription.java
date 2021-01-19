@@ -1,6 +1,7 @@
 package com.esd.model.data.persisted;
 
-import java.util.Date;
+
+import org.joda.time.LocalDate;
 
 /**
  * Original Author: Angela Jackson
@@ -8,32 +9,24 @@ import java.util.Date;
  */
 public class Prescription {
     private int id;
+    private int originatingPrescriptionId;
     private int employeeId;
     private int patientId;
     private String prescriptionDetails;
     private int appointmentId;
-    private Date issueDate;
+    private LocalDate issueDate;
 
-    public Prescription ( int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate)
-    {
-        this.id = 0;
-        this.employeeId = employeeId;
-        this.patientId = patientId;
-        this.prescriptionDetails = prescriptionDetails;
-        this.appointmentId = appointmentId;
-        this.issueDate = issueDate;
+    public Prescription() {
     }
 
-    public Prescription (int id, int employeeId, int patientId, String prescriptionDetails, int appointmentId, Date issueDate)
-    {
-        this.id = id;
-        this.employeeId = employeeId;
-        this.patientId = patientId;
-        this.prescriptionDetails = prescriptionDetails;
-        this.appointmentId = appointmentId;
-        this.issueDate = issueDate;
+    public int getOriginatingPrescriptionId() {
+        return originatingPrescriptionId;
     }
-    
+
+    public void setOriginatingPrescriptionId(int originatingPrescriptionId) {
+        this.originatingPrescriptionId = originatingPrescriptionId;
+    }
+
     public int getId() {
         return id;
     }
@@ -74,11 +67,11 @@ public class Prescription {
         this.appointmentId = appointmentId;
     }
     
-    public Date getIssueDate() {
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
     
