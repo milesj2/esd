@@ -68,6 +68,17 @@ public class PrescriptionDao {
         return null;
     }
 
+    public List<Prescription> getChildPrescriptionsByPrescriptionId(int prescriptionId) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID, prescriptionId))
+                .createStatement();
+        ResultSet results = statement.executeQuery();
+        List<Prescription> prescriptions = new ArrayList<>();
+        while(results.next()){
+            prescriptions.add(getPrescriptionDetailsFromResults(results));
+        }
+        return prescriptions;
+    }
 
     private Prescription getPrescriptionDetailsFromResults(ResultSet result) throws SQLException {
         Prescription prescription = new Prescription();
@@ -145,7 +156,4 @@ public class PrescriptionDao {
         statement.setInt(7, prescription.getId());
         statement.executeUpdate();
     }
-
-
-
 }

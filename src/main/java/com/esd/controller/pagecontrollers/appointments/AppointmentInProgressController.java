@@ -1,10 +1,8 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
-import com.esd.controller.pagecontrollers.examples.PersistentDataSearch;
 import com.esd.controller.utils.AuthenticationUtils;
 import com.esd.controller.utils.UrlUtils;
-import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;

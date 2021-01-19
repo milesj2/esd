@@ -8,6 +8,7 @@ import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -107,4 +108,12 @@ public class PrescriptionService {
     }
 
 
+    public List<Prescription> getChildPrescriptionsByPrescriptionId(int prescriptionId) {
+        try {
+            prescriptionDao.getChildPrescriptionsByPrescriptionId(prescriptionId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 }

@@ -2,14 +2,10 @@ package com.esd.controller.pagecontrollers.prescriptions;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.UrlUtils;
-import com.esd.model.data.PrescriptionRepeat;
 import com.esd.model.data.UserGroup;
-import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.Prescription;
-import com.esd.model.service.AppointmentsService;
 import com.esd.model.service.PrescriptionService;
 import org.apache.http.client.utils.URIBuilder;
-import org.joda.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +23,7 @@ public class EditPrescriptionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if(request.getParameter("selectedPrescriptionId") == null){
+            response.sendRedirect(UrlUtils.absoluteUrl(request, "/dashboard"));
             return;
         }
         int prescriptionId = Integer.parseInt(request.getParameter("selectedPrescriptionId"));
