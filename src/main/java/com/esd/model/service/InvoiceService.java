@@ -51,19 +51,7 @@ public class InvoiceService {
      public Invoice getInvoiceById(int id) throws SQLException, InvalidIdValueException {
         return invoiceDao.getInvoiceById(id);
     }
-     
-    public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id){
-       try {
-           return invoiceDao.getAllInvoiceItemsForInvoiceId(id);
-       } catch (SQLException ex) {
-           Logger.getLogger(InvoiceService.class.getName()).log(Level.SEVERE, null, ex);
-       }
-       return new ArrayList<>();
-    }
-    
-    public InvoiceItem getInvoiceItemById(int id) throws SQLException, InvalidIdValueException {
-        return invoiceDao.getInvoiceItemById(id);
-    }
+
 
     public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) {
         try {
@@ -76,14 +64,6 @@ public class InvoiceService {
 
     public void createInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
         invoiceDao.getInstance().createInvoice(invoice);
-    }
-    
-    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws InvalidIdValueException, SQLException {
-        invoiceDao.getInstance().updateInvoiceStatus(id, invoiceStatus);
-    }
-
-    public void updateInvoice(Invoice invoice) throws InvalidIdValueException, SQLException {
-        invoiceDao.getInstance().updateInvoice(invoice);
     }
 
     public void updateInvoice(Invoice invoice) {

@@ -36,7 +36,6 @@ public class InvoiceDao {
             "privatepatient=?, "+
             "appointmentid=? "+
             "where id =?";
-    
 
     private InvoiceDao() {}
 
@@ -69,22 +68,6 @@ public class InvoiceDao {
         return invoices;
     }
 
-    private Invoice extractInvoiceFromResultSet(ResultSet resultSet) throws SQLException {
-        Invoice invoice =  new Invoice();
-        invoice.setId(resultSet.getInt(DaoConsts.ID));
-        invoice.setInvoiceDate(LocalDate.fromDateFields(resultSet.getDate(DaoConsts.INVOICE_DATE)));
-        invoice.setInvoiceStatusChangeDate(LocalDate.fromDateFields(resultSet.getDate(DaoConsts.INVOICE_STATUS_CHANGE_DATE)));
-        invoice.setInvoiceTime(LocalTime.fromDateFields(resultSet.getTime(DaoConsts.INVOICE_TIME)));
-        invoice.setInvoiceStatus(InvoiceStatus.valueOf(InvoiceStatus.class,
-                resultSet.getString(DaoConsts.INVOICE_STATUS).toUpperCase()));
-        invoice.setEmployeeId(resultSet.getInt(DaoConsts.EMPLOYEE_ID_FK));
-        invoice.setPatientId(resultSet.getInt(DaoConsts.PATIENT_ID_FK));
-        invoice.setPrivatePatient(resultSet.getBoolean(DaoConsts.PRIVATE_PATIENT));
-        invoice.setAppointmentId(resultSet.getInt(DaoConsts.APPOINTMENT_ID_FK));
-
-        return invoice;
-    }
-
     public List<Invoice> getAllInvoicesWithStatus(LocalDate start, LocalDate end, Optional<InvoiceStatus> status, boolean loadItems) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
                 .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.INVOICE_DATE, start))
@@ -110,21 +93,6 @@ public class InvoiceDao {
                 .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_STATUS, status.toString()));
 
         return processResultSetForInvoices(loadItems, queryBuilder.createStatement());
-    }
-
-    public List<InvoiceItem> getAllInvoiceItemsForInvoiceId(int id) throws SQLException {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICEITEM)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
-
-        PreparedStatement statement = queryBuilder.createStatement();
-
-        ResultSet result = statement.executeQuery();
-        List<InvoiceItem> allItems = new ArrayList<>();
-
-        while (result.next()){
-            allItems.add(extractInvoiceItemFromResultSet(result));
-        }
-        return  allItems;
     }
 
     public Invoice extractInvoiceFromResultSet(ResultSet resultSet) throws SQLException {
@@ -167,17 +135,6 @@ public class InvoiceDao {
             invoiceItemDao.updateInvoiceItem(invoiceItem);
         }
     }
-    
-    public void updateInvoiceStatus(Integer id, String invoiceStatus) throws SQLException, InvalidIdValueException {
-        if(id==0){
-            throw new InvalidIdValueException("invoice id must be populated to update invoice");
-        }
-        Connection con = connectionManager.getConnection();
-        PreparedStatement statement = con.prepareStatement(UPDATE_INVOICE_STATUS);
-        statement.setString(1, invoiceStatus); 
-        statement.setInt(2, id); //key to id update
-        statement.executeUpdate();
-    }
 
     public void createInvoice(Invoice invoice) throws SQLException, InvalidIdValueException {
         if(invoice.getId()!=0){
@@ -198,17 +155,6 @@ public class InvoiceDao {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
         queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
         return processResultSetForInvoices(true, queryBuilder.createStatement()).get(0);
-    }
-    
-    public InvoiceItem getInvoiceItemById(int id) throws SQLException, InvalidIdValueException {
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICEITEM);
-        queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
-        PreparedStatement statement = queryBuilder.createStatement();
-        ResultSet resultSet = statement.executeQuery();
-        if(!resultSet.next()){
-            throw new InvalidIdValueException("could not find invoice item by id: "+ id);
-        }
-        return extractInvoiceItemFromResultSet(resultSet);
     }
 
     public Invoice getInvoiceByAppointmentId(int id) throws SQLException {
