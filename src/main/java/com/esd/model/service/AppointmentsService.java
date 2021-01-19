@@ -78,6 +78,16 @@ public class AppointmentsService {
         return false;
     }
 
+    public boolean updateAppointment(Appointment appointment) {
+        try {
+            appointmentDao.updateAppointment(appointment);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean updateAppointment(int appointmentId, AppointmentPlaceHolder placeholder, int patientId){
         if(!validateAppointmentSlotForEmployee(placeholder)){
             return false;
@@ -232,4 +242,6 @@ public class AppointmentsService {
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
+
+
 }

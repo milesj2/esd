@@ -87,6 +87,7 @@ create table appointments
     patientId INTEGER NOT NULL,
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
+    notes LONG VARCHAR,
 
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),

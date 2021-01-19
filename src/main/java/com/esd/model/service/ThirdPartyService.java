@@ -5,6 +5,7 @@ import com.esd.model.data.persisted.ThirdParty;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +20,13 @@ public class ThirdPartyService {
     private ThirdPartyService() {
     }
     
-    public List<ThirdParty> getThirdParties() throws SQLException {
-        return thirdPartyDao.getThirdParties();
+    public List<ThirdParty> getThirdParties()  {
+        try {
+            return thirdPartyDao.getThirdParties();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
     
     public boolean createThirdParty(ThirdParty thirdParty) throws SQLException, InvalidIdValueException {

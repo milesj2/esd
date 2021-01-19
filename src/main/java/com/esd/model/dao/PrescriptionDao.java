@@ -1,6 +1,7 @@
 package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.exceptions.InvalidIdValueException;
@@ -39,6 +40,18 @@ public class PrescriptionDao {
         }
         return instance;
     }
+
+    public Prescription getPrescriptionForAppointment(int appointmentId) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
+                .createStatement();
+        ResultSet results = statement.executeQuery();
+        if(results.next()){
+            return getPrescriptionDetailsFromResults(results);
+        }
+        return null;
+    }
+
 
     private Prescription getPrescriptionDetailsFromResults(ResultSet result) throws SQLException {
         return new Prescription(
@@ -101,4 +114,6 @@ public class PrescriptionDao {
         statement.setInt(6, prescription.getId());
         statement.executeUpdate();
     }
+
+
 }

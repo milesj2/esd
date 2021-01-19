@@ -60,4 +60,13 @@ public class PrescriptionService {
     public void updatePrescription(Prescription prescription) throws InvalidIdValueException, SQLException {
         prescriptionDao.updatePrescription(prescription);
     }
+
+    public Prescription getPrescriptionForAppointment(int appointmentId) {
+        try {
+            return prescriptionDao.getPrescriptionForAppointment(appointmentId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
 }
