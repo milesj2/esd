@@ -242,6 +242,4 @@ public class AppointmentsService {
     public List<Appointment> getAppointmentsInRange(LocalDate fromDate, LocalDate toDate, Optional<Map<String, Object>> args) throws SQLException {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
-
-
 }

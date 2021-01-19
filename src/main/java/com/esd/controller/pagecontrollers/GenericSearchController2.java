@@ -1,5 +1,10 @@
 package com.esd.controller.pagecontrollers;
 
+import com.esd.controller.pagecontrollers.search.SearchColumn;
+import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
+import com.esd.controller.utils.AuthenticationUtils;
+import com.esd.model.data.persisted.SystemUser;
+import com.esd.model.service.UserDetailsService;
 import org.apache.http.client.utils.URIBuilder;
 
 import javax.servlet.RequestDispatcher;
@@ -10,27 +15,31 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
-public abstract class GenericSearchController extends HttpServlet {
+public abstract class GenericSearchController2 extends HttpServlet {
 
-    protected ArrayList<String> formValues;
-    protected Function<Map<String, Object>, List<?>> searchFilterFunction;
+    protected List<SearchColumn> columns;
     protected String selectedKey;
-    protected String searchPage;
+
+
+
+    public abstract List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args);
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
+            throws ServletException, IOException {
 
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
-        RequestDispatcher view = request.getRequestDispatcher(searchPage);
+
+        request.setAttribute("columns", columns);
+
+        RequestDispatcher view = request.getRequestDispatcher("/search.jsp");
         view.forward(request, response);
     }
 
@@ -41,7 +50,7 @@ public abstract class GenericSearchController extends HttpServlet {
             redirectURIBuilder = new URIBuilder(request.getParameter("redirect"));
 
             if(request.getParameter(selectedKey) != null) {
-                redirectURIBuilder.addParameter(selectedKey, request.getParameter(selectedKey));
+                redirectURIBuilder.addParameter(selectedKey, request.getParameter("selectedKey"));
             }
 
             response.sendRedirect(redirectURIBuilder.build().toString());
@@ -52,27 +61,34 @@ public abstract class GenericSearchController extends HttpServlet {
 
     protected void performSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> args =  new HashMap<>();
-        for(String key: formValues) {
-            if(checkRequestContains(request, key)){
-                args.put(key, request.getParameter(key));
+        for(SearchColumn searchColumn: columns) {
+            if(checkRequestContains(request, searchColumn.getField())){
+                args.put(searchColumn.getField(), request.getParameter(searchColumn.getField()));
             }
         }
         try {
             // pass request with form keys and request (has post values)
-            List<?> resultList = searchFilterFunction.apply(args);
+            SystemUser user = AuthenticationUtils.getCurrentUser(request);
+            if(user.getUserDetails() == null){
+                user.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(user.getId()));
+            }
+            List<SearchRow> resultList = getSearchResults(user, args);
+
             request.setAttribute("table", resultList);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(searchPage);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         final String type = request.getParameter("type");
+        request.setAttribute("columns", columns);
 
         switch (type){
             case "search":

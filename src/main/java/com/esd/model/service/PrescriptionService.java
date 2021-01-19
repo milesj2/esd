@@ -38,8 +38,13 @@ public class PrescriptionService {
         return false;
     }
 
-    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        List<Prescription> prescriptionList = prescriptionDao.getFilteredDetails(args);
+    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args)  {
+        List<Prescription> prescriptionList = new ArrayList<>();
+        try {
+            prescriptionList = prescriptionDao.getFilteredDetails(args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return prescriptionList;
     }
 
