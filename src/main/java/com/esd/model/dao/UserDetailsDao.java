@@ -151,7 +151,7 @@ public class UserDetailsDao {
        Iterator mapIter = args.entrySet().iterator();
        while(mapIter.hasNext()) {
            Map.Entry pair = (Map.Entry)mapIter.next();
-           queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+           queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
        }
 
        switch(currentUser.getUserGroup()){
