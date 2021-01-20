@@ -1,6 +1,7 @@
 package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.joins.Joins;
 import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
@@ -95,7 +96,8 @@ public class PrescriptionDao {
 
     public List<Prescription> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
         ArrayList<Prescription> prescriptionList = new ArrayList<Prescription>();
-        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS);
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, DaoConsts.PATIENT_ID_FK));
 
         Iterator mapIter = args.entrySet().iterator();
         while(mapIter.hasNext()) {

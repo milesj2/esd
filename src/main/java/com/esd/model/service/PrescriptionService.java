@@ -116,7 +116,7 @@ public class PrescriptionService {
 
     public List<Prescription> getChildPrescriptionsByPrescriptionId(int prescriptionId) {
         try {
-            prescriptionDao.getChildPrescriptionsByPrescriptionId(prescriptionId);
+            return prescriptionDao.getChildPrescriptionsByPrescriptionId(prescriptionId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
