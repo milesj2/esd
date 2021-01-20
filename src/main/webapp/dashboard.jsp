@@ -26,7 +26,7 @@
                         <div class="quarter-widget">
                             <a href="<%=widget.getLink()%>">
                                 <img src="<%=widget.getIcon()%>">
-                                <h2><%=widget.getName()%>></h2>
+                                <h2><%=widget.getName()%></h2>
                             </a>
                         </div>
                     <% } %>
