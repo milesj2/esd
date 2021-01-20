@@ -57,6 +57,55 @@ public class AppointmentsService {
         return new HashMap<>();
     }
 
+    public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriodForEmployeeByUserDetailsId(int userDetailsId, LocalDate date, int span){
+        LocalDate endDate = date.plusDays(span);
+        try {
+            List<Appointment> appointments = appointmentDao.getAppointmentsInPeriodForEmployeeByUserDetailsId(userDetailsId, date, endDate);
+            return createHashMapOfAppointments(appointments);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriod(LocalDate date, int span){
+        LocalDate endDate = date.plusDays(span);
+        try {
+            List<Appointment> appointments = appointmentDao.getAppointmentsInPeriod(date, endDate);
+            return createHashMapOfAppointments(appointments);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriodForPatientByUserDetailsId(int userDetailsId, LocalDate date, int span){
+        LocalDate endDate = date.plusDays(span);
+        try {
+            List<Appointment> appointments = appointmentDao.getAppointmentsInPeriodForPatientByUserDetailsId(userDetailsId, date, endDate);
+            return createHashMapOfAppointments(appointments);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    private HashMap<LocalDate, List<Appointment>> createHashMapOfAppointments(List<Appointment> appointments) {
+        HashMap<LocalDate, List<Appointment>> sortedAppointments = new HashMap<>();
+        for(Appointment appointment : appointments){
+            //lazy load the details of employee and patient
+            appointment.setEmployeeDetails(UserDetailsService.getInstance().getUserDetailsByID(appointment.getEmployeeId()));
+            appointment.setPatientDetails(UserDetailsService.getInstance().getUserDetailsByID(appointment.getPatientId()));
+
+            if(!sortedAppointments.containsKey(appointment.getAppointmentDate())){
+                sortedAppointments.put(appointment.getAppointmentDate(), new ArrayList<>());
+            }
+            sortedAppointments.get(appointment.getAppointmentDate()).add(appointment);
+            Collections.sort(sortedAppointments.get(appointment.getAppointmentDate()), Comparator.comparing(Appointment::getAppointmentTime));
+        }
+        return sortedAppointments;
+    }
+
     public boolean bookAppointment(AppointmentPlaceHolder placeholder, int patientId){
         if(!validateAppointmentSlotForEmployee(placeholder)){
             return false;

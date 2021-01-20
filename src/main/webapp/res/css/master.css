@@ -358,3 +358,31 @@ body.register-page nav {
 .password_error_container p{
     color: red;
 }
+
+/***Schedule***/
+.dateContainer{
+    width:100%;
+    display: grid;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 1;
+}
+
+.dateColumn{
+    grid-column-start: 1;
+}
+
+.appointmentRows{
+    grid-column-start: 2;
+}
+
+.spacer{
+    min-height:20px;
+}
+
+.appointmentLinks{
+    display:inline-block;
+}
+
+.appointmentRow * {
+    padding:20px;
+}

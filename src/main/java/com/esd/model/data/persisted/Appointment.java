@@ -1,8 +1,13 @@
 package com.esd.model.data.persisted;
 
 import com.esd.model.data.AppointmentStatus;
+import com.esd.model.exceptions.InvalidIdValueException;
+import com.esd.model.service.SystemSettingService;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Original Author: Jordan Hellier
@@ -17,6 +22,8 @@ public class Appointment {
     private LocalTime appointmentTime;
     private AppointmentStatus status;
     private String notes;
+    private UserDetails patientDetails;
+    private UserDetails employeeDetails;
 
     public Appointment() {
     }
@@ -93,5 +100,33 @@ public class Appointment {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public UserDetails getPatientDetails() {
+        return patientDetails;
+    }
+
+    public void setPatientDetails(UserDetails patientDetails) {
+        this.patientDetails = patientDetails;
+    }
+
+    public UserDetails getEmployeeDetails() {
+        return employeeDetails;
+    }
+
+    public void setEmployeeDetails(UserDetails employeeDetails) {
+        this.employeeDetails = employeeDetails;
+    }
+
+    public LocalTime getEndTime() {
+        try {
+            int slotTime = SystemSettingService.getInstance().getIntegerSettingValueByKey(SystemSettingService.SYSTEMSETTING_SLOT_TIME);
+            return getAppointmentTime().plusMinutes(slotTime * getSlots());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return getAppointmentTime();
     }
 }

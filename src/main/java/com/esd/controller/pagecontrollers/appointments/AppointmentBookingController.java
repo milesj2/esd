@@ -5,6 +5,7 @@ import com.esd.controller.utils.AuthenticationUtils;
 import com.esd.controller.utils.UrlUtils;
 import com.esd.model.data.AppointmentPlaceHolder;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.Appointment;
 import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.service.AppointmentsService;
@@ -38,7 +39,7 @@ public class AppointmentBookingController extends HttpServlet {
         //We need a patient ID to start the booking process.
         int patientId = -1;
         if(!UserGroup.patients.contains(usergroup)){
-            if( request.getParameter("selectedUserId") == null){
+            if( request.getParameter("selectedUserId") == null && request.getParameter("selectedAppointmentId") == null){
                 response.sendRedirect(UrlUtils.absoluteUrl(request, "/users/search?redirect=" + UrlUtils.absoluteUrl(request, "/appointments/book")));
                 return;
             }
@@ -56,6 +57,21 @@ public class AppointmentBookingController extends HttpServlet {
         if(patientId == -1){
             response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
             return;
+        }
+
+        if(!UserGroup.patients.contains(usergroup)) {
+            if (request.getParameter("selectedAppointmentId") != null) {
+                int appointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
+                Appointment appointment = AppointmentsService.getInstance().getAppointmentById(appointmentId);
+                SystemUser currentUser = AuthenticationUtils.getCurrentUser(request);
+                if(currentUser.getUserDetails() == null){
+                    currentUser.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(currentUser.getId()));
+                }
+                if(appointment.getPatientId() != currentUser.getUserDetails().getId()){
+                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN));
+                    return;
+                }
+            }
         }
 
         //next step is to select the appointment date

@@ -130,4 +130,8 @@ public class UserDetails {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
