@@ -35,7 +35,6 @@ public class InvoicePdfController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-
             //get invoice
             Invoice invoice = InvoiceService.getInstance().getInvoiceById(Integer.parseInt(request.getParameter("selectedInvoiceId")));
             UserDetails userDetails = UserDetailsService.getInstance().getUserDetailsByUserID(invoice.getPatientId());
@@ -95,6 +94,11 @@ public class InvoicePdfController extends HttpServlet {
             table.addCell(new Cell().add(""));
             table.addCell(new Cell().add("Total Due:"));
             table.addCell(new Cell().add(Double.toString(sum)));
+
+            table.addCell(new Cell().add(""));
+            table.addCell(new Cell().add(""));
+            table.addCell(new Cell().add("Status: "));
+            table.addCell(new Cell().add(invoice.getInvoiceStatus().toString()));
 
             doc.add(table);
 

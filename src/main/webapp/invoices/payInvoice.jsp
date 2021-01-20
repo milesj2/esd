@@ -149,6 +149,9 @@
                     <%}%>
                 </div>
             </form>
+            <a href="${pageContext.request.contextPath}/invoices/pdf?selectedInvoiceId=<%=invoice.getId()%>" target="_blank">
+                <button class="input_form_button">Download PDF</button>
+            </a>
             <% 
             } catch (Exception e) {
             } %>

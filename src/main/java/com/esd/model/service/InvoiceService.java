@@ -134,4 +134,8 @@ public class InvoiceService {
             e.printStackTrace();
         }
     }
+
+    public Invoice getInvoiceByAppointmentID(int id) throws SQLException {
+        return invoiceDao.getInvoiceByAppointmentId(id);
+    }
 }

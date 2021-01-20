@@ -25,7 +25,7 @@
         <main>
             <h1>Appointment Completed</h1>
             <a href="<%=request.getAttribute("scheduleLink")%>">Back to schedule</a>
-            <a href="<%=request.getAttribute("invoiceDownloadLink")%>">Download Invoice</a>
+            <a href="<%=request.getAttribute("invoiceDownloadLink")%>" target="_blank">Download Invoice</a>
             <a href="<%=request.getAttribute("prescriptionViewLink")%>">View Prescriptions</a>
         </main>
     </div>
