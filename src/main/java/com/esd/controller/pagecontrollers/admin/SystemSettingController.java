@@ -32,6 +32,8 @@ public class SystemSettingController extends HttpServlet {
 		session.setAttribute("previousPage", session.getAttribute("currentPage"));
 		session.setAttribute("currentPage", request.getServletPath());
 
+		request.setAttribute("pageTitle", "Settings");
+
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			populateForm(request);

@@ -35,6 +35,8 @@ public class AppointmentBookingController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserGroup usergroup = AuthenticationUtils.getCurrentUserGroup(request);
 
+        request.setAttribute("pageTitle", "Appointments");
+
         //We need a patient ID to start the booking process.
         int patientId = -1;
         if(!UserGroup.patients.contains(usergroup)){

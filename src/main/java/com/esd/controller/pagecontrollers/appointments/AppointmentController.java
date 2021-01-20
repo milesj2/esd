@@ -34,6 +34,8 @@ public class AppointmentController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
+        request.setAttribute("pageTitle", "Appointments");
+
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());

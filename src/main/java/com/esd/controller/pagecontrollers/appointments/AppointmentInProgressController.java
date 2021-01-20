@@ -29,6 +29,8 @@ public class AppointmentInProgressController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserGroup usergroup = AuthenticationUtils.getCurrentUserGroup(request);
 
+        request.setAttribute("pageTitle", "Appointments");
+
         //We need a patient ID to start the booking process.
         if( request.getParameter("selectedAppointmentId") == null){
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));

@@ -27,6 +27,7 @@ public class IssuePrescriptionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher view = request.getRequestDispatcher("/prescriptions/issuePrescription.jsp");
+        request.setAttribute("pageTitle", "Prescriptions");
         view.forward(request, response);
     }
 

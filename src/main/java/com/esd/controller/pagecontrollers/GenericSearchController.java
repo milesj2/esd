@@ -36,7 +36,7 @@ public abstract class GenericSearchController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
-
+        request.setAttribute("pageTitle", "Search");
         request.setAttribute("columns", columns);
 
         RequestDispatcher view = request.getRequestDispatcher("/search.jsp");
