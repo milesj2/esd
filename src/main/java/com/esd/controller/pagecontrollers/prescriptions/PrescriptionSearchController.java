@@ -31,7 +31,7 @@ public class PrescriptionSearchController extends GenericSearchController {
 
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
-        List<Prescription> prescriptions = PrescriptionService.getInstance().getPrescriptionFromFilteredRequest(args);
+        List<Prescription> prescriptions = PrescriptionService.getInstance().getPrescriptionFromFilteredRequest(currentUser, args);
         List<SearchRow> searchRows = new ArrayList<>();
         for(Prescription prescription : prescriptions){
             searchRows.add(new PrescriptionSearchRow(prescription));

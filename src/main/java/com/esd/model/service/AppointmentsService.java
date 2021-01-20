@@ -9,6 +9,7 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.WorkingHours;
 
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
@@ -240,9 +241,9 @@ public class AppointmentsService {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
-    public List<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args)  {
+    public List<Appointment> getAppointmentsByFilteredResults(SystemUser currentUser, Map<String, Object> args)  {
         try {
-            appointmentDao.getAppointmentsByFilteredResults(args);
+            appointmentDao.getAppointmentsByFilteredResults(currentUser, args);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -4,6 +4,7 @@ import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
 
@@ -92,7 +93,7 @@ public class PrescriptionDao {
         return  prescription;
     }
 
-    public List<Prescription> getFilteredDetails(Map<String, Object> args) throws SQLException {
+    public List<Prescription> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
         ArrayList<Prescription> prescriptionList = new ArrayList<Prescription>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS);
 
@@ -102,6 +103,12 @@ public class PrescriptionDao {
             queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
         }
 
+        switch(currentUser.getUserGroup()){
+            case PRIVATE_PATIENT:
+            case NHS_PATIENT:
+                queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, currentUser.getId()));
+                break;
+        }
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
 

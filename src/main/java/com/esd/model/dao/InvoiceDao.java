@@ -5,6 +5,7 @@ import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -111,7 +112,7 @@ public class InvoiceDao {
         return invoice;
     }
     
-    public List<Invoice> getFilteredDetails(Map<String, Object> args) throws SQLException {
+    public List<Invoice> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
         ArrayList<Invoice> invoiceList = new ArrayList<Invoice>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE);
 
@@ -120,6 +121,13 @@ public class InvoiceDao {
             Map.Entry pair = (Map.Entry)mapIter.next();
             queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
         }
+        switch(currentUser.getUserGroup()){
+            case PRIVATE_PATIENT:
+            case NHS_PATIENT:
+                queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, currentUser.getId()));
+                break;
+        }
+
         return processResultSetForInvoices(true, queryBuilder.createStatement());
     }
 

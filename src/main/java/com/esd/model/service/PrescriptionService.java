@@ -4,6 +4,7 @@ import com.esd.model.dao.PrescriptionDao;
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.PrescriptionRepeat;
 import com.esd.model.data.persisted.Prescription;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
 
@@ -38,10 +39,10 @@ public class PrescriptionService {
         return false;
     }
 
-    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args)  {
+    public List<Prescription> getPrescriptionFromFilteredRequest(SystemUser currentUser, Map<String, Object> args)  {
         List<Prescription> prescriptionList = new ArrayList<>();
         try {
-            prescriptionList = prescriptionDao.getFilteredDetails(args);
+            prescriptionList = prescriptionDao.getFilteredDetails(currentUser, args);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
