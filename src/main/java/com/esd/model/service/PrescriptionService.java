@@ -2,12 +2,13 @@ package com.esd.model.service;
 
 import com.esd.model.dao.PrescriptionDao;
 import com.esd.model.dao.UserDetailsDao;
-import com.esd.model.data.UserGroup;
+import com.esd.model.data.PrescriptionRepeat;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.exceptions.InvalidIdValueException;
+import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,28 +26,25 @@ public class PrescriptionService {
     private PrescriptionService() {
     }
 
-    public boolean createPrescription(int employeeDetailsId, int patientDetailsId, String prescriptionDetails, int appointmentId,
-                                      Date issueDate) throws SQLException, InvalidIdValueException {
-
-        boolean employeeFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(employeeDetailsId, UserGroup.DOCTOR, UserGroup.NURSE);
-        boolean patientFound = userDetailsDao.validateUserDetailsExistByIdAndUserGroup(patientDetailsId, UserGroup.NHS_PATIENT, UserGroup.PRIVATE_PATIENT);
-
-        Prescription prescription = new Prescription(
-                employeeDetailsId,
-                patientDetailsId,
-                prescriptionDetails,
-                appointmentId,
-                issueDate);
-
-        if (employeeFound && patientFound) {
+    public boolean createPrescription(Prescription prescription) {
+        try {
             prescriptionDao.createPrescription(prescription);
             return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
         }
         return false;
     }
-    
-    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        List<Prescription> prescriptionList = prescriptionDao.getFilteredDetails(args);
+
+    public List<Prescription> getPrescriptionFromFilteredRequest(Map<String, Object> args)  {
+        List<Prescription> prescriptionList = new ArrayList<>();
+        try {
+            prescriptionList = prescriptionDao.getFilteredDetails(args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return prescriptionList;
     }
 
@@ -57,7 +55,70 @@ public class PrescriptionService {
         return instance;
     }
 
-    public void updatePrescription(Prescription prescription) throws InvalidIdValueException, SQLException {
-        prescriptionDao.updatePrescription(prescription);
+    public void updatePrescription(Prescription prescription)  {
+        try {
+            prescriptionDao.updatePrescription(prescription);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Prescription getPrescriptionForAppointment(int appointmentId) {
+        try {
+            return prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public Prescription getPrescriptionById(int appointmentId) {
+        try {
+            return prescriptionDao.getPrescriptionById(appointmentId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void repeatPrescription(Prescription prescription, PrescriptionRepeat repeat, LocalDate repeatUntil) {
+        if(repeat == PrescriptionRepeat.NEVER){
+            return;
+        }
+
+
+        int originatingPrescriptionId = prescription.getId();
+
+        if(repeat == PrescriptionRepeat.WEEKLY){
+            LocalDate newDate = new LocalDate(prescription.getIssueDate());
+            while((newDate = newDate.plusWeeks(1)).isBefore(repeatUntil) || newDate.isEqual(repeatUntil)){
+                prescription.setId(0);
+                prescription.setOriginatingPrescriptionId(originatingPrescriptionId);
+                prescription.setIssueDate(newDate);
+                createPrescription(prescription);
+            }
+        }
+
+        if(repeat == PrescriptionRepeat.MONTHLY){
+            LocalDate newDate = new LocalDate(prescription.getIssueDate());
+            while((newDate = newDate.plusMonths(1)).isBefore(repeatUntil) || newDate.isEqual(repeatUntil)){
+                prescription.setId(0);
+                prescription.setOriginatingPrescriptionId(originatingPrescriptionId);
+                prescription.setIssueDate(newDate);
+                createPrescription(prescription);
+            }
+        }
+    }
+
+
+    public List<Prescription> getChildPrescriptionsByPrescriptionId(int prescriptionId) {
+        try {
+            prescriptionDao.getChildPrescriptionsByPrescriptionId(prescriptionId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

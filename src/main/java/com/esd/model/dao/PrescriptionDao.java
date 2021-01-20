@@ -1,14 +1,14 @@
 package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.exceptions.InvalidIdValueException;
+import org.joda.time.LocalDate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 /**
@@ -19,16 +19,21 @@ import java.util.*;
 public class PrescriptionDao {
     
     private static PrescriptionDao instance;
-    private static final String INSERT_INTO_PRESCRIPTIONS = "insert into prescriptions " +
+    private static final String INSERT_INTO_PRESCRIPTIONS_WITH_LINK = "insert into prescriptions " +
+            "(employeeId, patientId, ORIGINATINGPRESCRIPTIONID, prescriptionDetails, appointmentId, issueDate) " +
+            "values (?, ?, ?, ?, ?, ?)";
+
+    private static final String INSERT_INTO_PRESCRIPTIONS_EXCLUDING_LINK = "insert into prescriptions " +
             "(employeeId, patientId, prescriptionDetails, appointmentId, issueDate) " +
             "values (?, ?, ?, ?, ?)";
+
     private static final String UPDATE_PRESCRIPTIONS = "update prescriptions set "+
             "employeeId=?, "+
             "patientid=?, "+
             "prescriptiondetails=?, "+
             "appointmentid=?, "+
             "issuedate=? "+
-            "where id=?";
+            "where id=? or originatingPrescriptionId=? and issueDate >= CURRENT_DATE";
 
     private PrescriptionDao() {
     }
@@ -40,15 +45,51 @@ public class PrescriptionDao {
         return instance;
     }
 
+    public Prescription getMainPrescriptionForAppointment(int appointmentId) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
+                .withRestriction(Restrictions.nullRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID))
+                .createStatement();
+        ResultSet results = statement.executeQuery();
+        if(results.next()){
+            return getPrescriptionDetailsFromResults(results);
+        }
+        return null;
+    }
+
+    public Prescription getPrescriptionById(int id) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id))
+                .createStatement();
+        ResultSet results = statement.executeQuery();
+        if(results.next()){
+            return getPrescriptionDetailsFromResults(results);
+        }
+        return null;
+    }
+
+    public List<Prescription> getChildPrescriptionsByPrescriptionId(int prescriptionId) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID, prescriptionId))
+                .createStatement();
+        ResultSet results = statement.executeQuery();
+        List<Prescription> prescriptions = new ArrayList<>();
+        while(results.next()){
+            prescriptions.add(getPrescriptionDetailsFromResults(results));
+        }
+        return prescriptions;
+    }
+
     private Prescription getPrescriptionDetailsFromResults(ResultSet result) throws SQLException {
-        return new Prescription(
-            result.getInt(DaoConsts.PRESCRIPTION_ID),
-            result.getInt(DaoConsts.EMPLOYEE_ID_FK),
-            result.getInt(DaoConsts.PATIENT_ID_FK),
-            result.getString(DaoConsts.PRESCRIPTION_DETAILS), 
-            result.getInt(DaoConsts.ID),
-            result.getDate(DaoConsts.PRESCRIPTION_ISSUE_DATE)
-        );
+        Prescription prescription = new Prescription();
+        prescription.setOriginatingPrescriptionId(result.getInt(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID));
+        prescription.setId(result.getInt(DaoConsts.ID));
+        prescription.setEmployeeId(result.getInt(DaoConsts.EMPLOYEE_ID_FK));
+        prescription.setPatientId(result.getInt(DaoConsts.PATIENT_ID_FK));
+        prescription.setPrescriptionDetails(result.getString(DaoConsts.PRESCRIPTION_DETAILS));
+        prescription.setIssueDate(LocalDate.parse(result.getString(DaoConsts.PRESCRIPTION_ISSUE_DATE)));
+        prescription.setAppointmentId(result.getInt(DaoConsts.APPOINTMENT_ID_FK));
+        return  prescription;
     }
 
     public List<Prescription> getFilteredDetails(Map<String, Object> args) throws SQLException {
@@ -74,21 +115,34 @@ public class PrescriptionDao {
 
     //For creating new prescription     
     public void createPrescription(Prescription prescription) throws SQLException, InvalidIdValueException {
-        if(prescription.getId()==0){
+        if(prescription.getId()!=0){
             throw new InvalidIdValueException("prescription id must be 0 to create prescription");
         }
         Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(INSERT_INTO_PRESCRIPTIONS);
+        String query = prescription.getOriginatingPrescriptionId() == null ? INSERT_INTO_PRESCRIPTIONS_EXCLUDING_LINK : INSERT_INTO_PRESCRIPTIONS_WITH_LINK;
+        PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, prescription.getEmployeeId());
         statement.setInt(2, prescription.getPatientId());
-        statement.setString(3, prescription.getPrescriptionDetails());
-        statement.setInt(4, prescription.getAppointmentId());
-        statement.setDate(5, (java.sql.Date) prescription.getIssueDate());
+        if(prescription.getOriginatingPrescriptionId() != null){
+            statement.setInt(3, prescription.getOriginatingPrescriptionId());
+            statement.setString(4, prescription.getPrescriptionDetails());
+            statement.setInt(5, prescription.getAppointmentId());
+            statement.setDate(6, Date.valueOf(prescription.getIssueDate().toString()));
+        }else{
+            statement.setString(3, prescription.getPrescriptionDetails());
+            statement.setInt(4, prescription.getAppointmentId());
+            statement.setDate(5, Date.valueOf(prescription.getIssueDate().toString()));
+        }
+
         statement.executeUpdate();
+
+        ResultSet keys = statement.getGeneratedKeys();
+        keys.next();
+        prescription.setId(keys.getInt(1));
     }
 
     public void updatePrescription(Prescription prescription) throws SQLException, InvalidIdValueException {
-        if(prescription.getId()!=0){
+        if(prescription.getId()==0){
             throw new InvalidIdValueException("prescription id must not be 0 to update prescription");
         }
         Connection con = ConnectionManager.getInstance().getConnection();
@@ -97,8 +151,9 @@ public class PrescriptionDao {
         statement.setInt(2, prescription.getPatientId());
         statement.setString(3, prescription.getPrescriptionDetails());
         statement.setInt(4, prescription.getAppointmentId());
-        statement.setDate(5, (java.sql.Date) prescription.getIssueDate());
+        statement.setDate(5, Date.valueOf(prescription.getIssueDate().toString()));
         statement.setInt(6, prescription.getId());
+        statement.setInt(7, prescription.getId());
         statement.executeUpdate();
     }
 }

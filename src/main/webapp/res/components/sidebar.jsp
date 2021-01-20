@@ -12,6 +12,7 @@ function dropDown(dropdownId) {
 <div class="sidebar_container">
     <a href="${pageContext.request.contextPath}/dashboard">
         <img class="logo" src="${pageContext.request.contextPath}/res/images/logo_white.png" alt="SmartWare Logo">
+
     </a>
     <nav id="sidebar">
         <ul class="list-unstyled components">

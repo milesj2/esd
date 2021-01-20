@@ -1,7 +1,6 @@
 package com.esd.controller.utils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class UrlUtils {
 

@@ -2,8 +2,13 @@ package com.esd.controller.pagecontrollers.invoice;
 
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.pagecontrollers.GenericSearchController;
+import com.esd.controller.pagecontrollers.search.SearchColumn;
+import com.esd.controller.pagecontrollers.search.searchrow.InvoiceSearchRow;
+import com.esd.controller.pagecontrollers.search.searchrow.SearchRow;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.Invoice;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.service.InvoiceService;
 
 import javax.servlet.annotation.WebServlet;
@@ -21,18 +26,26 @@ public class InvoiceSearchController extends GenericSearchController {
     private InvoiceService invoiceService = InvoiceService.getInstance();
 
     public InvoiceSearchController() {
-        formValues =  new ArrayList<>(Arrays.asList(
-                DaoConsts.ID,
-                DaoConsts.INVOICE_DATE,
-                DaoConsts.INVOICE_STATUS,
-                DaoConsts.INVOICE_TIME,
-                DaoConsts.INVOICE_STATUS,
-                DaoConsts.EMPLOYEE_ID,
-                DaoConsts.PATIENT_ID,
-                DaoConsts.ID));
+        columns = Arrays.asList(
+                new SearchColumn(DaoConsts.ID, "Id", "number"),
+                new SearchColumn(DaoConsts.INVOICE_DATE, "Invoice Date", "date"),
+                new SearchColumn(DaoConsts.INVOICE_STATUS, "Status", "text"),
+                new SearchColumn(DaoConsts.INVOICE_TIME, "Invoice time", "time"),
+                new SearchColumn(DaoConsts.EMPLOYEE_ID, "Employee Id", "number"),
+                new SearchColumn(DaoConsts.PATIENT_ID, "Patient Id", "number")
+        );
 
-        searchFilterFunction = invoiceService::getInvoiceFromFilteredRequest;
-        searchPage = "/invoices/searchInvoices.jsp";
         selectedKey = "selectedInvoiceId";
     }
+
+    @Override
+    public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
+        List<Invoice> invoices = InvoiceService.getInstance().getInvoiceFromFilteredRequest(args);
+        List<SearchRow> searchRows = new ArrayList<>();
+        for(Invoice invoice : invoices){
+            searchRows.add(new InvoiceSearchRow(invoice));
+        }
+        return searchRows;
+    }
+
 }

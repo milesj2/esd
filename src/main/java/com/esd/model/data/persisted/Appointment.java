@@ -12,10 +12,20 @@ public class Appointment {
     private int id;
     private int patientId;
     private int employeeId;
-    private int slots;
+    private int slots = 1;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private AppointmentStatus status;
+    private String notes;
+
+    public Appointment() {
+    }
+
+    public Appointment(LocalDate date, LocalTime withMinuteOfHour, AppointmentStatus pending) {
+        this.appointmentDate = date;
+        this.appointmentTime = withMinuteOfHour;
+        this.status = pending;
+    }
 
     public AppointmentStatus getStatus() {
         return status;
@@ -71,5 +81,17 @@ public class Appointment {
 
     public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
+    }
+
+    public boolean isCancled() {
+       return this.status.equals(AppointmentStatus.CANCELED);
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

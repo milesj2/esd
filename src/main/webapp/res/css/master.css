@@ -79,6 +79,10 @@ body{
     padding: 20px 0;
 }
 
+.logo-image{
+    width: var(--nav-width);
+}
+
 .sidebar_container nav {
     /*padding: 10px;*/
     padding: 1.5rem;
@@ -190,13 +194,25 @@ i.fa.nav-icons {
 #############################################
 */
 
+
+
 main {
     margin: 0;
     padding: 20px;
     height: calc(100vh - var(--logo-height));
     width: calc(100vw - var(--nav-width) - 2*10px);
     background: #eeeeee;
-    overflow:scroll;
+    overflow: scroll;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
 }
 
 main .widgets {
@@ -372,4 +388,14 @@ main .widgets .whole-widget {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+/*
+#############################################
+############ Register #######################
+#############################################
+*/
+
+body.register-page nav {
+    display: none;
 }

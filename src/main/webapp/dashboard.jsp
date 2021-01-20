@@ -34,32 +34,47 @@
         { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
         { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
+         { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
         { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/settings.png"},
+        { name: "Manage Third Party", link: "thirdPartyManagement/manage", icon: "res/icons/settings.png"},
+         { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
     items = [
         { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
+        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NURSE)) { %>
     items = [
         { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
+        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
     items = [
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
+
+        { name: "Appointments Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
+        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
+
     ];
     <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
     items = [
         { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
+
         { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
+
+        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
+        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
+
     ];
     <% } %>
 

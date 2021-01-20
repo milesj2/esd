@@ -16,17 +16,17 @@ public class AppointmentDao {
     private static AppointmentDao instance;
 
     private static String INSERT_APPOINTMENT = "insert into appointments " +
-            "(id, appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus)" +
+            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus, notes)" +
             " values (?,?,?,?,?,?,?)";
 
     private static String UPDATE_APPOINTMENT = "update appointments set" +
-            " id = ?," +
             " appointmentdate = ?," +
             " appointmenttime = ?," +
             " slots = ?," +
             " employeeid = ?," +
             " patientid = ?," +
-            " appointmentstatus = ? " +
+            " appointmentstatus = ?, " +
+            " notes = ? " +
             "where id = ?";
 
     public void updateAppointment(Appointment appointment) throws SQLException {
@@ -36,14 +36,15 @@ public class AppointmentDao {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
         statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
-        statement.setTime(2, Time.valueOf(appointment.getAppointmentTime().toString()));
+        statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
         statement.setInt(3, appointment.getSlots());
         statement.setInt(4, appointment.getEmployeeId());
         statement.setInt(5, appointment.getPatientId());
         statement.setString(6, appointment.getStatus().toString());
+        statement.setString(7, appointment.getNotes());
         //where id
-        statement.setInt(7, appointment.getId());
-        statement.executeQuery();
+        statement.setInt(8, appointment.getId());
+        statement.executeUpdate();
     }
 
     public void createAppointment(Appointment appointment) throws SQLException {
@@ -52,14 +53,14 @@ public class AppointmentDao {
         }
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(INSERT_APPOINTMENT);
-        statement.setInt(1, appointment.getId());
-        statement.setDate(2, Date.valueOf(appointment.getAppointmentDate().toString()));
-        statement.setTime(3, Time.valueOf(appointment.getAppointmentTime().toString()));
-        statement.setInt(4, appointment.getSlots());
-        statement.setInt(5, appointment.getEmployeeId());
-        statement.setInt(6, appointment.getPatientId());
-        statement.setString(7, appointment.getStatus().toString());
-        statement.executeQuery();
+        statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
+        statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
+        statement.setInt(3, appointment.getSlots());
+        statement.setInt(4, appointment.getEmployeeId());
+        statement.setInt(5, appointment.getPatientId());
+        statement.setString(6, appointment.getStatus().toString());
+        statement.setString(7, appointment.getNotes());
+        statement.executeUpdate();
     }
 
     public List<Appointment> getAppointmentsInPeriodWithStatus(LocalDate start, LocalDate end, Optional<AppointmentStatus> status) throws SQLException {
@@ -89,6 +90,7 @@ public class AppointmentDao {
         appointment.setAppointmentTime(LocalTime.parse(resultSet.getString(DaoConsts.APPOINTMENT_TIME)));
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
         appointment.setStatus(AppointmentStatus.valueOf(resultSet.getString(DaoConsts.APPOINTMENT_STATUS)));
+        appointment.setNotes(resultSet.getString(DaoConsts.APPOINTMENT_NOTES));
         return appointment;
     }
 
@@ -133,5 +135,24 @@ public class AppointmentDao {
             instance = new AppointmentDao();
         }
         return instance;
+    }
+
+    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {
+        ArrayList<Appointment> appointmentsList = new ArrayList<>();
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
+
+        Iterator mapIter = args.entrySet().iterator();
+        while(mapIter.hasNext()) {
+            Map.Entry pair = (Map.Entry)mapIter.next();
+            queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
     }
 }

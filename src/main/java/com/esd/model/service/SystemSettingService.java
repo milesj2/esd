@@ -28,8 +28,15 @@ public class SystemSettingService {
         return systemSettingDao.getInstance().getIntegerSettingValueByKey(settingKey);
     }
 
-    public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        return systemSettingDao.getInstance().getDoubleSettingValueByKey(settingKey);
+    public double getDoubleSettingValueByKey(String settingKey) {
+        try {
+            return systemSettingDao.getInstance().getDoubleSettingValueByKey(settingKey);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {

@@ -1,12 +1,9 @@
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
 <%@ page import="com.esd.model.data.InvoiceStatus" %>
-<%@ page import="com.esd.model.data.persisted.InvoiceItem" %>
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
-<%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.dao.DaoConsts" %>
 <%@ page import="com.esd.model.data.persisted.Invoice" %>
-<%@ page import="com.esd.model.data.InvoiceOptions" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -115,12 +112,13 @@
                         </tr>
                         <tr>
                             <th>Total Amount</th>
-                            <td>£<%=(Double)request.getAttribute("totalDue")%></td>
+                            <td>Â£<%=(Double)request.getAttribute("totalDue")%></td>
                         </tr>
                     </table>
                 </div>
                         
-                <form method="post" action="${pageContext.request.contextPath}/invoices/pay?id=<%=invoice.getId()%>&uid=<%=invoice.getPatientId()%>&eid=<%=invoice.getEmployeeId()%>">
+                <form method="post" action="${pageContext.request.contextPath}/invoices/pay">
+                    <input type="hidden" name="selectedInvoiceId" value="<%=invoice.getId()%>">
                 <div class="invoice-pay">
                     <h3>Payment Details</h3>
                     <% if (invoice.getInvoiceStatus() != InvoiceStatus.PAID){%>
@@ -145,7 +143,7 @@
 
                     <div style="padding:5px;"><label for="cvv">CVV*</label>
                         <input type="text" id="cvv" name="cvv" placeholder="352" size="3" maxlength="3" pattern="[0-9]{3}" required></div><br>
-                    <input type="submit" value="Pay £<%=(Double)request.getAttribute("totalDue")%>" class="btn">
+                    <input type="submit" value="Pay Â£<%=(Double)request.getAttribute("totalDue")%>" class="btn">
                     <%}else{%>
                     <h5>Payment for this invoice is paid in full.</h4>
                     <%}%>
