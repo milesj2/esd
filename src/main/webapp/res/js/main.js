@@ -2,20 +2,19 @@ let previous_sort_header;
 
 
 function onDropDownClick(section) {
-    if (section.tag === "img")
-        section.parentElement;
-    var button = section.firstElementChild;
-    if(button.src.includes("right")) {
-        button.src.replace("res/icons/chevron-right.png", "res/icons/chevron-down.png");
+
+    var img = section.firstElementChild;
+    if(img.src.includes("right")) {
+        img.src = img.src.replace("chevron-right.png", "chevron-down.png");
     } else {
-        button.src.replace("res/icons/chevron-down.png", "res/icons/chevron-right.png");
+        img.src = img.src.replace("chevron-down.png", "chevron-right.png");
     }
-    console.log(button.src);
+    console.log(img.src);
     if (section.nextElementSibling == null){
         return;
     }
     var dropdownChild = section.nextElementSibling;
-    console.log(dropdownChild);
+    // console.log(dropdownChild);
     dropdownChild.classList.toggle("show");
 }
 
@@ -135,4 +134,38 @@ function generateWidgets(widgetList){
     }
 }
 
+function checkPasswords(){
+    var err;
 
+    let newPassword = document.getElementById("new_password");
+    let confirmPassword = document.getElementById("confirm_password");
+
+    if (confirmPassword.value === ""){
+        return;
+    }
+    let passwordErrorContainer = document.getElementById("password_error_container");
+
+    if (newPassword.value !== confirmPassword.value) {
+        err = "Passwords do not match!";
+    }
+    else if (document.getElementById("password").value === "") {
+        err = "Current password cannot be empty!";
+    }
+    else if (!isStrongPassword(newPassword.value)){
+        err = "New password not strong enough!"
+    }
+
+    if (err !== undefined){
+        passwordErrorContainer.classList.add("show");
+        let passwordError = document.getElementById("password_error");
+        passwordError.innerHTML = err;
+    }  else {
+        document.getElementById("password_submit").disabled = false;
+        passwordErrorContainer.classList.remove("show");
+    }
+}
+
+function isStrongPassword(password) {
+    var regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()]).{8,}/;
+    return regExp.test(password);
+}
