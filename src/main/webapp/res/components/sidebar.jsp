@@ -8,7 +8,7 @@ function dropDown(dropdownId) {
   document.getElementById(dropdownId).classList.toggle("show");
 }
 </script>
-<% SystemUser currentUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
+<% SystemUser uiCurrentUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
 <div class="sidebar_container">
     <a href="${pageContext.request.contextPath}/dashboard">
         <img class="logo" src="${pageContext.request.contextPath}/res/images/logo_white.png" alt="SmartWare Logo">
@@ -27,7 +27,7 @@ function dropDown(dropdownId) {
                     <i class="fa fa-arrow-circle-left nav-icons"></i>Back</a>
             </li>
             <br><br>
-        <% if(currentUser.getUserGroup().equals(UserGroup.ADMIN) || currentUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
+        <% if(uiCurrentUser.getUserGroup().equals(UserGroup.ADMIN) || uiCurrentUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
             <li>
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
@@ -59,7 +59,7 @@ function dropDown(dropdownId) {
                     </li>
                 </ul>
             </li>
-        <% } else if(currentUser.getUserGroup().equals(UserGroup.DOCTOR) || currentUser.getUserGroup().equals(UserGroup.NURSE)) { %>
+        <% } else if(uiCurrentUser.getUserGroup().equals(UserGroup.DOCTOR) || uiCurrentUser.getUserGroup().equals(UserGroup.NURSE)) { %>
             <li>
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
@@ -85,7 +85,7 @@ function dropDown(dropdownId) {
                     </li>
                 </ul>
             </li>
-        <% } else if(currentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT) || currentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
+        <% } else if(uiCurrentUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT) || uiCurrentUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
             <li>
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">

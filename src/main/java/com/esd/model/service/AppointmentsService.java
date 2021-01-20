@@ -58,7 +58,7 @@ public class AppointmentsService {
     }
 
     public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriodForEmployeeByUserDetailsId(int userDetailsId, LocalDate date, int span){
-        LocalDate endDate = date.plusDays(span);
+        LocalDate endDate = date.plusDays(span - 1);
         try {
             List<Appointment> appointments = appointmentDao.getAppointmentsInPeriodForEmployeeByUserDetailsId(userDetailsId, date, endDate);
             return createHashMapOfAppointments(appointments);
@@ -69,7 +69,7 @@ public class AppointmentsService {
     }
 
     public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriod(LocalDate date, int span){
-        LocalDate endDate = date.plusDays(span);
+        LocalDate endDate = date.plusDays(span - 1);
         try {
             List<Appointment> appointments = appointmentDao.getAppointmentsInPeriod(date, endDate);
             return createHashMapOfAppointments(appointments);
@@ -80,7 +80,7 @@ public class AppointmentsService {
     }
 
     public HashMap<LocalDate, List<Appointment>> getAppointmentsInPeriodForPatientByUserDetailsId(int userDetailsId, LocalDate date, int span){
-        LocalDate endDate = date.plusDays(span);
+        LocalDate endDate = date.plusDays(span - 1);
         try {
             List<Appointment> appointments = appointmentDao.getAppointmentsInPeriodForPatientByUserDetailsId(userDetailsId, date, endDate);
             return createHashMapOfAppointments(appointments);
