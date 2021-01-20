@@ -93,6 +93,9 @@ public class AppointmentsService {
     private HashMap<LocalDate, List<Appointment>> createHashMapOfAppointments(List<Appointment> appointments) {
         HashMap<LocalDate, List<Appointment>> sortedAppointments = new HashMap<>();
         for(Appointment appointment : appointments){
+            if(appointment.getStatus() == AppointmentStatus.CANCELED){
+                continue;
+            }
             //lazy load the details of employee and patient
             appointment.setEmployeeDetails(UserDetailsService.getInstance().getUserDetailsByID(appointment.getEmployeeId()));
             appointment.setPatientDetails(UserDetailsService.getInstance().getUserDetailsByID(appointment.getPatientId()));
