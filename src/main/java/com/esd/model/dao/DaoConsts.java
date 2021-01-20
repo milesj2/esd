@@ -94,7 +94,7 @@ public class DaoConsts {
 
     public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";
     public final static String SYSTEMSETTING_SETTINGVALUE = "settingVal";
-    
+
     public final static String THIRDPARTY_ID = "id";
     public final static String THIRDPARTY_NAME = "thirdPartyName";
     public final static String THIRDPARTY_ADDRESS1 = "addressline1";
@@ -104,4 +104,9 @@ public class DaoConsts {
     public final static String THIRDPARTY_POSTCODE = "postCode";
     public final static String THIRDPARTY_TYPE = "thirdPartyType";
     public final static String THIRDPARTY_ACTIVE = "active";
+
+    public static final String PATIENT_FIRST_NAME = "patientFirstName";
+    public static final String PATIENT_LAST_NAME = "patientLastName";
+    public static final String EMPLOYEE_FIRST_NAME = "employeeFirstName";
+    public static final String EMPLOYEE_LAST_NAME = "employeeLastName";
 }

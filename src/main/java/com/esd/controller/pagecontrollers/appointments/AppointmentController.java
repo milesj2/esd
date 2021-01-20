@@ -9,6 +9,7 @@ import com.esd.model.service.AppointmentsService;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,48 +30,41 @@ public class AppointmentController extends HttpServlet {
     private AppointmentsService appointmentsService = AppointmentsService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
         HttpSession session = request.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-        // if referred with get url get appointments
-        if (request.getParameterMap().containsKey(DaoConsts.ID)) {
-            int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
-            Appointment appointment = appointmentsService.getAppointmentById(idVal);
-            request.setAttribute("appointment", appointment);
+        try {
+            // if referred with get url get appointments
+            if (request.getParameterMap().containsKey(DaoConsts.ID)) {
+                int appId = Integer.parseInt(request.getParameter(DaoConsts.ID));
+                Appointment appointment = appointmentsService.getAppointmentById(appId);
+                request.setAttribute("appointment", appointment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
         view.forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
         try {
-            int idVal = Integer.parseInt(request.getParameter(DaoConsts.ID));
+            Appointment appointment = createAppointmentFromParameters(request);
+            int appId = appointment.getId();
 
-            Appointment appointment = new Appointment();
-            appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
-            appointment.setAppointmentDate(LocalDate.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
-            appointment.setAppointmentTime(LocalTime.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME)));
-            appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
-            //appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));//todo required?
-            appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
-            appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
-
-//            if(AppointmentOptions.valueOf(request.getParameter("option")) == AppointmentOptions.UPDATE) {
-//                appointmentsService.updateAppointment(appointment);
-//            } else {
-//                appointmentsService.createNewAppointment(appointment);
-//            }
-
-            request.setAttribute("message", "Success");
-            appointment = appointmentsService.getAppointmentById(idVal);
-            request.setAttribute("appointment", appointment);
-
+            if (request.getParameter("inprogress") != null) { // if wanting to set appointment as 'in progress'
+                response.sendRedirect("appointments/inprogress?selectedAppointmentId=" + appId);
+            } else if (request.getParameter("amend") != null) { // if wanting to amend an appointment
+                response.sendRedirect("appointments/book?selectedAppointmentId=" + appId);
+            } else if (request.getParameter("cancel") != null) { // cancel appointment
+                appointment.setStatus(AppointmentStatus.CANCELED);
+                appointmentsService.updateAppointment(appointment);
+                request.setAttribute("msg", "Successfully canceled.");
+                request.setAttribute("appointment", appointment);
+            }
         } catch (Exception e){
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -79,5 +73,17 @@ public class AppointmentController extends HttpServlet {
         // dispatch
         RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
         view.forward(request, response);
+    }
+
+    private Appointment createAppointmentFromParameters(HttpServletRequest request) {
+        Appointment appointment = new Appointment();
+        appointment.setId(Integer.parseInt(request.getParameter(DaoConsts.ID)));
+        appointment.setAppointmentDate(LocalDate.parse(request.getParameter(DaoConsts.APPOINTMENT_DATE)));
+        appointment.setAppointmentTime(LocalTime.parse(request.getParameter(DaoConsts.APPOINTMENT_TIME)));
+        appointment.setSlots(Integer.parseInt(request.getParameter(DaoConsts.APPOINTMENT_SLOTS)));
+        appointment.setEmployeeId(Integer.parseInt(request.getParameter(DaoConsts.EMPLOYEE_ID)));
+        appointment.setPatientId(Integer.parseInt(request.getParameter(DaoConsts.PATIENT_ID)));
+        appointment.setStatus(AppointmentStatus.valueOf(request.getParameter(DaoConsts.APPOINTMENT_STATUS)));
+        return appointment;
     }
 }

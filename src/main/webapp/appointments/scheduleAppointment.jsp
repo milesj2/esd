@@ -24,7 +24,7 @@
                             <th>To Date</th>
                             <th>Slots</th>
                             <th>Status</th>
-                            <th>Id</th>
+                            <th>ID</th>
                             <th sort="lock"></th>
                         </tr>
                         <tr>
@@ -43,7 +43,7 @@
                             <th>Appointment Time</th>
                             <th>Appointment Slots</th>
                             <th>Appointment Status</th>
-                            <th>Patient Id</th>
+                            <th>Patient ID</th>
                             <th sort="lock">Actions</th>
                         </tr>
                         <% try {
@@ -55,7 +55,7 @@
                             <td><%=appointment.getSlots()%></td>
                             <td><%=appointment.getStatus()%></td>
                             <td><%=appointment.getPatientId()%></td>
-                            <td><a href='viewAppointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>Amend Appointment</a></td>
+                            <td><a href='viewAppointment?<%=DaoConsts.ID%>=<%=appointment.getId()%>'>View & Amend</a></td>
                         </tr>
                         <% }
                         } catch(Exception e){

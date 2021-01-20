@@ -37,7 +37,8 @@ public class AppointmentDao {
         Connection con = ConnectionManager.getInstance().getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
         statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
-        statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
+        // remove milliseconds from time, otherwise throws NumberFormatException
+        statement.setTime(2, Time.valueOf(appointment.getAppointmentTime().toString().replace(".000","")));
         statement.setInt(3, appointment.getSlots());
         statement.setInt(4, appointment.getEmployeeId());
         statement.setInt(5, appointment.getPatientId());

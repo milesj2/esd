@@ -67,7 +67,7 @@ public class AuthenticationFilter implements Filter {
                         filterChain.doFilter(servletRequest,servletResponse);
                         return;
                     }
-                    System.err.println("ERROR: Authenitcation is marked as not required but usergroups are marked to be restricted: " + mapping.getServletName());
+                    System.err.println("ERROR: Authentication is marked as not required, but usergroups are marked to be restricted: " + mapping.getServletName());
                     response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_UNAUTHORIZED));
                     return;
                 }
@@ -97,7 +97,7 @@ public class AuthenticationFilter implements Filter {
             return;
         }
 
-        //We don't care about default mapping so we can just forward the reqyest
+        //We don't care about default mapping so we can just forward the request
         System.err.println("No mapping match handled for: " + mappingMatch.name());
         filterChain.doFilter(servletRequest,servletResponse);
     }
