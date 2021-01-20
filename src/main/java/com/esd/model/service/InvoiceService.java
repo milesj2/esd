@@ -53,9 +53,9 @@ public class InvoiceService {
     }
 
 
-    public List<Invoice> getInvoiceFromFilteredRequest(Map<String, Object> args) {
+    public List<Invoice> getInvoiceFromFilteredRequest(SystemUser currentUser, Map<String, Object> args) {
         try {
-            return invoiceDao.getInstance().getFilteredDetails(args);
+            return invoiceDao.getInstance().getFilteredDetails(currentUser, args);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

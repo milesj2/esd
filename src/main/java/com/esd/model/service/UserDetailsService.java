@@ -2,6 +2,7 @@ package com.esd.model.service;
 
 import com.esd.model.dao.UserDetailsDao;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
@@ -67,10 +68,10 @@ public class UserDetailsService {
         return new UserDetailsService(userDetailsDao);
     }
 
-    public List<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) {
+    public List<UserDetails> getUserDetailsFromFilteredRequest(SystemUser currentUser, Map<String, Object> args) {
         List<UserDetails> userDetails = new ArrayList<>();
         try {
-            userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
+            userDetails = UserDetailsDao.getInstance().getFilteredDetails(currentUser, args);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

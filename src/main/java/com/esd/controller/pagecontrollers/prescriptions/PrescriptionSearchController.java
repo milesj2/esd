@@ -23,7 +23,14 @@ public class PrescriptionSearchController extends GenericSearchController {
 
     public PrescriptionSearchController() {
         columns = Arrays.asList(
-            new SearchColumn(DaoConsts.PRESCRIPTION_ISSUE_DATE, "Prescription Date", "date")
+                new SearchColumn(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.USERDETAILS_FIRSTNAME,
+                        "Patient First name", "text"),
+                new SearchColumn(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.USERDETAILS_LASTNAME,
+                        "Patient Last name", "text"),
+                new SearchColumn(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.USERDETAILS_POSTCODE,
+                        "Patient Last name", "text"),
+                new SearchColumn(DaoConsts.TABLE_PRESCRIPTIONS_REFERENCE + DaoConsts.PRESCRIPTION_ISSUE_DATE,
+                    "Prescription Date", "date")
         );
 
         selectedKey = "selectedInvoiceId";
@@ -31,7 +38,7 @@ public class PrescriptionSearchController extends GenericSearchController {
 
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
-        List<Prescription> prescriptions = PrescriptionService.getInstance().getPrescriptionFromFilteredRequest(args);
+        List<Prescription> prescriptions = PrescriptionService.getInstance().getPrescriptionFromFilteredRequest(currentUser, args);
         List<SearchRow> searchRows = new ArrayList<>();
         for(Prescription prescription : prescriptions){
             searchRows.add(new PrescriptionSearchRow(prescription));

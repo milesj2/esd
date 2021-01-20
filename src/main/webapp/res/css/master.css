@@ -88,7 +88,7 @@ body{
 
 .sidebar_container nav {
     padding: 10px;
-    display: block;
+     block;
 }
 
 .sidebar_container nav ul {
@@ -150,9 +150,15 @@ main .widgets {
     display: -webkit-flex;
     display: flex;
     margin-top: 5%;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
     text-align: center;
+}
+
+main .widgets .quarter-widget{
+    min-width: 180px;
+    flex: 0 0 25%;
 }
 
 main .widgets img {
