@@ -35,6 +35,7 @@ public class AppointmentController extends HttpServlet {
 
         if (!request.getParameterMap().containsKey("selectedAppointmentId")) {
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
+            return;
         }
 
         request.setAttribute("pageTitle", "Appointments");
@@ -42,13 +43,9 @@ public class AppointmentController extends HttpServlet {
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", request.getServletPath());
 
-
-            // if referred with get url get appointments
-
         int appId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
         Appointment appointment = appointmentsService.getAppointmentById(appId);
         request.setAttribute("appointment", appointment);
-
 
         RequestDispatcher view = request.getRequestDispatcher("/appointments/viewAppointment.jsp");
         view.forward(request, response);
