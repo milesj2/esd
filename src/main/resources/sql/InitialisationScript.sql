@@ -178,6 +178,13 @@ VALUES ('2020-11-30', '14:00:00', 3, 1, 'PENDING'),
        ('2020-12-01', '14:30:00', 3, 1, 'PENDING'),
        ('2020-12-01', '14:45:00', 3, 1, 'CANCELED');
 
+--insert prescriptions
+insert into PRESCRIPTIONS(ORIGINATINGPRESCRIPTIONID, EMPLOYEEID, PATIENTID, PRESCRIPTIONDETAILS, APPOINTMENTID, ISSUEDATE)
+values(1, 1, 2, 'some text here', 1, '2020-11-01'),
+      (1, 1, 2, 'different text', 1, '2020-11-07'),
+      (1, 2, 2, 'some text here', 1, '2020-11-01'),
+      (1, 2, 2, 'different text', 1, '2020-11-07');
+
 --create an invoice for each appointment,
 insert into INVOICE(INVOICEDATE, INVOICETIME, EMPLOYEEID,PATIENTID,INVOICESTATUS, PRIVATEPATIENT, APPOINTMENTID, STATUSCHANGEDATE)
 VALUES ('2020-11-30', '14:15:00', 3, 1, 'OVERDUE', false, 1, '2020-11-01'),
