@@ -153,14 +153,14 @@ values (3,1),
 
 --create 2 days of appointments
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID, APPOINTMENTSTATUS)
-VALUES ('2020-11-30', '14:00:00', 3, 1, 'PENDING'),
-       ('2020-11-30', '14:15:00', 3, 1, 'PENDING'),
-       ('2020-11-30', '14:30:00', 3, 1, 'PENDING'),
-       ('2020-11-30', '14:45:00', 3, 1, 'PENDING'),
-       ('2020-12-01', '14:00:00', 3, 1, 'PENDING'),
-       ('2020-12-01', '14:15:00', 3, 1, 'PENDING'),
-       ('2020-12-01', '14:30:00', 3, 1, 'PENDING'),
-       ('2020-12-01', '14:45:00', 3, 1, 'CANCELED');
+VALUES ('2021-01-21', '14:00:00', 3, 1, 'PENDING'),
+       ('2021-01-21', '14:15:00', 3, 1, 'PENDING'),
+       ('2021-01-21', '14:30:00', 3, 1, 'PENDING'),
+       ('2021-01-21', '14:45:00', 3, 1, 'PENDING'),
+       ('2021-01-22', '14:00:00', 3, 1, 'PENDING'),
+       ('2021-01-23', '14:15:00', 3, 1, 'PENDING'),
+       ('2021-01-24', '14:30:00', 3, 1, 'PENDING'),
+       ('2021-01-24', '14:45:00', 3, 1, 'CANCELED');
 
 --insert prescriptions
 insert into PRESCRIPTIONS(ORIGINATINGPRESCRIPTIONID, EMPLOYEEID, PATIENTID, PRESCRIPTIONDETAILS, APPOINTMENTID, ISSUEDATE)
@@ -171,13 +171,13 @@ values(1, 1, 2, 'some text here', 1, '2020-11-01'),
 
 --create an invoice for each appointment,
 insert into INVOICE(INVOICEDATE, INVOICETIME, EMPLOYEEID,PATIENTID,INVOICESTATUS, PRIVATEPATIENT, APPOINTMENTID, STATUSCHANGEDATE)
-VALUES ('2020-11-30', '14:15:00', 3, 1, 'OVERDUE', false, 1, '2020-11-01'),
-       ('2020-11-30', '14:15:00', 3, 1, 'OVERDUE', false, 2, '2020-11-01'),
-       ('2020-11-30', '14:30:00', 3, 1, 'PAID', false, 3, '2020-12-01'),
-       ('2020-12-01', '14:00:00', 3, 1, 'PAID', false, 5, '2020-12-01'),
-       ('2020-12-01', '14:15:00', 3, 1, 'PAID', false, 6, '2020-12-01'),
-       ('2020-11-30', '14:45:00', 3, 1, 'UNPAID', false, 4, '2020-11-01'),
-       ('2020-12-01', '14:30:00', 3, 1, 'UNPAID', false, 7, '2020-12-01');
+VALUES ('2021-01-21', '14:15:00', 3, 1, 'OVERDUE', false, 1, '2020-11-01'),
+       ('2021-01-21', '14:15:00', 3, 1, 'OVERDUE', false, 2, '2020-11-01'),
+       ('2021-01-21', '14:30:00', 3, 1, 'PAID', false, 3, '2020-12-01'),
+       ('2021-01-21', '14:00:00', 3, 1, 'PAID', false, 5, '2020-12-01'),
+       ('2021-01-22', '14:15:00', 3, 1, 'PAID', false, 6, '2020-12-01'),
+       ('2021-01-23', '14:45:00', 3, 1, 'UNPAID', false, 4, '2020-11-01'),
+       ('2021-01-24', '14:30:00', 3, 1, 'UNPAID', false, 7, '2020-12-01');
 
 --create invoice items
 insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
