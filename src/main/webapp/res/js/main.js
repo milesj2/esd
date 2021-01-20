@@ -18,6 +18,22 @@ function onDropDownClick(section) {
     dropdownChild.classList.toggle("show");
 }
 
+function filterTable(e){
+    let value = e.value.toUpperCase();
+    let table = e.parentElement.parentElement.parentElement;
+    let rows = table.childNodes;
+    let colIdx = e.parentElement.cellIndex;
+
+    var i;
+    for (i = 3; i < rows.length; i++){
+        var row = rows[i];
+        if (row.nodeName === "#text") {
+            continue;
+        }
+        row.hidden = !row.children[colIdx].innerHTML.includes(value);
+    }
+}
+
 function sortTable(e){
     // Modified: https://www.w3schools.com/howto/howto_js_sort_table.asp
     var rows, switching, i, x, y, shouldSwitch, img, sort, header;
@@ -100,39 +116,6 @@ function addFuncToTableControl(){
     }
 }
 
-function generateWidgets(widgetList){
-    var i, dashboardItem, img, h2, a, dashboard, row, widget;
-    console.log("Test");
-    dashboard = document.getElementById("dashboard");
-
-    for(i = 0; i < widgetList.length; i++){
-        widget = widgetList[i];
-        dashboardItem = document.createElement("div");
-        a = document.createElement("a");
-        img = document.createElement("img");
-        h2 = document.createElement("h2");
-
-        dashboardItem.classList.add("quarter-widget");
-        a.href = widget.link;
-        img.src = widget.icon;
-        h2.innerHTML = widget.name;
-
-        a.appendChild(img);
-        a.appendChild(h2);
-
-        dashboardItem.appendChild(a);
-
-        if (dashboard.lastChild.childNodes.length < 4 && dashboard.childElementCount !== 0){
-            dashboard.lastChild.appendChild(dashboardItem);
-            continue;
-        }
-        row = document.createElement("div");
-        row.classList.add("row");
-        row.appendChild(dashboardItem);
-
-        dashboard.appendChild(row);
-    }
-}
 
 function checkPasswords(){
     var err;
