@@ -163,4 +163,48 @@ public class AppointmentDao {
         }
         return appointmentsList;
     }
+
+    public List<Appointment> getAppointmentsInPeriodForPatientByUserDetailsId(int userDetailsId, LocalDate date, LocalDate endDate) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, date))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, endDate))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, userDetailsId))
+                .createStatement();
+
+        ResultSet result = statement.executeQuery();
+        List<Appointment> appointmentsList = new ArrayList<>();
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
+    }
+
+    public List<Appointment> getAppointmentsInPeriodForEmployeeByUserDetailsId(int userDetailsId, LocalDate date, LocalDate endDate) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, date))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, endDate))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.EMPLOYEE_ID_FK, userDetailsId))
+                .createStatement();
+
+        ResultSet result = statement.executeQuery();
+        List<Appointment> appointmentsList = new ArrayList<>();
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
+    }
+
+    public List<Appointment> getAppointmentsInPeriod(LocalDate date, LocalDate endDate) throws SQLException {
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS)
+                .withRestriction(Restrictions.greaterThanInclusive(DaoConsts.APPOINTMENT_DATE, date))
+                .withRestriction(Restrictions.lessThanInclusive(DaoConsts.APPOINTMENT_DATE, endDate))
+                .createStatement();
+
+        ResultSet result = statement.executeQuery();
+        List<Appointment> appointmentsList = new ArrayList<>();
+        while (result.next()){
+            appointmentsList.add(processResultSetForAppointment(result));
+        }
+        return appointmentsList;
+    }
 }
