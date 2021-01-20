@@ -1,6 +1,8 @@
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="com.esd.model.data.UserGroup" %>
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
+<%@ page import="com.esd.controller.pagecontrollers.dashboard.DashboardWidget" %>
+<%@ page import="java.util.List" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% SystemUser currentSystemUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
@@ -20,68 +22,17 @@
                 Welcome <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>
                 <br>
                 <div id="dashboard" class="widgets">
+                    <% for (DashboardWidget widget : (List<DashboardWidget>)request.getAttribute("widgets")) { %>
+                        <div class="quarter-widget">
+                            <a href="<%=widget.getLink()%>">
+                                <img src="<%=widget.getIcon()%>">
+                                <h2><%=widget.getName()%>></h2>
+                            </a>
+                        </div>
+                    <% } %>
                 </div>
             </main>
         </div>
     </div>
-<script>
-    var items;
-    // PLACE HOLDER GENERATION
-    <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
-     items = [
-        { name: "Manage Users", link: "users/manage", icon: "res/icons/users.png" },
-        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
-        { name: "Admin Reports", link: "admin/reports", icon: "res/icons/clipboard.png" },
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
-         { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
-        { name: "Manage System Settings", link: "admin/settings", icon: "res/icons/settings.png"},
-        { name: "Manage Third Party", link: "thirdPartyManagement/manage", icon: "res/icons/settings.png"},
-         { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
-    ];
-    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.DOCTOR)) { %>
-    items = [
-        { name: "Search Users", link: "users/search", icon: "res/icons/search.png" },
-        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
-        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
-    ];
-    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NURSE)) { %>
-    items = [
-        { name: "Search Users", link: "users/search", icon: "res/icons/user-search.png" },
-        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
-        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
-    ];
-    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.PRIVATE_PATIENT)) { %>
-    items = [
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
-
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
-
-        { name: "Appointments Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
-        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
-
-    ];
-    <% } else if(currentSystemUser.getUserGroup().equals(UserGroup.NHS_PATIENT)) { %>
-    items = [
-        { name: "Appointments", link: "appointments/schedule", icon: "res/icons/calendar.png" },
-
-        { name: "Search Invoices", link: "invoices/search", icon: "res/icons/receipt-search.png" },
-
-        { name: "Appointment Booking", link: "appointments/book", icon: "res/icons/calendar.png" },
-        { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
-
-    ];
-    <% };%>
-
-    items.push( { name: "My Account", link: "users/my-account", icon: "res/icons/users.png" });
-
-    generateWidgets(items);
-
-</script>
-
 </body>
 </html>

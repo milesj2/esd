@@ -22,7 +22,7 @@ import java.util.*;
  * user search page
  */
 
-@WebServlet("/appointments/schedule")
+@WebServlet("/appointments/search")
 @Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentsSearchController extends GenericSearchController {
 
