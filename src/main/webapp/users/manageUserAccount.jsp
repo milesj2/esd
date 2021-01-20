@@ -24,7 +24,8 @@
                     <%  String errMsg = request.getParameter("errMsg");
                         if (errMsg != null){
                             out.print(errMsg);
-                        } %>
+                        }
+                    %>
                 </p>
                 <table class="search_table">
                     <tr>
@@ -32,11 +33,16 @@
                         <th>Username</th>
                         <th>Password</th>
                         <th>User Group</th>
-                        <!--<th>User Details</th> -->
                         <th sort="lock">Manage</th>
                     </tr>
+                    <tr style="background-color: #CCCCCC" sort="lock">
+                        <td>Filter</td>
+                        <td><input oninput="filterTable(this)" type="text"></td>
+                        <td><input oninput="filterTable(this)" type="text"></td>
+                        <td><input oninput="filterTable(this)" type="text"></td>
+                        <td></td>
+                    </tr>
                     <%
-
                         ArrayList<SystemUser> systemUsers = (ArrayList<SystemUser>) (request.getAttribute("users"));
 
                         for (SystemUser systemUser : systemUsers){
