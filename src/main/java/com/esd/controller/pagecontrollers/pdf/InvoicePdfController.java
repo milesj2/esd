@@ -3,7 +3,6 @@ package com.esd.controller.pagecontrollers.pdf;
 import com.esd.controller.annotations.Authentication;
 import com.esd.controller.utils.AuthenticationUtils;
 import com.esd.controller.utils.UrlUtils;
-import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.*;
 import com.esd.model.service.InvoiceService;
@@ -19,7 +18,6 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -106,9 +104,7 @@ public class InvoicePdfController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(request.getHeader("referer"));
-            request.setAttribute("message", "error could not generate pdf");
-            requestDispatcher.forward(request, response);
+            response.sendRedirect(UrlUtils.error(request, response.SC_INTERNAL_SERVER_ERROR));
         }
     }
 }
