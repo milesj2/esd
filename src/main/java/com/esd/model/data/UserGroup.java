@@ -1,8 +1,6 @@
 package com.esd.model.data;
 
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Original Author: Jordan Hellier
@@ -16,7 +14,6 @@ public enum UserGroup {
     DOCTOR,
     NURSE,
     RECEPTIONIST,
-
     //Used for user filtering
     ALL;
 

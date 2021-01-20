@@ -20,6 +20,9 @@ public class AppointmentCompletedController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setAttribute("pageTitle", "Appointments");
+
         if( request.getParameter("selectedAppointmentId") == null){
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
             return;

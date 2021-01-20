@@ -26,6 +26,9 @@ public class EditPrescriptionController extends HttpServlet {
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/dashboard"));
             return;
         }
+
+        request.setAttribute("pageTitle", "Prescriptions");
+
         int prescriptionId = Integer.parseInt(request.getParameter("selectedPrescriptionId"));
         Prescription prescription = PrescriptionService.getInstance().getPrescriptionById(prescriptionId);
         request.setAttribute("details", prescription.getPrescriptionDetails());

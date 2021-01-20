@@ -22,6 +22,9 @@ public class ReportController extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("previousPage", session.getAttribute("currentPage"));
         session.setAttribute("currentPage", req.getServletPath());
+
+        req.setAttribute("pageTitle", "Reports");
+
         try {
             RequestDispatcher view = req.getRequestDispatcher("/admin/reports/reports.jsp");
             view.forward(req,resp);
