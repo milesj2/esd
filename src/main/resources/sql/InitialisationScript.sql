@@ -5,29 +5,7 @@
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
 
 --the below drops where generated from the below commented line, if we change foreign keys we can rerun it to generate this:
-SELECT  'ALTER TABLE '||S.SCHEMANAME||'.'||T.TABLENAME||' DROP CONSTRAINT '||C.CONSTRAINTNAME||';'  FROM      SYS.SYSCONSTRAINTS C,      SYS.SYSSCHEMAS S,      SYS.SYSTABLES T  WHERE      C.SCHEMAID = S.SCHEMAID  AND      C.TABLEID = T.TABLEID  AND  S.SCHEMANAME = 'APP'  UNION  SELECT 'DROP TABLE ' || schemaname ||'.' || tablename || ';'  FROM SYS.SYSTABLES  INNER JOIN SYS.SYSSCHEMAS ON SYS.SYSTABLES.SCHEMAID = SYS.SYSSCHEMAS.SCHEMAID  where schemaname='APP';
-ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_EMPLOYEE_ID;
-ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_PATIENT_ID;
-ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_APPOINTMENT_ID;
-ALTER TABLE WORKINGHOURSJT DROP CONSTRAINT FK_WORKINGHOURSJT_WORKINGHOURS_ID;
-ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_THIRDPARTY_ID;
-ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_EMPLOYEE_ID;
-ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_PATIENT_ID;
-ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_APPOINTMENT_ID;
-ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_EMPLOYEE_ID;
-ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_PATIENT_ID;
-ALTER TABLE INVOICEITEM DROP CONSTRAINT FK_INVOICEITEM_INVOICE_ID;
-ALTER TABLE USERDETAILS DROP CONSTRAINT FK_USERDETAILS_USER_ID;
-DROP TABLE THIRDPARTY;
-DROP TABLE PRESCRIPTIONS;
-DROP TABLE WORKINGHOURS;
-DROP TABLE WORKINGHOURSJT;
-DROP TABLE APPOINTMENTS;
-DROP TABLE INVOICE;
-DROP TABLE INVOICEITEM;
-DROP TABLE SYSTEMUSER;
-DROP TABLE USERDETAILS;
-DROP TABLE SYSTEMSETTING;
+
 
 create table systemUser(
     id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
@@ -48,7 +26,7 @@ create table userDetails(
     town varchar(255) NOT NULL,
     postCode varchar(7) NOT NULL,
     dob DATE NOT NULL,
-    constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
+    constraint fk_userdetails_user_id foreign key(userId) references systemUser(id) ON DELETE CASCADE
 );
 
 create table thirdParty(
@@ -74,7 +52,7 @@ create table workingHoursJT(
     employeeId INTEGER NOT NULL,
     workingHoursId INTEGER NOT NULL,
     constraint fk_workingHoursjt_workinghours_id foreign key(workingHoursId) references workingHours(id),
-    constraint fk_workingHoursjt_employee_id foreign key(employeeId) references userDetails(id)
+    constraint fk_workingHoursjt_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE
 );
 
 create table appointments(
@@ -87,9 +65,9 @@ create table appointments(
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
     notes LONG VARCHAR default 'n/a',
-    constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
-    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id)
+    constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id) ON DELETE CASCADE,
+    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE
 );
 
 create table invoice(
@@ -102,9 +80,9 @@ create table invoice(
     patientId integer not null,
     privatePatient BOOLEAN not null,
     appointmentId integer not null,
-    constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id),
-    constraint fk_invoice_appointment_id foreign key(appointmentId) references appointments(id)
+    constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_invoice_appointment_id foreign key(appointmentId) references appointments(id) ON DELETE CASCADE
 );
 
 create table invoiceItem(
@@ -113,7 +91,7 @@ create table invoiceItem(
     itemCost double not null,
     quantity integer not null,
     description varchar(100) not null,
-    constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id)
+    constraint fk_invoiceitem_invoice_id foreign key(invoiceId) references invoice(id) ON DELETE CASCADE
 );
 
 create table systemSetting(
@@ -129,10 +107,10 @@ create table prescriptions(
     prescriptionDetails  LONG VARCHAR NOT NULL,
     appointmentId INTEGER NOT NULL,
     issueDate DATE NOT NULL,
-    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id),
-    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id),
-    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id),
-    constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id)
+    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE,
+    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id) ON DELETE CASCADE,
+    constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id) ON DELETE CASCADE
 );
 
 --The order of these are important they link to the above records

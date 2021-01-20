@@ -70,6 +70,7 @@ public class UserDeleteController extends HttpServlet {
             try {
                 systemUserService.deleteUser(Integer.parseInt(request.getParameter("userID")));
             } catch (SQLException throwables) {
+                throwables.printStackTrace();
                 response.sendRedirect("manage?errMsg=" + throwables.getMessage());
             }
             response.sendRedirect("manage?errMsg=" + "User deleted.");
