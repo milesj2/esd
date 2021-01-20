@@ -257,21 +257,7 @@ public class AppointmentsService {
         }
         return true;
     }
-
-    public Appointment getNextAppointment(int patientId) throws SQLException {
-        List<Appointment> appointments = appointmentDao.getAllAppointments();
-        if (appointments.isEmpty()) {
-            return null;
-        }
-        return appointments.stream()
-                .reduce((app1, app2)
-                        -> app1.getAppointmentDate().getDayOfYear() < app2.getAppointmentDate().getDayOfYear()
-                        && app1.getAppointmentDate().getYear() < app2.getAppointmentDate().getYear()
-                        ? app1
-                        : app2)
-                .get();
-    }
-
+    
     public Appointment getLastAddedAppointment() throws SQLException {
         return appointmentDao.getAllAppointments().stream()
                 .max(Comparator.comparing(Appointment::getId))
