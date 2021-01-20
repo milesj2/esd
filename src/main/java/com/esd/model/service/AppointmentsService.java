@@ -9,6 +9,7 @@ import com.esd.model.data.UserGroup;
 import com.esd.model.data.WorkingHours;
 
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 import org.joda.time.LocalDate;
@@ -168,7 +169,7 @@ public class AppointmentsService {
                 return new ArrayList<>();
             }
 
-            List<LocalTime> allSlots = generateAllPossibleSlots(applicableWorkingHours, slotTime, requestedSlotLength);
+            List<LocalTime> allSlots = generateAllPossibleSlots(applicableWorkingHours, date, slotTime, requestedSlotLength);
             List<Appointment> bookedAppointments = this.getAppointmentsInRange(date, date, Optional.empty());
 
             //loop all booked appointments and slots removing any overlaps
@@ -207,13 +208,23 @@ public class AppointmentsService {
         }
     }
 
-    private List<LocalTime> generateAllPossibleSlots(List<WorkingHours> applicableWorkingHours, int slotTime, int requestedSlotLength) {
+    private List<LocalTime> generateAllPossibleSlots(List<WorkingHours> applicableWorkingHours, LocalDate date, int slotTime, int requestedSlotLength) {
         List<LocalTime> allSlots = new ArrayList<>();
+
         for(WorkingHours currentWorkingTime : applicableWorkingHours){
             LocalTime currentTime = new LocalTime(currentWorkingTime.getStartTime());
 
             while(currentTime.isBefore(currentWorkingTime.getEndTime())){
-                allSlots.add(new LocalTime(currentTime));
+                boolean validSlotTime = true;
+                if(date.equals(new LocalDate())){
+                    if(!currentTime.isAfter(new LocalTime())){
+                        validSlotTime = false;
+                    }
+                }
+
+                if(validSlotTime){
+                    allSlots.add(new LocalTime(currentTime));
+                }
                 currentTime = currentTime.plusMinutes(slotTime * requestedSlotLength);
             }
         }
@@ -240,9 +251,9 @@ public class AppointmentsService {
         return appointmentDao.getAppointmentsInPeriodWithArgs(fromDate, toDate, args);
     }
 
-    public List<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args)  {
+    public List<Appointment> getAppointmentsByFilteredResults(SystemUser currentUser, Map<String, Object> args)  {
         try {
-            appointmentDao.getAppointmentsByFilteredResults(args);
+            appointmentDao.getAppointmentsByFilteredResults(currentUser, args);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -22,7 +22,7 @@ import java.util.*;
  * user search page
  */
 
-@WebServlet("/appointments/schedule")
+@WebServlet("/appointments/search")
 @Authentication(userGroups = {UserGroup.ALL})
 public class AppointmentsSearchController extends GenericSearchController {
 
@@ -43,7 +43,7 @@ public class AppointmentsSearchController extends GenericSearchController {
 
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
-        List<Appointment> invoices = AppointmentsService.getInstance().getAppointmentsByFilteredResults(args);
+        List<Appointment> invoices = AppointmentsService.getInstance().getAppointmentsByFilteredResults(currentUser, args);
         List<SearchRow> searchRows = new ArrayList<>();
         for(Appointment appointment : invoices){
             searchRows.add(new AppointmentSearchRow(appointment));

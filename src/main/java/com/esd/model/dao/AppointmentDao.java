@@ -4,6 +4,7 @@ import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.SystemUser;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -137,14 +138,21 @@ public class AppointmentDao {
         return instance;
     }
 
-    public ArrayList<Appointment> getAppointmentsByFilteredResults(Map<String, Object> args) throws SQLException {
+    public ArrayList<Appointment> getAppointmentsByFilteredResults(SystemUser currentUser, Map<String, Object> args) throws SQLException {
         ArrayList<Appointment> appointmentsList = new ArrayList<>();
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS);
 
         Iterator mapIter = args.entrySet().iterator();
         while(mapIter.hasNext()) {
             Map.Entry pair = (Map.Entry)mapIter.next();
-            queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+            queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
+        }
+
+        switch(currentUser.getUserGroup()){
+            case PRIVATE_PATIENT:
+            case NHS_PATIENT:
+                queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, currentUser.getUserDetails().getId()));
+                break;
         }
 
         PreparedStatement statement = queryBuilder.createStatement();

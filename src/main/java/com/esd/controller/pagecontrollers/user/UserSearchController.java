@@ -45,7 +45,7 @@ public class UserSearchController extends GenericSearchController {
 
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
-        List<UserDetails> userDetails = userDetailsService.getUserDetailsFromFilteredRequest(args);
+        List<UserDetails> userDetails = userDetailsService.getUserDetailsFromFilteredRequest(currentUser, args);
         List<SearchRow> searchRows = new ArrayList<>();
         for(UserDetails userDetail : userDetails){
             searchRows.add(new UserDetailsSearchRow(userDetail));

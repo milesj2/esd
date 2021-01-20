@@ -35,6 +35,13 @@ body{
     height: 100%;
 }
 
+.toggle_hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
 
 /*
 #############################################
@@ -84,7 +91,6 @@ body{
 }
 
 .sidebar_container nav {
-    /*padding: 10px;*/
     padding: 1.5rem;
     display: block;
 }
@@ -222,9 +228,15 @@ main .widgets {
     display: -webkit-flex;
     display: flex;
     margin-top: 5%;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
     text-align: center;
+}
+
+main .widgets .quarter-widget{
+    min-width: 180px;
+    flex: 0 0 25%;
 }
 
 main .widgets img {
@@ -330,6 +342,16 @@ main .widgets .whole-widget {
 
 /*
 #############################################
+############ Register #######################
+#############################################
+*/
+
+body.register-page nav {
+    display: none;
+}
+
+/*
+#############################################
 ############ CONTROLS #######################
 #############################################
 */
@@ -389,13 +411,28 @@ main .widgets .whole-widget {
     border-radius: 4px;
     cursor: pointer;
 }
+.input_form input[type=submit]:disabled {
+    background-color: #6c757d;
+}
+/***** containers ******/
+.container_header {
+    display: flex;
+}
 
-/*
-#############################################
-############ Register #######################
-#############################################
-*/
+.container_header h1 {
+    margin: 15px 0 15px 0;
+}
 
-body.register-page nav {
-    display: none;
+.container_header img {
+    width: 38px;
+    margin: 15px 0 15px 0;
+}
+
+/***** password ******/
+
+.password_error_container {
+
+}
+.password_error_container p{
+    color: red;
 }

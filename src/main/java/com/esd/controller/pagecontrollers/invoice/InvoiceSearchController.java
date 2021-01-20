@@ -40,7 +40,7 @@ public class InvoiceSearchController extends GenericSearchController {
 
     @Override
     public List<SearchRow> getSearchResults(SystemUser currentUser, Map<String, Object> args) {
-        List<Invoice> invoices = InvoiceService.getInstance().getInvoiceFromFilteredRequest(args);
+        List<Invoice> invoices = InvoiceService.getInstance().getInvoiceFromFilteredRequest(currentUser, args);
         List<SearchRow> searchRows = new ArrayList<>();
         for(Invoice invoice : invoices){
             searchRows.add(new InvoiceSearchRow(invoice));

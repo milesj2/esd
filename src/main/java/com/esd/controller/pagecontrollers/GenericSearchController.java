@@ -38,6 +38,7 @@ public abstract class GenericSearchController extends HttpServlet {
         session.setAttribute("currentPage", request.getServletPath());
         request.setAttribute("pageTitle", "Search");
         request.setAttribute("columns", columns);
+        setDefaultColumValue(request);
 
         RequestDispatcher view = request.getRequestDispatcher("/search.jsp");
         view.forward(request, response);
@@ -49,7 +50,7 @@ public abstract class GenericSearchController extends HttpServlet {
         try {
             redirectURIBuilder = new URIBuilder(request.getParameter("redirect"));
 
-            if(request.getParameter(selectedKey) != null) {
+            if(request.getParameter("selectedKey") != null) {
                 redirectURIBuilder.addParameter(selectedKey, request.getParameter("selectedKey"));
             }
 
@@ -83,13 +84,26 @@ public abstract class GenericSearchController extends HttpServlet {
         }
     }
 
+    public void setDefaultColumValue(HttpServletRequest request){
+        for(SearchColumn column : columns){
+            String value = request.getParameter(column.getField());
+            String key = "val"+column.getField();
+            if(value != null){
+                request.setAttribute(key, value);
+            }else{
+                request.setAttribute(key, "");
+            }
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         final String type = request.getParameter("type");
         request.setAttribute("columns", columns);
-
+        setDefaultColumValue(request);
+        
         switch (type){
             case "search":
                 //the submitted button is the only button included in the request

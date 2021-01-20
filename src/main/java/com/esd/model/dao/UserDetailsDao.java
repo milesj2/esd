@@ -4,6 +4,7 @@ import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.joins.Joins;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
@@ -142,7 +143,7 @@ public class UserDetailsDao {
         return userDetailsList;
     }
 
-   public List<UserDetails> getFilteredDetails(Map<String, Object> args) throws SQLException {
+   public List<UserDetails> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
 
        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS);
@@ -150,7 +151,14 @@ public class UserDetailsDao {
        Iterator mapIter = args.entrySet().iterator();
        while(mapIter.hasNext()) {
            Map.Entry pair = (Map.Entry)mapIter.next();
-           queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+           queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
+       }
+
+       switch(currentUser.getUserGroup()){
+           case NHS_PATIENT:
+           case PRIVATE_PATIENT:
+               queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, currentUser.getUserDetails().getId()));
+               break;
        }
 
        PreparedStatement statement = queryBuilder.createStatement();
