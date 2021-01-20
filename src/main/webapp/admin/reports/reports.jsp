@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.esd.model.reportgen.SystemReports" %>
 <%@ page import="com.esd.model.reportgen.ReportType" %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <html>
 <head>
     <title>Generate Report</title>
@@ -25,9 +26,9 @@
                 <br/>
                 Report parameters: <br/>
                 <label for="report">Start Date:</label>
-                <input id="startDate" type="date" name="startDate"/><br/>
+                <input id="startDate" type="date" name="startDate" required/><br/>
                 <label for="endDate">End Date:</label>
-                <input id="endDate" type="date" name="endDate"/><br/>
+                <input id="endDate" type="date" name="endDate" required/><br/>
                 <label for="reportType">Report type:</label>
                 <select id="reportType" name="reportType">
                 <%
@@ -36,10 +37,33 @@
                     }
                 %>
                 </select> <br/>
-                <input type="submit" value="Generate Report">
+                <input id="GenerateReport" type="submit" value="Generate Report">
             </form>
+                <a hidden id="DownloadButton" href="" target="_blank">
+                    <button class="input_form_button">Download PDF </button>
+                </a>
             </main>
         </div>
+        <input id="baseURL" hidden value="${pageContext.request.contextPath}" />
     </div>
 </body>
+<script>
+    document.getElementById("reportType").onchange = function(){
+
+        let startdate = document.getElementById("startDate").value;
+        let enddate = document.getElementById("endDate").value;
+        let selection = document.getElementById("reportType").value;
+
+        if(selection == "PDF"){
+            document.getElementById("GenerateReport").style.display = "none";
+            document.getElementById("DownloadButton").style.display = "block";
+            let urlWithParams = document.getElementById("baseURL").value+ "/admin/reports/pdf?startDate="+startdate+"&endDate="+enddate;
+            console.log(urlWithParams);
+            document.getElementById("DownloadButton").href = urlWithParams;
+        } else {
+            document.getElementById("DownloadButton").style.display = "none";
+            document.getElementById("GenerateReport").style.display = "block";
+        }
+    }
+</script>
 </html>
