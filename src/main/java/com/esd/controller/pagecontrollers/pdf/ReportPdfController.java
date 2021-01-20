@@ -1,5 +1,7 @@
 package com.esd.controller.pagecontrollers.pdf;
 
+import com.esd.controller.annotations.Authentication;
+import com.esd.model.data.UserGroup;
 import com.esd.model.service.UserDetailsService;
 import com.esd.model.service.reports.SystemOverViewReportService;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -21,11 +23,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 @WebServlet("/admin/reports/pdf")
+@Authentication(userGroups = {UserGroup.ADMIN})
 public class ReportPdfController extends HttpServlet {
 
     private UserDetailsService userDetailsService = UserDetailsService.getInstance();
@@ -47,9 +51,8 @@ public class ReportPdfController extends HttpServlet {
             doc.setMargins(40, 40, 40, 40);
 
             //get logo
-            //Image logo = new Image(ImageDataFactory.create(getServletContext().getContextPath()+"/res/images/logo.png"));
-            Image logo = new Image(ImageDataFactory.create("C:\\Users\\Trent Meier\\Desktop\\Enterprise Systems Development\\" +
-                    "Current\\SmartWare\\src\\main\\webapp\\res\\images\\logo.png"));
+            URL logoPath = ReportPdfController.class.getResource("/images/logo.png");
+            Image logo = new Image(ImageDataFactory.create(logoPath));
             logo.setHorizontalAlignment(HorizontalAlignment.RIGHT);
             doc.add(logo);
 

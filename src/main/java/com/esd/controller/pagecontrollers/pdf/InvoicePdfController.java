@@ -1,6 +1,10 @@
 package com.esd.controller.pagecontrollers.pdf;
 
+import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.AuthenticationUtils;
+import com.esd.controller.utils.UrlUtils;
 import com.esd.model.dao.DaoConsts;
+import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.*;
 import com.esd.model.service.InvoiceService;
 import com.esd.model.service.UserDetailsService;
@@ -22,8 +26,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 
 @WebServlet("/invoices/pdf")
+@Authentication(userGroups = {UserGroup.ALL})
 public class InvoicePdfController extends HttpServlet {
 
     @Override
@@ -31,9 +37,18 @@ public class InvoicePdfController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+
             //get invoice
-            Invoice invoice = InvoiceService.getInstance().getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
+            Invoice invoice = InvoiceService.getInstance().getInvoiceById(Integer.parseInt(request.getParameter("selectedInvoiceId")));
             UserDetails userDetails = UserDetailsService.getInstance().getUserDetailsByUserID(invoice.getPatientId());
+
+            if(UserGroup.patients.contains(AuthenticationUtils.getCurrentUserGroup(request))){
+                if(userDetails.getId() != invoice.getPatientId()){
+                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN));
+                    return;
+                }
+            }
+
             double sum = 0.00;
 
             response.setContentType("application/pdf");
@@ -44,15 +59,14 @@ public class InvoicePdfController extends HttpServlet {
             doc.setMargins(60, 40, 60, 40);
 
             //get logo
-            //Image logo = new Image(ImageDataFactory.create(getServletContext().getContextPath()+"/res/images/logo.png"));
-            Image logo = new Image(ImageDataFactory.create("C:\\Users\\Trent Meier\\Desktop\\Enterprise Systems Development\\" +
-                    "Current\\SmartWare\\src\\main\\webapp\\res\\images\\logo.png"));
+            URL logoPath = InvoicePdfController.class.getResource("/images/logo.png");
+            Image logo = new Image(ImageDataFactory.create(logoPath));
             logo.setHorizontalAlignment(HorizontalAlignment.RIGHT);
             doc.add(logo);
 
             //add content
             doc.add(new Paragraph("SMARTWARE\n \n" +
-                            "To:" + userDetails.getFirstName()+ " "+
+                            "To:\n" + userDetails.getFirstName()+ " "+
                             userDetails.getLastName()+"\n"+
                             userDetails.getAddressLine1()+"\n"+
                             userDetails.getTown()+"\n"+
