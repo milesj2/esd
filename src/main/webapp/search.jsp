@@ -39,7 +39,7 @@
                 <form method="post" action="${__SELF}">
                     <tr>
                         <% for (SearchColumn column : columns) { %>
-                        <td><input type="<%=column.getType()%>" name=<%=column.getField()%> size="10"/></td>
+                        <td><input type="<%=column.getType()%>" name=<%=column.getField()%> value="<%=request.getAttribute("val"+column.getField())%>" size="10"/></td>
                         <% } %>
                     </tr>
                     <tr>
