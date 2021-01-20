@@ -292,9 +292,9 @@ public class AppointmentsService {
                         : app2)
                 .orElse(null);
     }
-
+    
     public void createNewAppointment(Appointment appointment) throws SQLException, InvalidIdValueException {
-        if(!checkIfAptConflicts(appointment)){
+        if(checkIfAptConflicts(appointment)){
             throw new InvalidIdValueException("Appointment conflicts with existing appointment");
         }
         if(!checkIfAptIsWorkingDay(appointment)){

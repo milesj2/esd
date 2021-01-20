@@ -1,6 +1,7 @@
 package com.esd.controller.pagecontrollers.appointments;
 
 import com.esd.controller.annotations.Authentication;
+import com.esd.controller.utils.UrlUtils;
 import com.esd.model.dao.DaoConsts;
 import com.esd.model.data.AppointmentStatus;
 import com.esd.model.data.UserGroup;
@@ -56,9 +57,11 @@ public class AppointmentController extends HttpServlet {
             int appId = appointment.getId();
 
             if (request.getParameter("inprogress") != null) { // if wanting to set appointment as 'in progress'
-                response.sendRedirect("appointments/inprogress?selectedAppointmentId=" + appId);
+                response.sendRedirect(UrlUtils.absoluteUrl(request,"appointments/inprogress?selectedAppointmentId=" + appId));
+                return;
             } else if (request.getParameter("amend") != null) { // if wanting to amend an appointment
-                response.sendRedirect("appointments/book?selectedAppointmentId=" + appId);
+                response.sendRedirect(UrlUtils.absoluteUrl(request, "appointments/book?selectedAppointmentId=" + appId));
+                return;
             } else if (request.getParameter("cancel") != null) { // cancel appointment
                 appointment.setStatus(AppointmentStatus.CANCELED);
                 appointmentsService.updateAppointment(appointment);

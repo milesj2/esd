@@ -5,54 +5,76 @@
 --Drop tables and constraints, DERBYDB doesnt support if exists so this will fail if you don't already have the tables
 
 --the below drops where generated from the below commented line, if we change foreign keys we can rerun it to generate this:
-
+SELECT  'ALTER TABLE '||S.SCHEMANAME||'.'||T.TABLENAME||' DROP CONSTRAINT '||C.CONSTRAINTNAME||';'  FROM      SYS.SYSCONSTRAINTS C,      SYS.SYSSCHEMAS S,      SYS.SYSTABLES T  WHERE      C.SCHEMAID = S.SCHEMAID  AND      C.TABLEID = T.TABLEID  AND  S.SCHEMANAME = 'APP'  UNION  SELECT 'DROP TABLE ' || schemaname ||'.' || tablename || ';'  FROM SYS.SYSTABLES  INNER JOIN SYS.SYSSCHEMAS ON SYS.SYSTABLES.SCHEMAID = SYS.SYSSCHEMAS.SCHEMAID  where schemaname='APP';
+ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_EMPLOYEE_ID;
+ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_PATIENT_ID;
+ALTER TABLE PRESCRIPTIONS DROP CONSTRAINT FK_PRESCRIPTIONS_APPOINTMENT_ID;
+ALTER TABLE WORKINGHOURSJT DROP CONSTRAINT FK_WORKINGHOURSJT_WORKINGHOURS_ID;
+ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_THIRDPARTY_ID;
+ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_EMPLOYEE_ID;
+ALTER TABLE APPOINTMENTS DROP CONSTRAINT FK_APPOINTMENTS_PATIENT_ID;
+ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_APPOINTMENT_ID;
+ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_EMPLOYEE_ID;
+ALTER TABLE INVOICE DROP CONSTRAINT FK_INVOICE_PATIENT_ID;
+ALTER TABLE INVOICEITEM DROP CONSTRAINT FK_INVOICEITEM_INVOICE_ID;
+ALTER TABLE USERDETAILS DROP CONSTRAINT FK_USERDETAILS_USER_ID;
+DROP TABLE THIRDPARTY;
+DROP TABLE PRESCRIPTIONS;
+DROP TABLE WORKINGHOURS;
+DROP TABLE WORKINGHOURSJT;
+DROP TABLE APPOINTMENTS;
+DROP TABLE INVOICE;
+DROP TABLE INVOICEITEM;
+DROP TABLE SYSTEMUSER;
+DROP TABLE USERDETAILS;
+DROP TABLE SYSTEMSETTING;
 
 create table systemUser(
-   id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-   username varchar(50) NOT NULL unique,
-   password varchar(255) NOT NULL,
-   active boolean NOT NULL DEFAULT false,
-   userGroup varchar(16) NOT NULL
+                           id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                           username varchar(50) NOT NULL unique,
+                           password varchar(255) NOT NULL,
+                           active boolean NOT NULL DEFAULT false,
+                           userGroup varchar(16) NOT NULL
 );
 
 create table userDetails(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-    userId Integer unique,
-    firstName varchar(50) NOT NULL,
-    lastName varchar(50) NOT NULL,
-    addressLine1 varchar(255) NOT NULL,
-    addressLine2 varchar(255) NOT NULL,
-    addressLine3 varchar(255) NOT NULL,
-    town varchar(255) NOT NULL,
-    postCode varchar(7) NOT NULL,
-    dob DATE NOT NULL,
+                            id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                            userId Integer unique,
+                            firstName varchar(50) NOT NULL,
+                            lastName varchar(50) NOT NULL,
+                            addressLine1 varchar(255) NOT NULL,
+                            addressLine2 varchar(255) NOT NULL,
+                            addressLine3 varchar(255) NOT NULL,
+                            town varchar(255) NOT NULL,
+                            postCode varchar(7) NOT NULL,
+                            dob DATE NOT NULL,
 
-                            constraint fk_userdetails_user_id foreign key(userId) references systemUser(id) ON DELETE CASCADE
+                            constraint fk_userdetails_user_id foreign key(userId) references systemUser(id)
 );
 
 create table thirdParty(
-   id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-   thirdPartyName varchar(50) NOT NULL,
-   addressLine1 varchar(255) NOT NULL,
-   addressLine2 varchar(255) NOT NULL,
-   addressLine3 varchar(255) NOT NULL,
-   town varchar(255) NOT NULL,
-   postCode varchar(7) NOT NULL,
-   thirdPartyType varchar(20) NOT NULL,
-   active boolean NOT NULL DEFAULT true
+                           id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                           thirdPartyName varchar(50) NOT NULL,
+                           addressLine1 varchar(255) NOT NULL,
+                           addressLine2 varchar(255) NOT NULL,
+                           addressLine3 varchar(255) NOT NULL,
+                           town varchar(255) NOT NULL,
+                           postCode varchar(7) NOT NULL,
+                           thirdPartyType varchar(20) NOT NULL,
+                           active boolean NOT NULL DEFAULT true
 );
 
 create table workingHours(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-    workingDays varchar(255) NOT NULL,
-    startTime TIME NOT NULL,
-    endTime TIME NOT NULL
+                             id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                             workingDays varchar(255) NOT NULL,
+                             startTime TIME NOT NULL,
+                             endTime TIME NOT NULL
 );
 create table workingHoursJT(
-   employeeId INTEGER NOT NULL,
-   workingHoursId INTEGER NOT NULL,
-   constraint fk_workingHoursjt_workinghours_id foreign key(workingHoursId) references workingHours(id),
-   constraint fk_workingHoursjt_employee_id foreign key(employeeId) references userDetails(id)
+                               employeeId INTEGER NOT NULL,
+                               workingHoursId INTEGER NOT NULL,
+                               constraint fk_workingHoursjt_workinghours_id foreign key(workingHoursId) references workingHours(id),
+                               constraint fk_workingHoursjt_employee_id foreign key(employeeId) references userDetails(id)
 );
 
 create table appointments
@@ -65,27 +87,27 @@ create table appointments
     patientId INTEGER NOT NULL,
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
-    notes LONG VARCHAR,
+    notes LONG VARCHAR default 'n/a',
 
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id),
-    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
-    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE
+    constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id),
+    constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id)
 );
 
 create table invoice(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
-    invoiceDate DATE NOT NULL default CURRENT_DATE,
-    invoiceTime TIME NOT NULL default CURRENT_TIME,
-    invoiceStatus varchar(16) NOT NULL DEFAULT 'UNPAID',
-    statusChangeDate Date NOT NULL default CURRENT_DATE,
-    employeeId integer not null,
-    patientId integer not null,
-    privatePatient BOOLEAN not null,
-    appointmentId integer not null,
+                        id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key ,
+                        invoiceDate DATE NOT NULL default CURRENT_DATE,
+                        invoiceTime TIME NOT NULL default CURRENT_TIME,
+                        invoiceStatus varchar(16) NOT NULL DEFAULT 'UNPAID',
+                        statusChangeDate Date NOT NULL default CURRENT_DATE,
+                        employeeId integer not null,
+                        patientId integer not null,
+                        privatePatient BOOLEAN not null,
+                        appointmentId integer not null,
 
-                        constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
-                        constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE,
-    constraint fk_invoice_appointment_id foreign key(appointmentId) references appointments(id) ON DELETE CASCADE
+                        constraint fk_invoice_employee_id foreign key(employeeId) references userDetails(id),
+                        constraint fk_invoice_patient_id foreign key(patientId) references userDetails(id),
+                        constraint fk_invoice_appointment_id foreign key(appointmentId) references appointments(id)
 );
 
 create table invoiceItem
@@ -99,8 +121,8 @@ create table invoiceItem
 );
 
 create table systemSetting(
-    settingKey varchar(100) not null primary key,
-    settingVal varchar(100) not null
+                              settingKey varchar(100) not null primary key,
+                              settingVal varchar(100) not null
 );
 
 create table prescriptions
@@ -113,10 +135,10 @@ create table prescriptions
     appointmentId INTEGER NOT NULL,
     issueDate DATE NOT NULL,
 
-    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id) on delete cascade,
-    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id) on delete cascade,
-    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id) ON DELETE CASCADE,
-    constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id) ON DELETE CASCADE
+    constraint fk_prescriptions_employee_id foreign key(employeeId) references userDetails(id),
+    constraint fk_prescriptions_patient_id foreign key(patientId) references userDetails(id),
+    constraint fk_prescriptions_appointment_id foreign key(appointmentId) references appointments(id),
+    constraint fk_prescriptions_originatingPrescriptionId_id foreign key(originatingPrescriptionId) references prescriptions(id)
 );
 
 --The order of these are important they link to the above records
@@ -162,13 +184,6 @@ VALUES ('2020-11-30', '14:00:00', 3, 1, 'PENDING'),
        ('2020-12-01', '14:30:00', 3, 1, 'PENDING'),
        ('2020-12-01', '14:45:00', 3, 1, 'CANCELED');
 
---insert prescriptions
-insert into PRESCRIPTIONS(ORIGINATINGPRESCRIPTIONID, EMPLOYEEID, PATIENTID, PRESCRIPTIONDETAILS, APPOINTMENTID, ISSUEDATE)
-values(1, 1, 2, 'some text here', 1, '2020-11-01'),
-      (1, 1, 2, 'different text', 1, '2020-11-07'),
-      (1, 2, 2, 'some text here', 1, '2020-11-01'),
-      (1, 2, 2, 'different text', 1, '2020-11-07');
-
 --create an invoice for each appointment,
 insert into INVOICE(INVOICEDATE, INVOICETIME, EMPLOYEEID,PATIENTID,INVOICESTATUS, PRIVATEPATIENT, APPOINTMENTID, STATUSCHANGEDATE)
 VALUES ('2020-11-30', '14:15:00', 3, 1, 'OVERDUE', false, 1, '2020-11-01'),
@@ -201,5 +216,3 @@ VALUES ('Bristol Royal Infirmary', 'Upper Maudlin St', '', '', 'Bristol', 'BS28H
        ('Southmead Hospital', 'Southmead Rd', '', '', 'Bristol', 'BS105NB', 'HOSPITAL', true),
        ('Bristol Endodontic Clinic', '9 North View', '', '', 'Bristol', 'BS67PT', 'SPECIALIST_CLINIC', true),
        ('Bristol Physiotherapy Clinic', 'Workout Harbourside', 'Welsh Back', '', 'Bristol', 'BS14JA', 'SPECIALIST_CLINIC', true);
-
-
