@@ -26,7 +26,6 @@
     </div>
 <script>
     var items;
-
     // PLACE HOLDER GENERATION
     <% if(currentSystemUser.getUserGroup().equals(UserGroup.ADMIN) || currentSystemUser.getUserGroup().equals(UserGroup.RECEPTIONIST)) { %>
      items = [
@@ -76,7 +75,9 @@
         { name: "Prescriptions", link: "prescriptions/search", icon: "res/icons/calendar.png" },
 
     ];
-    <% } %>
+    <% };%>
+
+    items.push( { name: "My Account", link: "users/my-account", icon: "res/icons/users.png" });
 
     generateWidgets(items);
 

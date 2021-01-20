@@ -1,6 +1,8 @@
 package com.esd.model.data.persisted;
 
 import com.esd.model.data.InvoiceStatus;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import java.util.Date;
 import java.util.List;
@@ -15,11 +17,10 @@ public class Invoice {
     private int employeeId;
     private int patientId;
     private int appointmentId;
-    private Date invoiceStatusChangeDate;
-
+    private LocalDate invoiceStatusChangeDate;
     private boolean privatePatient;
-    private Date invoiceDate;
-    private Date invoiceTime;
+    private LocalDate invoiceDate;
+    private LocalTime invoiceTime;
     private List<InvoiceItem> items;
     private InvoiceStatus invoiceStatus;
 
@@ -70,19 +71,19 @@ public class Invoice {
         this.privatePatient = privatePatient;
     }
 
-    public Date getInvoiceDate() {
+    public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(Date invoiceDate) {
+    public void setInvoiceDate(LocalDate invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
-    public Date getInvoiceTime() {
+    public LocalTime getInvoiceTime() {
         return invoiceTime;
     }
 
-    public void setInvoiceTime(Date invoiceTime) {
+    public void setInvoiceTime(LocalTime invoiceTime) {
         this.invoiceTime = invoiceTime;
     }
 
@@ -98,16 +99,16 @@ public class Invoice {
         return invoiceStatus;
     }
 
-    public Date getInvoiceStatusChangeDate() {
+    public LocalDate getInvoiceStatusChangeDate() {
         return invoiceStatusChangeDate;
     }
 
-    public void setInvoiceStatusChangeDate(Date invoiceStatusChangeDate) {
+    public void setInvoiceStatusChangeDate(LocalDate invoiceStatusChangeDate) {
         this.invoiceStatusChangeDate = invoiceStatusChangeDate;
     }
 
     public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
-        this.invoiceStatusChangeDate = new Date();
+        this.invoiceStatusChangeDate = new LocalDate();
     }
 }

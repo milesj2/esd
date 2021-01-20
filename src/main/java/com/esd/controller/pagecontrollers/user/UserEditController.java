@@ -62,57 +62,107 @@ public class UserEditController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
+        boolean doEditUser = true,
+                doEditUserDetails = true,
+                doUpdatePassword = false,
+                editUserResult = true,
+                editUserDetailsResult = true,
+                updatePasswordResult = true;
+
+
+        int userID;
+
+        String referer = request.getHeader("referer");
+        String redirect = "manage?";
+
+        if (referer.contains("my-account")){
+            doEditUser = false;
+            redirect = "my-account?";
+            userID = ((SystemUser)request.getSession().getAttribute("currentSessionUser")).getId();
+            if (request.getParameter("password") != null){
+                doUpdatePassword = true;
+                doEditUserDetails = false;
+            }
+        } else {
+            userID = Integer.parseInt(request.getParameter(DaoConsts.ID));
+        }
+
+        try {
+            if (doUpdatePassword)
+                updatePasswordResult = updateUserPassword(request, userID);
+            if (doEditUser)
+                editUserResult = editUser(request, userID);
+            if (doEditUserDetails)
+                editUserDetailsResult = editUserDetails(request, userID);
+        } catch (SQLException e) {
+            response.sendRedirect(redirect + "errMsg=" + e.getMessage());
+            System.out.println(e.getMessage());
+        } catch (InvalidIdValueException e) {
+            response.sendRedirect(redirect + "errMsg=" + "Invalid id user'" + request.getParameter(DaoConsts.ID) + "'");
+            System.out.println(e.getMessage());
+        }
+
+        if (!editUserResult){
+            response.sendRedirect(redirect + "errMsg=Error updating user details.");
+        }
+
+        if (!editUserDetailsResult){
+            response.sendRedirect(redirect + "errMsg=Error updating user.");
+        }
+
+        if (!updatePasswordResult){
+            response.sendRedirect(redirect + "errMsg=Error Updating Password.");
+        }
+
+        response.sendRedirect(redirect + "errMsg=Success");
+
+    }
+
+    private boolean editUser(HttpServletRequest request, int userID) throws InvalidIdValueException, SQLException {
+
         boolean active = false;
+
         if (request.getParameter(DaoConsts.SYSTEMUSER_ACTIVE) != null)
             active = true;
 
         SystemUser systemUser = new SystemUser(
-                Integer.parseInt(request.getParameter(DaoConsts.ID)),
+                userID,
                 request.getParameter(DaoConsts.SYSTEMUSER_USERNAME),
                 request.getParameter(DaoConsts.SYSTEMUSER_PASSWORD),
                 UserGroup.valueOf(request.getParameter(DaoConsts.SYSTEMUSER_USERGROUP)),
                 active
         );
 
-        UserDetails userDetails = null;
-        try {
-            userDetails = new UserDetails(
-                    -1,
-                    systemUser.getId(),
-                    request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
-                    request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
-                    request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
-                    request.getParameter(DaoConsts.USERDETAILS_TOWN),
-                    request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
-                    LocalDate.parse(request.getParameter(DaoConsts.USERDETAILS_DOB))
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+        return systemUserService.updateUser(systemUser);
 
-        // Try updating SQL
-        try {
-            boolean updateUserResult;
-            boolean updateUserDetailsResult;
-
-            updateUserResult = systemUserService.updateUser(systemUser);
-            updateUserDetailsResult = userDetailsService.updateUserDetails(userDetails);
-
-            if (updateUserResult && updateUserDetailsResult) {
-                response.sendRedirect("manage?errMsg=Success");
-            } else {
-                response.sendRedirect("manage?errMsg=Error updating user or user details.");
-            }
-
-        } catch (SQLException e) {
-            response.sendRedirect("manage?errMsg=" + e.getMessage());
-            System.out.println(e.getMessage());
-        } catch (InvalidIdValueException e) {
-            response.sendRedirect("manage?errMsg=" + "Invalid id user'" + systemUser.getId() + "'");
-            System.out.println(e.getMessage());
-        }
     }
+
+    private boolean editUserDetails(HttpServletRequest request, int userID) throws InvalidIdValueException, SQLException {
+        UserDetails userDetails = null;
+
+        userDetails = new UserDetails(
+                -1,
+                userID,
+                request.getParameter(DaoConsts.USERDETAILS_FIRSTNAME),
+                request.getParameter(DaoConsts.USERDETAILS_LASTNAME),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS1),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS2),
+                request.getParameter(DaoConsts.USERDETAILS_ADDRESS3),
+                request.getParameter(DaoConsts.USERDETAILS_TOWN),
+                request.getParameter(DaoConsts.USERDETAILS_POSTCODE),
+                LocalDate.parse(request.getParameter(DaoConsts.USERDETAILS_DOB))
+        );
+
+        return userDetailsService.updateUserDetails(userDetails);
+    }
+
+    private boolean updateUserPassword(HttpServletRequest request, int userID) throws InvalidIdValueException, SQLException {
+		SystemUser user = systemUserService.getUserByID(userID);
+
+        if (user.getPassword().equals(request.getParameter("password")))
+            return systemUserService.updatePassword(request.getParameter("new_password"), userID);
+        else
+            return false;
+    }
+
 }
