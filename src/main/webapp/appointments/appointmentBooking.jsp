@@ -15,7 +15,7 @@
 <head>
     <title>Appointment booking</title>
     <link rel="stylesheet" href="../res/css/master.css">
-    <script src="res/js/main.js"></script>
+    <script src="../res/js/main.js"></script>
 </head>
 <body>
 <div class="root_container">
@@ -91,6 +91,7 @@
                                value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE)%>"/>
                         <input type="hidden" name="slots" value="1"/>
                         <input type="hidden" name="action" value="book"/>
+                        <input type="hidden" name="patientId" value="<%=request.getAttribute("patientId")%>">
                         <% if(request.getParameter("selectedUserId") != null){ %>
                         <input type="hidden" name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>"/>
                         <% } %>
