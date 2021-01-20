@@ -32,10 +32,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/view">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
                     </li>
                 </ul>
             </li>
@@ -64,10 +64,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/view">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
                     </li>
                 </ul>
             </li>
@@ -90,10 +90,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/view">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
                     </li>
                 </ul>
             </li>
