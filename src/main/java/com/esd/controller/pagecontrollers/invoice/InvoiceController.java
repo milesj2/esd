@@ -31,7 +31,7 @@ import java.util.List;
  * page
  */
 
-@WebServlet("/invoices/edit")
+@WebServlet("/invoices/view")
 @Authentication(userGroups = {UserGroup.ALL})
 public class InvoiceController extends HttpServlet {
 
@@ -41,7 +41,7 @@ public class InvoiceController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if(!request.getParameter(DaoConsts.ID).isEmpty()){
+        if(!request.getParameter("selectedInvoiceId").isEmpty()){
 
             request.setAttribute("pageTitle", "Invoices");
 
@@ -50,12 +50,12 @@ public class InvoiceController extends HttpServlet {
             session.setAttribute("currentPage", request.getServletPath());
 
             try{
-                Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter(DaoConsts.ID)));
+                Invoice invoice = invoiceService.getInvoiceById(Integer.parseInt(request.getParameter("selectedInvoiceId")));
                 request.setAttribute("invoice", invoice);
             } catch (Exception e){
                 request.setAttribute("message", "could not find invoice");
             }
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/editInvoice.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -104,7 +104,7 @@ public class InvoiceController extends HttpServlet {
         }
 
         // dispatch
-        RequestDispatcher view = request.getRequestDispatcher("/invoices/editInvoice.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/invoices/viewInvoice.jsp");
         view.forward(request, response);
     }
 }

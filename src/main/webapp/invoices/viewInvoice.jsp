@@ -23,7 +23,7 @@
                     <% } %>
                 </div>
                 <% try { Invoice invoice = (Invoice)request.getAttribute("invoice"); %>
-                <form class="input_form" method="post" action="${pageContext.request.contextPath}/invoices/edit">
+                <form class="input_form" method="post" action="${pageContext.request.contextPath}/invoices/view">
                     <table>
                         <tr>
                             <td>Invoice id</td>
@@ -79,11 +79,11 @@
                             <td><input type="text" name=<%=DaoConsts.APPOINTMENT_SLOTS%> value="<%out.print(invoiceItem.getDescription());%>" size="10" required/></td>
                         </tr>
                         <%}%>
-                        <tr>
-                            <button class="input_form_button" type="Submit" >Update</button>
-                        </tr>
                     </table>
                 </form>
+                <a href="${pageContext.request.contextPath}/invoices/pdf?selectedInvoiceId=<%=invoice.getId()%>" target="_blank">
+                    <button class="input_form_button">Download PDF</button>
+                </a>
                 <% } catch (Exception e) { } %>
             </div>
         </main>
