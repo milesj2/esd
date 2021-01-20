@@ -24,6 +24,8 @@ public class AppointmentBookingConfirmationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        request.setAttribute("pageTitle", "Bookings");
+
         RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBookingConfirmation.jsp");
         view.forward(request, response);
     }

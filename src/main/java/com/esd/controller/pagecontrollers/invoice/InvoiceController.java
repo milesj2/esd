@@ -43,6 +43,8 @@ public class InvoiceController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if(!request.getParameter(DaoConsts.ID).isEmpty()){
 
+            request.setAttribute("pageTitle", "Invoices");
+
             HttpSession session = request.getSession();
             session.setAttribute("previousPage", session.getAttribute("currentPage"));
             session.setAttribute("currentPage", request.getServletPath());

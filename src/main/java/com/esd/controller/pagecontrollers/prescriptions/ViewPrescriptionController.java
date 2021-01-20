@@ -28,6 +28,9 @@ public class ViewPrescriptionController extends HttpServlet {
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/dashboard"));
             return;
         }
+
+        request.setAttribute("pageTitle", "Prescriptions");
+
         int prescriptionId = Integer.parseInt(request.getParameter("selectedPrescriptionId"));
         Prescription prescription = PrescriptionService.getInstance().getPrescriptionById(prescriptionId);
         UserDetails currentUserDetails = UserDetailsService.getInstance().getUserDetailsByUserID(AuthenticationUtils.getCurrentUser(request).getId());

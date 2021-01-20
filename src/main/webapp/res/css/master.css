@@ -54,8 +54,9 @@ body{
     padding: 10px;
     height: calc(var(--logo-height) - 2*10px);
     width: calc(100vw - 250px);
-    background: #E2E2E2;
-    /*background: var(--background-color); */
+    /*background: #CCCCCC;*/
+    background: var(--background-color); 
+    color: white;
     text-align: center;
 }
 
@@ -72,14 +73,17 @@ body{
 .sidebar_container {
     margin: 0;
     height: 100%;
-    background: #dbdbdb;
-    /*background: var(--background-color);*/
+    /*background: #888888;
+    background: var(--background-color);*/
+    background: #232323;
 
 }
 
 .sidebar_container .logo {
     width: var(--nav-width);
-    height: var(--logo-height);
+    /*height: var(--logo-height);*/
+    height: auto; /*so logo is not being streached*/
+    padding: 20px 0;
 }
 
 .logo-image{
@@ -87,10 +91,84 @@ body{
 }
 
 .sidebar_container nav {
-    padding: 10px;
-     block;
+    padding: 1.5rem;
+    display: block;
 }
 
+#sidebar ul li {
+    font-size: 16px;
+}
+
+#sidebar ul li a {
+    padding: 10px 0;
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sidebar ul li > ul li {
+    font-size: 14px;
+}
+
+#sidebar ul li a:hover {
+    color: var(--background-color);
+}
+
+#sidebar ul li.active > a {
+    background: transparent;
+    color: var(--background-color);
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle {
+    white-space: nowrap;
+}
+
+#sidebar ul li > ul {
+    margin-left: 15px;
+}
+
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
+
+i.fa.nav-icons {
+    padding: 5px;  
+    color: white;
+}
+
+#sidebar ul li a:hover > i.fa.nav-icons {
+    color: var(--background-color);
+}
+
+.dropdown-container {
+  display: none;
+}
 .sidebar_container nav ul {
     list-style-type: none;
     margin: 0;
