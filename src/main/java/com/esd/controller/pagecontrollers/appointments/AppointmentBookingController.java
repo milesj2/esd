@@ -45,7 +45,10 @@ public class AppointmentBookingController extends HttpServlet {
                 response.sendRedirect(UrlUtils.absoluteUrl(request, "/users/search?redirect=" + UrlUtils.absoluteUrl(request, "/appointments/book")));
                 return;
             }
-            patientId = Integer.parseInt(request.getParameter("selectedUserId"));
+
+            if(request.getParameter("selectedUserId") != null){
+                patientId = Integer.parseInt(request.getParameter("selectedUserId"));
+            }
         }else{
             SystemUser user = AuthenticationUtils.getCurrentUser(request);
             if(user.getUserDetails() == null){
@@ -55,26 +58,30 @@ public class AppointmentBookingController extends HttpServlet {
                 patientId = user.getUserDetails().getId();
             }
         }
+        if (request.getParameter("selectedAppointmentId") != null) {
+            int appointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
+            Appointment appointment = AppointmentsService.getInstance().getAppointmentById(appointmentId);
+            SystemUser currentUser = AuthenticationUtils.getCurrentUser(request);
+            if(currentUser.getUserDetails() == null){
+                currentUser.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(currentUser.getId()));
+            }
+            patientId = appointment.getPatientId();
+            if(UserGroup.patients.contains(usergroup)) {
+                if(appointment.getPatientId() != currentUser.getUserDetails().getId()){
+                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN));
+                    return;
+                }
+            }
+
+        }
+
 
         if(patientId == -1){
             response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
             return;
         }
 
-        if(!UserGroup.patients.contains(usergroup)) {
-            if (request.getParameter("selectedAppointmentId") != null) {
-                int appointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
-                Appointment appointment = AppointmentsService.getInstance().getAppointmentById(appointmentId);
-                SystemUser currentUser = AuthenticationUtils.getCurrentUser(request);
-                if(currentUser.getUserDetails() == null){
-                    currentUser.setUserDetails(UserDetailsService.getInstance().getUserDetailsByUserID(currentUser.getId()));
-                }
-                if(appointment.getPatientId() != currentUser.getUserDetails().getId()){
-                    response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_FORBIDDEN));
-                    return;
-                }
-            }
-        }
+
 
         //next step is to select the appointment date
         LocalDate date;
