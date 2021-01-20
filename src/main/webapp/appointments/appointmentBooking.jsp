@@ -53,6 +53,7 @@
                         <h2>Dr <%=UserDetailsService.getInstance().getUserDetailsByID(id).getLastName()%></h2>
                         <form method="post" action="<%=UrlUtils.absoluteUrl(request, "appointments/confirm")%>">
                             <input type="hidden" name="employeeId" value="<%=id%>"/>
+                            <input type="hidden" name="patientId" value="<%=request.getAttribute("patientId")%>">
                             <input type="hidden" name="appointmentDate"
                                    value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE)%>"/>
                             <input type="hidden" name="slots" value="1"/>

@@ -46,7 +46,7 @@ public class AppointmentBookingConfirmationController extends HttpServlet {
         if(request.getParameter("action").equals("confirm")){
             int employeeId = Integer.parseInt(request.getParameter("employeeId"));
 
-            int patientId = Integer.parseInt(request.getParameter("employeeId"));
+            int patientId = Integer.parseInt(request.getParameter("patientId"));
 
             int slots = Integer.parseInt(request.getParameter("slots"));
             LocalDate appointmentDate = new LocalDate(request.getParameter("appointmentDate"));

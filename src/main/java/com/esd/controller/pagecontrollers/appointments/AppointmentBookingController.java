@@ -90,7 +90,7 @@ public class AppointmentBookingController extends HttpServlet {
 
         request.setAttribute(ATTRIBUTE_AVAILABLE_APPOINTMENTS_DOCTOR, doctorAppointmentsList);
         request.setAttribute(ATTRIBUTE_AVAILABLE_APPOINTMENTS_NURSE, nurseAppointmentsList);
-
+        request.setAttribute("patientId", patientId);
         RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBooking.jsp");
         view.forward(request, response);
     }

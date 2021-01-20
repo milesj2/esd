@@ -60,6 +60,7 @@
             <form method="post" action="<%=UrlUtils.absoluteUrl(request, "appointments/confirm")%>">
                 <input type="hidden" name="action" value="confirm"/>
                 <input type="hidden" readonly name="employeeId" value="<%=request.getParameter("employeeId")%>"/>
+                <input type="hidden" readonly name="patientId" value="<%=request.getParameter("patientId")%>"/>
                 <% if(request.getParameter("selectedUserId") != null){
                     UserDetails patient =
                         UserDetailsService.getInstance().getUserDetailsByID(Integer.parseInt(request.getParameter("selectedUserId")));

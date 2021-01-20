@@ -106,7 +106,7 @@ public class PrescriptionDao {
         switch(currentUser.getUserGroup()){
             case PRIVATE_PATIENT:
             case NHS_PATIENT:
-                queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, currentUser.getId()));
+                queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.PATIENT_ID_FK, currentUser.getUserDetails().getId()));
                 break;
         }
         PreparedStatement statement = queryBuilder.createStatement();

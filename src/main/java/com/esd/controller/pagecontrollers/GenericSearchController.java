@@ -49,7 +49,7 @@ public abstract class GenericSearchController extends HttpServlet {
         try {
             redirectURIBuilder = new URIBuilder(request.getParameter("redirect"));
 
-            if(request.getParameter(selectedKey) != null) {
+            if(request.getParameter("selectedKey") != null) {
                 redirectURIBuilder.addParameter(selectedKey, request.getParameter("selectedKey"));
             }
 
