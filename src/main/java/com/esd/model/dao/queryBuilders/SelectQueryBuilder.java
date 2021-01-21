@@ -13,9 +13,16 @@ import java.util.*;
 
 public class SelectQueryBuilder{
     String table;
+    String tableAlias;
 
     List<Restriction> restrictions = new ArrayList<>();
     List<Join> joins = new ArrayList<>();
+    HashMap<String, String> columnAlias = new HashMap<>();
+
+    public SelectQueryBuilder(String table, String tableAlias) {
+        this.table = table;
+        this.tableAlias = tableAlias;
+    }
 
     public SelectQueryBuilder(String table) {
         this.table = table;
@@ -47,8 +54,23 @@ public class SelectQueryBuilder{
         Connection con = ConnectionManager.getInstance().getConnection();
 
         List<Object> theMap = new ArrayList<>();
-        String query = "Select * from " + table;
-
+        String query = "Select ";
+        if(!columnAlias.isEmpty()){
+            boolean isFirst = true;
+            for(String key : columnAlias.keySet()){
+                if(!isFirst){
+                    query += ", ";
+                }
+                query += key + " as " + columnAlias.get(key) + "";
+                isFirst = false;
+            }
+        }else{
+            query += " *";
+        }
+        query += " from " + table;
+        if(tableAlias != null){
+            query += " " + tableAlias;
+        }
         for (Join join : joins) {
             query += " " + join.generateSQL();
         }
@@ -83,5 +105,14 @@ public class SelectQueryBuilder{
             }
         }
         return statement;
+    }
+
+    public SelectQueryBuilder selectColumn(String field, String alias) {
+        columnAlias.put(field, alias);
+        return this;
+    }
+    public SelectQueryBuilder selectColumn(String field) {
+        columnAlias.put(field, field.replace(".", "_"));
+        return this;
     }
 }

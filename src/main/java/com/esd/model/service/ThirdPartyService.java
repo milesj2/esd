@@ -1,12 +1,16 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.ThirdPartyDao;
+import com.esd.model.data.ReferalSearchDto;
+import com.esd.model.data.persisted.Appointment;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.ThirdParty;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Original Author: Angela Jackson
@@ -48,5 +52,13 @@ public class ThirdPartyService {
         }
         return instance;
     }
-    
+
+    public List<ReferalSearchDto> getReferalsByFilteredResults(SystemUser currentUser, Map<String, Object> args) {
+        try {
+            return ThirdPartyDao.getInstance().getReferalsByFilteredResults(currentUser, args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 }

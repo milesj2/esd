@@ -1,10 +1,16 @@
 package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
+import com.esd.model.dao.queryBuilders.joins.Joins;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
+import com.esd.model.data.ReferalSearchDto;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.ThirdParty;
 import com.esd.model.exceptions.InvalidIdValueException;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
+import javax.swing.text.html.Option;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -140,5 +146,63 @@ public class ThirdPartyDao {
             return false;
         }
     }
-        
+
+    public ArrayList<ReferalSearchDto> getReferalsByFilteredResults(SystemUser currentUser, Map<String, Object> args) throws SQLException {
+    //this stack overflow page explains why this looks a little odd
+    //https://stackoverflow.com/questions/7224024/jdbc-resultset-get-columns-with-table-alias
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_APPOINTMENTS, "A")
+                .selectColumn("A." + DaoConsts.ID)
+                .selectColumn("A." + DaoConsts.APPOINTMENT_DATE)
+                .selectColumn("A." + DaoConsts.APPOINTMENT_TIME)
+                .selectColumn("E." + DaoConsts.USERDETAILS_FIRSTNAME)
+                .selectColumn("E." + DaoConsts.USERDETAILS_LASTNAME)
+                .selectColumn("P." + DaoConsts.USERDETAILS_FIRSTNAME)
+                .selectColumn("P." + DaoConsts.USERDETAILS_LASTNAME)
+                .selectColumn("T." + DaoConsts.THIRDPARTY_NAME)
+                .selectColumn("T." + DaoConsts.THIRDPARTY_ADDRESS1)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_THIRDPARTY, "T", "A." + DaoConsts.THIRDPARTY_ID_FK, "T."+DaoConsts.ID))
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, "P", "A." + DaoConsts.PATIENT_ID_FK, "P."+DaoConsts.ID))
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_USERDETAILS, "E", "A." + DaoConsts.EMPLOYEE_ID_FK, "E."+DaoConsts.ID));
+
+
+        Iterator mapIter = args.entrySet().iterator();
+        while(mapIter.hasNext()) {
+            Map.Entry pair = (Map.Entry)mapIter.next();
+            queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
+        }
+
+//        switch(currentUser.getUserGroup()){
+//            case NHS_PATIENT:
+//            case PRIVATE_PATIENT:
+//                queryBuilder.withRestriction(Restrictions.equalsRestriction("P." + DaoConsts.ID, currentUser.getUserDetails().getId()));
+//                break;
+//        }
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+
+        ArrayList<ReferalSearchDto> referalSearchDtos = new ArrayList<>();
+        // add results to list of user to return
+        while (result.next()) {
+            referalSearchDtos.add(getReferalSearchDtoFromResult(result));
+        }
+
+        return referalSearchDtos;
+    }
+
+    private ReferalSearchDto getReferalSearchDtoFromResult(ResultSet result) throws SQLException {
+        ReferalSearchDto dto = new ReferalSearchDto();
+        dto.setId(result.getInt("A_" + DaoConsts.ID));
+        dto.setAppointmentDate(LocalDate.parse(result.getString("A_" + DaoConsts.APPOINTMENT_DATE)));
+        dto.setAppointmentTime(LocalTime.parse(result.getString("A_" + DaoConsts.APPOINTMENT_TIME)));
+        dto.setPractitionerFirstName(result.getString("E_" + DaoConsts.USERDETAILS_FIRSTNAME));
+        dto.setPractitionerLastName(result.getString("E_" + DaoConsts.USERDETAILS_LASTNAME));
+        dto.setPatientFirstName(result.getString("P_" + DaoConsts.USERDETAILS_FIRSTNAME));
+        dto.setPatientLastName(result.getString("P_" + DaoConsts.USERDETAILS_LASTNAME));
+        dto.setThirdPartyName(result.getString("T_" + DaoConsts.THIRDPARTY_NAME));
+        dto.setThirdPartyAdress1(result.getString("T_" + DaoConsts.THIRDPARTY_ADDRESS1));
+
+        return dto;
+    }
+
 }

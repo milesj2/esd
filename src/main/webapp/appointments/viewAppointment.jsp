@@ -2,6 +2,7 @@
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.service.UserDetailsService" %>
+<%@ page import="com.esd.model.data.AppointmentStatus" %>
 <%@ page import="com.esd.controller.utils.AuthenticationUtils" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +21,9 @@
                 <h2>View & Amend Appointment Details</h2>
                 <form class="input_form" method="post" action="${pageContext.request.contextPath}/appointments/viewAppointment">
                     <table>
+                        <% Appointment appointment = (Appointment) request.getAttribute("appointment"); %>
                         <% try {
-                            Appointment appointment = (Appointment) request.getAttribute("appointment");
+
                             UserDetails employeeDetails = UserDetailsService.getInstance().getUserDetailsByUserID(appointment.getEmployeeId());
                             UserDetails patientDetails = UserDetailsService.getInstance().getUserDetailsByUserID(appointment.getPatientId());
                         %>
@@ -73,6 +75,7 @@
                             e.printStackTrace();
                         } %>
                     </table>
+                    <% if(appointment.getStatus() != AppointmentStatus.COMPLETE){ %>
                     <div>
                         <% if(UserGroup.practitioner.contains(AuthenticationUtils.getCurrentUserGroup(request))) { %>
                             <input type="submit" name="inprogress" value="Start Appointment">
@@ -84,6 +87,7 @@
                         <strong><%=request.getAttribute("msg")%></strong>
                         <% } %>
                     </div>
+                    <% } %>
                 </form>
             </main>
         </div>
