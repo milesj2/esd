@@ -66,8 +66,10 @@ public class WorkingHoursController extends HttpServlet {
 
         try {
             workingHoursService.addWorkingHoursToEmployee(workingHours);
+            response.sendRedirect("manage?errMsg=Successfully updated working hours");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            response.sendRedirect("manage?errMsg=Error updating working hours");
         }
     }
 }

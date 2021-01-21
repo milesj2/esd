@@ -26,6 +26,7 @@ public class WorkingHoursDao {
     private static final String INSERT_WORKING_HOURS = "INSERT INTO WORKINGHOURS (WORKINGDAYS, STARTTIME, ENDTIME) VALUES (?, ?, ?)";
     private static final String DELETE_EMPLOYEE_WORKING_HOURS = "DELETE FROM WORKINGHOURSJT WHERE employeeID=?";
     private static final String GET_ASSIGNED_WORKING_HOURS = "SELECT * FROM WORKINGHOURSJT WHERE employeeID=?";
+    private static final String INSERT_WORKING_HOUR_JT = "INSERT INTO WORKINGHOURSJT (EMPLOYEEID, WORKINGHOURSID) VALUES (?, ?)";
 
     private WorkingHoursDao() {
     }
@@ -40,10 +41,11 @@ public class WorkingHoursDao {
     String daysToString(List<Integer> daysList){
         StringBuilder days = new StringBuilder();
         for (Integer day:daysList){
-            days.append(days);
+            days.append(day);
             days.append(",");
         }
-        days.delete(days.length()-1, days.length()-1);
+
+        days.setLength(days.length() - 1);
         return days.toString();
     }
 
@@ -137,9 +139,12 @@ public class WorkingHoursDao {
 
     public void addWorkingHoursToEmployee(WorkingHours workingHours) throws SQLException {
         int existingWorkingHours = findWorkingHours(workingHours);
-        if (existingWorkingHours != -1){
-            if (getAssignedWorkingHoursID(workingHours.getEmployeeDetailsId()) == -1)
-                addEmployeeToWorkingHours(workingHours.getEmployeeDetailsId(), existingWorkingHours);
+        if (existingWorkingHours != -1) {
+            int assignedHoursID = getAssignedWorkingHoursID(workingHours.getEmployeeDetailsId());
+            if (assignedHoursID == existingWorkingHours)
+                return;
+            deleteWorkingHours(workingHours.getEmployeeDetailsId());
+            addEmployeeToWorkingHours(workingHours.getEmployeeDetailsId(), existingWorkingHours);
             return;
         }
 
@@ -179,15 +184,19 @@ public class WorkingHoursDao {
         PreparedStatement statement = con.prepareStatement(INSERT_WORKING_HOURS);
         statement.setString(1, daysToString(hours.getWorkingDays()));
         statement.setString(2, formatTime(hours.getStartTime()));
-        statement.setString(2, formatTime(hours.getEndTime()));
+        statement.setString(3, formatTime(hours.getEndTime()));
 
-        return statement.executeUpdate();
+        statement.execute();
+
+        return findWorkingHours(hours);
+
+
     }
 
     public void addEmployeeToWorkingHours(int employeID, int workingHoursID) throws SQLException {
         Connection con = ConnectionManager.getInstance().getConnection();
 
-        PreparedStatement statement = con.prepareStatement("INSERT INTO WORKINGHOURSJT (EMPLOYEEID, WORKINGHOURSID) VALUES (?, ?)");
+        PreparedStatement statement = con.prepareStatement(INSERT_WORKING_HOUR_JT);
         statement.setInt(1, employeID);
         statement.setInt(2, workingHoursID);
 
