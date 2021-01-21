@@ -1,19 +1,25 @@
 # ESD
 The below is guidance for various aspects of the project
 
-# code style
+#Contributors
+Jordan Hellier - Jordan2.Hellier@live.uwe.ac.uk - 17019992  \
+Trent Meier - Trent2.Meier@live.uwe.ac.uk - 17026432 \
+Angela Jackson - Angela2.Asif@live.uwe.ac.uk - 12007734\
+Miles Jarvis - Miles2.Jarvis@live.uwe.ac.uk - 17029773\
+Sam Barbra - Samuele2.Barba@live.uwe.ac.uk- 17043938 
+
+#Code style
 For consistency it's important we all follow the same code style, this involves formatting code in a certain way, here is a link to googles Java code style which we will follow throughout the project https://google.github.io/styleguide/javaguide.html pay particular attention to package naming, class naming, function names etc. 
 
 # Derby DB
-## creating users
-Creating a database user is done in 2 steps execute the 2 below commands as root user to create a new user:
-
-CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.user.\<username\>','\<password\>');
+## creating Users
+Creating a database systemUser is done in 2 steps execute the 2 below commands as root systemUser to create a new systemUser:
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.systemUser.\<username\>','\<password\>');
 create schema <USERNAME>
 
 when creating the schema it needs to be in caps to work no matter username, the 2 above commands should look like below
 
-CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.user.admin','pw');
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.systemUser.admin','pw');
 create schema ADMIN;
 
 # Glassfish server
@@ -26,6 +32,9 @@ create schema ADMIN;
 - Click the check box for "I have read and accept..." and click Next >
 - Accept the default values for the Domain Location settings and click Finish.
 - Now open Tools > Servers and select the server you just added.
+
+- To enable integration with Jersey Client Factory and SSL Webservice requests navigate to: glassfish5\glassfish\modules\endorsed\grizzly-npn-bootstrap.jar unzip the jar and remove the sun dir. This is required due to a known incompatibility with glassfish5.01 and jdk1.8.0_261 see https://github.com/eclipse-ee4j/glassfish/issues/22436.
+
 
 (Instructions are from this link: https://stackoverflow.com/questions/58080214/how-to-add-glassfish-5-0-server-in-netbeans-8-2 
 there are also screenshots there showing every step).
@@ -54,8 +63,8 @@ The core structure of the project will be based in com.esd further packages will
 ## Coding help
 
 ### Protecting pages
-It's import to remember about protecting pages from user's that shouldn't have access. The basic principal is to grab the user from the session (See the index.jsp or dashboard.jsp) pages that are only visible to certain user groups need to check the usergroup of the user, this will just be an extra if statement saying 
-if user.usergroup != UserGroup.DOCTOR{
+It's import to remember about protecting pages from systemUser's that shouldn't have access. The basic principal is to grab the systemUser from the session (See the index.jsp or dashboard.jsp) pages that are only visible to certain systemUser groups need to check the usergroup of the systemUser, this will just be an extra if statement saying 
+if systemUser.usergroup != UserGroup.DOCTOR{
     //redirect here
     return;
 }

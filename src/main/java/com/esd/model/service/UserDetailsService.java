@@ -1,11 +1,14 @@
 package com.esd.model.service;
 
 import com.esd.model.dao.UserDetailsDao;
+import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,6 +16,7 @@ import java.util.Map;
  * Use: This class is a singleton, The use of this class is to do any functionality needed for user details
  */
 public class UserDetailsService {
+
     private static UserDetailsService instance;
     private UserDetailsDao userDetailsDao;
 
@@ -30,9 +34,30 @@ public class UserDetailsService {
         return instance;
     }
 
+    public UserDetails getUserDetailsByID(int id)  {
+        try {
+            return userDetailsDao.getUserDetailsById(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-    public UserDetails getUserDetailsByUserID(int userId) throws SQLException, InvalidIdValueException {
-        return userDetailsDao.getUserDetailsByUserId(userId);
+    public UserDetails getUserDetailsByUserID(int userId) {
+        try {
+            return userDetailsDao.getUserDetailsByUserId(userId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<UserDetails> getAllUsersOfGroups(UserGroup... groups) throws SQLException, InvalidIdValueException {
+        return userDetailsDao.getAllUsersOfGroups(groups);
     }
 
     public boolean updateUserDetails(UserDetails userDetails) throws InvalidIdValueException, SQLException {
@@ -43,8 +68,13 @@ public class UserDetailsService {
         return new UserDetailsService(userDetailsDao);
     }
 
-    public static ArrayList<UserDetails> getUserDetailsFromFilteredRequest(Map<String, Object> args) throws SQLException {
-        ArrayList<UserDetails> userDetails = UserDetailsDao.getInstance().getFilteredDetails(args);
+    public List<UserDetails> getUserDetailsFromFilteredRequest(SystemUser currentUser, Map<String, Object> args) {
+        List<UserDetails> userDetails = new ArrayList<>();
+        try {
+            userDetails = UserDetailsDao.getInstance().getFilteredDetails(currentUser, args);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return userDetails;
     }
 }

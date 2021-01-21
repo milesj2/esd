@@ -4,13 +4,12 @@ import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.joins.Joins;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.UserGroup;
+import com.esd.model.data.persisted.SystemUser;
 import com.esd.model.data.persisted.UserDetails;
 import com.esd.model.exceptions.InvalidIdValueException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.joda.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +25,7 @@ public class UserDetailsDao {
     private static final String INSERT_INTO_USERDETAILS = "insert into userDetails " +
             "(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob) " +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     private static final String UPDATE_USER_DETAILS = "UPDATE USERDETAILS SET " +
             "firstname=?" +
             ",lastname=?" +
@@ -58,19 +58,33 @@ public class UserDetailsDao {
                 result.getString(DaoConsts.USERDETAILS_ADDRESS3),
                 result.getString(DaoConsts.USERDETAILS_TOWN),
                 result.getString(DaoConsts.USERDETAILS_POSTCODE),
-                result.getDate(DaoConsts.USERDETAILS_DOB)
+                LocalDate.parse(result.getString(DaoConsts.USERDETAILS_DOB))
         );
     }
 
-    public UserDetails getUserDetailsByUserId(int id) throws SQLException, InvalidIdValueException {
+    public UserDetails getUserDetailsById(int id) throws SQLException, InvalidIdValueException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_USERDETAILS_REFERENCE + DaoConsts.ID, id));
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, id));
 
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         boolean resultFound = result.next();
         if(!resultFound){
             throw new InvalidIdValueException(String.format("No user details found for id '%d'", id));
+        }
+        return getUserDetailsFromResults(result);
+    }
+
+    public UserDetails getUserDetailsByUserId(int userId) throws SQLException, InvalidIdValueException {
+        SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.SYSTEMUSER_ID_FK, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID))
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, userId));
+
+        PreparedStatement statement = queryBuilder.createStatement();
+        ResultSet result = statement.executeQuery();
+        boolean resultFound = result.next();
+        if(!resultFound){
+            throw new InvalidIdValueException(String.format("No user details found for id '%d'", userId));
         }
         return getUserDetailsFromResults(result);
     }
@@ -97,7 +111,7 @@ public class UserDetailsDao {
         statement.setString(5, userDetails.getAddressLine3());
         statement.setString(6, userDetails.getTown());
         statement.setString(7, userDetails.getPostCode());
-        statement.setDate(8, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+        statement.setDate(8, Date.valueOf(userDetails.getDateOfBirth().toString()));
         statement.setInt(9, userDetails.getUserId());
 
         int result = statement.executeUpdate();
@@ -112,15 +126,40 @@ public class UserDetailsDao {
         }
     }
 
-   public ArrayList<UserDetails> getFilteredDetails(Map<String, Object> args) throws SQLException {
+    public List<UserDetails> getAllUsersOfGroups(UserGroup...groups) throws SQLException {
+        ArrayList<UserDetails> userDetailsList = new ArrayList<>();
+        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+                .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, DaoConsts.SYSTEMUSER_ID_FK))
+                .withRestriction(Restrictions.in(DaoConsts.SYSTEMUSER_USERGROUP, groups))
+                .createStatement();
+
+        ResultSet result = statement.executeQuery();
+
+        // add results to list of user to return
+        while (result.next()) {
+            userDetailsList.add(getUserDetailsFromResults(result));
+        }
+
+        return userDetailsList;
+    }
+
+   public List<UserDetails> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
 
        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-       SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS);
+       SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+               .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, DaoConsts.SYSTEMUSER_ID_FK));
 
        Iterator mapIter = args.entrySet().iterator();
        while(mapIter.hasNext()) {
            Map.Entry pair = (Map.Entry)mapIter.next();
-           queryBuilder.and(Restrictions.equalsRestriction(pair.getKey().toString(), pair.getValue()));
+           queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
+       }
+
+       switch(currentUser.getUserGroup()){
+           case NHS_PATIENT:
+           case PRIVATE_PATIENT:
+               queryBuilder.withRestriction(Restrictions.equalsRestriction(DaoConsts.ID, currentUser.getUserDetails().getId()));
+               break;
        }
 
        PreparedStatement statement = queryBuilder.createStatement();
@@ -146,7 +185,7 @@ public class UserDetailsDao {
             statement.setString(6, userDetails.getAddressLine3());
             statement.setString(7, userDetails.getTown());
             statement.setString(8, userDetails.getPostCode());
-            statement.setDate(9, new java.sql.Date(userDetails.getDateOfBirth().getTime()));
+            statement.setDate(9, Date.valueOf(userDetails.getDateOfBirth().toString()));
 
             statement.executeUpdate();
 

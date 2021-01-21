@@ -6,38 +6,21 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="css/master.css">
+    <link rel="stylesheet" href="res/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="res/css/master.css">
 </head>
 <body>
     <div class="container">
         <div class="loginFormWrapper">
-            <img src="images/logo.png" class="loginLogo" alt="" />
+            <img src="res/images/logo.png" class="loginLogo" alt="" />
             <form action="login" method="POST">
                 <input type="text" placeholder="username" id="username" name="username" val=""/><br/>
                 <input type="password" placeholder="password" id="password" name="password" val=""/><br/>
                 <button type="submit">Login</button>
                 <span class="errMessage">
-                    <%
-                        String errMsg, errCode;
-                        errCode = request.getParameter("err");
-                        if (errCode != null){
-                            LoginErrors err = LoginErrors.valueOf(errCode);
-                            switch (err){
-                                case IncorrectCredentials:
-                                    errMsg = "Invalid username/password";
-                                    break;
-                                case AccountDisabled:
-                                    errMsg = "This account is locked. Please contact your admin to reactive the account.";
-                                    break;
-                                default:
-                                    errMsg = "Unknown Error! Please contact admin if this error continues";
-                                    break;
-                            }
-                            out.print(errMsg);
-                        }
-
-                         %>
+                    <% if (request.getAttribute("errorMessage") != null){%>
+                        <%= request.getAttribute("errorMessage") %>
+                    <% } %>
                 </span>
             </form>
             <div class="noAccount">

@@ -11,13 +11,11 @@ import java.sql.SQLException;
  */
 public class SystemSettingService {
 
-    private static SystemSettingService instance;
-    private SystemSettingDao systemSettingDao;
-
     public final static String SYSTEMSETTING_FEE_DOCTOR = "baseConsultationFeeDoctor";
     public final static String SYSTEMSETTING_FEE_NURSE = "baseConsultationFeeNurse";
     public final static String SYSTEMSETTING_SLOT_TIME = "consultationSlotTime";
-
+    private static SystemSettingService instance;
+    private SystemSettingDao systemSettingDao;
 
     private SystemSettingService(SystemSettingDao systemSettingDao){
         if (systemSettingDao == null){
@@ -30,8 +28,15 @@ public class SystemSettingService {
         return systemSettingDao.getInstance().getIntegerSettingValueByKey(settingKey);
     }
 
-    public double getDoubleSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {
-        return systemSettingDao.getInstance().getDoubleSettingValueByKey(settingKey);
+    public double getDoubleSettingValueByKey(String settingKey) {
+        try {
+            return systemSettingDao.getInstance().getDoubleSettingValueByKey(settingKey);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (InvalidIdValueException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public String getSettingValueByKey(String settingKey) throws SQLException, InvalidIdValueException {

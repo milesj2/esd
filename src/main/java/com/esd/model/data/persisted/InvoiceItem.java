@@ -1,7 +1,5 @@
 package com.esd.model.data.persisted;
 
-import com.esd.model.data.InvoiceStatus;
-
 /**
  * Original Author: Jordan Hellier
  * Use: This class is a simple data class used to store the data about an invoice item

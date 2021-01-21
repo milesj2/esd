@@ -2,8 +2,13 @@ package com.esd.model.dao.queryBuilders.restrictions;
 
 public class Restrictions {
 
+
     public static Restriction equalsRestriction(String field, Object value){
         return new EqualRestriction(field, value);
+    }
+
+    public static Restriction like(String field, Object value){
+        return new Like(field, value);
     }
 
     public static Restriction notEqualsRestriction(String field, Object value){
@@ -28,5 +33,9 @@ public class Restrictions {
 
     public static Restriction in(String field, Object... values){
         return new InRestriction(field, values);
+    }
+
+    public static Restriction nullRestriction(String field) {
+        return new NullRestriction(field);
     }
 }

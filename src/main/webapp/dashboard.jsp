@@ -1,30 +1,36 @@
-<%@ page import="com.esd.model.data.persisted.User" %>
-<%@ page import="com.esd.model.data.UserGroup" %>
+<%@ page import="com.esd.model.data.persisted.SystemUser" %>
+<%@ page import="com.esd.controller.pagecontrollers.dashboard.DashboardWidget" %>
+<%@ page import="java.util.List" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>
+<% SystemUser currentSystemUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
 <html>
 <head>
     <title>User Dashboard</title>
+    <link rel="stylesheet" href="res/css/master.css">
+    <script src="res/js/main.js"></script>
 </head>
 <body>
-    <nav><a href="logout">Logout</a> </nav>
-    <div>
-        welcome to your dashboard <% out.print(currentUser.getUsername()); %> your privilege level is <% out.print(currentUser.getUserGroup().name()); %>
-	    <br>
-        <% if(currentUser.getUserGroup() == UserGroup.ADMIN) { %>
-        <a href='users/manage'>Manage Users</a>
-        <br>
-        <a href='users/search'>Search Users</a>
-        <br>
-        <a href='admin/reports'>AdminReports</a>
-        <br>
-        <a href='invoices/search'>Search Invoices</a>
-        <br>
-        <a href='admin/settings'>Manage System Settings</a>
-        <br>
-        <a href='appointments/schedule'>Appointments</a>
-        <%}%>
+    <div class="root_container">
+        <%@ include file="res/components/sidebar.jsp" %>
+        <div class="main_container">
+            <%@ include file="res/components/titlebar.jsp" %>
+            <main>
+                <h1>Dashboard</h1>
+                Welcome <% out.print(currentSystemUser.getUsername()); %>. Your privilege level is <% out.print(currentSystemUser.getUserGroup().name()); %>
+                <br>
+                <div id="dashboard" class="widgets">
+                    <% for (DashboardWidget widget : (List<DashboardWidget>)request.getAttribute("widgets")) { %>
+                        <div class="quarter-widget">
+                            <a href="<%=widget.getLink()%>">
+                                <img src="<%=widget.getIcon()%>">
+                                <h2><%=widget.getName()%></h2>
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </main>
+        </div>
     </div>
 </body>
 </html>

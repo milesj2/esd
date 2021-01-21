@@ -4,11 +4,279 @@
     --background-color:#0077C6;
     --accent-color-dark:#004472;
     --accent-color-light:#4DB8FF;
+    --logo-height:100px;
+    --nav-width:250px;
+    --font-size:15px;
 }
 
+/*
+#############################################
+############ GENERIC ########################
+#############################################
+*/
+
 body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
     background: var(--background-color);
+    overflow: hidden;
+    font-family: "Helvetica Neue", sans-serif;
 }
+
+
+.root_container {
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.main_container {
+    height: 100%;
+}
+
+.toggle_hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+/*
+#############################################
+############ TITLE BAR ######################
+#############################################
+*/
+
+.title_bar{
+    margin: 0;
+    padding: 10px;
+    height: calc(var(--logo-height) - 2*10px);
+    width: calc(100vw - 250px);
+    /*background: #CCCCCC;*/
+    background: var(--background-color); 
+    color: white;
+    text-align: center;
+}
+
+.title_bar h1 {
+
+}
+
+/*
+#############################################
+############ SIDE BAR #######################
+#############################################
+*/
+
+.sidebar_container {
+    margin: 0;
+    height: 100%;
+    /*background: #888888;
+    background: var(--background-color);*/
+    background: #232323;
+
+}
+
+.sidebar_container .logo {
+    width: var(--nav-width);
+    /*height: var(--logo-height);*/
+    height: auto; /*so logo is not being streached*/
+    padding: 20px 0;
+}
+
+.logo-image{
+    width: var(--nav-width);
+}
+
+.sidebar_container nav {
+    padding: 1.5rem;
+    display: block;
+}
+
+#sidebar ul li {
+    font-size: 16px;
+}
+
+#sidebar ul li a {
+    padding: 10px 0;
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sidebar ul li > ul li {
+    font-size: 14px;
+}
+
+#sidebar ul li a:hover {
+    color: var(--background-color);
+}
+
+#sidebar ul li.active > a {
+    background: transparent;
+    color: var(--background-color);
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle {
+    white-space: nowrap;
+}
+
+#sidebar ul li > ul {
+    margin-left: 15px;
+}
+
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
+
+i.fa.nav-icons {
+    padding: 5px;  
+    color: white;
+}
+
+#sidebar ul li a:hover > i.fa.nav-icons {
+    color: var(--background-color);
+}
+
+.dropdown-container {
+  display: none;
+}
+.sidebar_container nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar_container nav a {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar_container nav img {
+    width: var(--font-size);
+    margin-right: 2px;
+}
+
+.sidebar_container nav .dropdown_list {
+    display: none;
+    margin-left: 30px;
+}
+
+.sidebar_container nav .show {
+    display: block;
+}
+
+/*
+#############################################
+############ Main ###########################
+#############################################
+*/
+
+
+
+main {
+    margin: 0;
+    padding: 20px;
+    height: calc(100vh - var(--logo-height));
+    width: calc(100vw - var(--nav-width) - 2*10px);
+    background: #eeeeee;
+    overflow: scroll;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
+}
+
+.nonav{
+    width:100vw;
+    height:100vh;
+}
+
+main .widgets {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin-top: 5%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    text-align: center;
+}
+
+main .widgets .quarter-widget{
+    min-width: 180px;
+    flex: 0 0 25%;
+}
+
+main .widgets img {
+    height: 100px;
+    font-size: 15px;
+}
+
+main .widgets a {
+    text-decoration: none;
+    color: black;
+}
+
+main .widgets .row {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    min-height: 150px;
+
+}
+
+main .widgets .quarter-widget {
+    width: 25%;
+}
+
+main .widgets .half-widget {
+    width: 50%;
+}
+
+main .widgets .whole-widget {
+    width: 100%;
+}
+
+/*
+#############################################
+############ LOGIN ##########################
+#############################################
+*/
 
 .loginFormWrapper {
     font: 16px/2em Lato, serif;
@@ -70,4 +338,141 @@ body{
 }
 .form-links a {
     color: #fff;
+}
+
+/*
+#############################################
+############ Register #######################
+#############################################
+*/
+
+body.register-page nav {
+    display: none;
+}
+
+/*
+#############################################
+############ CONTROLS #######################
+#############################################
+*/
+
+/****** Search tables ******/
+
+.search_table {
+    margin: 20px;
+    width: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.search_table  td, .search_table  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.search_table  tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+.search_table  tr:hover {
+    background-color: #ddd;
+}
+
+.search_table  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--background-color);
+    color: white;
+    width: 1000px;
+}
+
+.search_table img {
+    height: var(--font-size);
+    margin-left: 5px;
+}
+
+/****** Forms ******/
+
+.input_form * {
+    box-sizing: border-box;
+}
+
+.input_form label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+.input_form input[type=submit], .input_form_button {
+    background-color: var(--background-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.input_form input[type=submit]:disabled {
+    background-color: #6c757d;
+}
+
+.input_form th {
+    text-align: left;
+    padding-right: 20px;
+}
+
+.input_form td {
+    padding-right: 40px;
+}
+
+
+
+/***** containers ******/
+.container_header {
+    display: flex;
+}
+
+.container_header h1 {
+    margin: 15px 0 15px 0;
+}
+
+.container_header img {
+    width: 38px;
+    margin: 15px 0 15px 0;
+}
+
+/***** password ******/
+
+.password_error_container {
+
+}
+.password_error_container p{
+    color: red;
+}
+
+/***Schedule***/
+.dateContainer{
+    width:100%;
+    display: grid;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 1;
+}
+
+.dateColumn{
+    grid-column-start: 1;
+}
+
+.appointmentRows{
+    grid-column-start: 2;
+}
+
+.spacer{
+    min-height:20px;
+}
+
+.appointmentLinks{
+    display:inline-block;
+}
+
+.appointmentRow * {
+    padding:20px;
 }
