@@ -133,7 +133,7 @@ public class InvoiceService {
     public Invoice getInvoiceFromAppointmentByInvoiceId(int id) {
         Invoice invoice = new Invoice();
         try{
-            invoice = invoiceDao.getInvoiceByIdFromAppointmentInvoiceId(id);
+            invoice = invoiceDao.getInvoiceByAppointmentId(id);
         }catch (Exception e){
             e.printStackTrace();
         }
