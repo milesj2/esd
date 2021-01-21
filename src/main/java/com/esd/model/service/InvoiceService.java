@@ -7,11 +7,8 @@ import com.esd.model.data.persisted.Invoice;
 import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.dao.SystemSettingDao;
 import com.esd.model.dao.SystemUserDao;
-import com.esd.model.data.InvoiceStatus;
 import com.esd.model.data.UserGroup;
 import com.esd.model.data.persisted.Appointment;
-import com.esd.model.data.persisted.Invoice;
-import com.esd.model.data.persisted.InvoiceItem;
 import com.esd.model.data.persisted.SystemUser;
 
 import com.esd.model.exceptions.InvalidIdValueException;
@@ -20,8 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Original Author: Trent Meier
@@ -135,7 +130,13 @@ public class InvoiceService {
         }
     }
 
-    public Invoice getInvoiceByAppointmentID(int id) throws SQLException {
-        return invoiceDao.getInvoiceByAppointmentId(id);
+    public Invoice getInvoiceFromAppointmentByInvoiceId(int id) {
+        Invoice invoice = new Invoice();
+        try{
+            invoice = invoiceDao.getInvoiceByIdFromAppointmentInvoiceId(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return invoice;
     }
 }

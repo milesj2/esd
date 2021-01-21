@@ -2,7 +2,6 @@ package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.joins.Joins;
-import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.data.persisted.SystemUser;
@@ -22,7 +21,7 @@ public class PrescriptionDao {
     
     private static PrescriptionDao instance;
     private static final String INSERT_INTO_PRESCRIPTIONS_WITH_LINK = "insert into prescriptions " +
-            "(employeeId, patientId, ORIGINATINGPRESCRIPTIONID, prescriptionDetails, appointmentId, issueDate) " +
+            "(employeeId, patientId, , prescriptionDetails, appointmentId, issueDate) " +
             "values (?, ?, ?, ?, ?, ?)";
 
     private static final String INSERT_INTO_PRESCRIPTIONS_EXCLUDING_LINK = "insert into prescriptions " +
@@ -47,16 +46,21 @@ public class PrescriptionDao {
         return instance;
     }
 
-    public Prescription getMainPrescriptionForAppointment(int appointmentId) throws SQLException {
-        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
-                .withRestriction(Restrictions.nullRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID))
-                .createStatement();
-        ResultSet results = statement.executeQuery();
-        if(results.next()){
-            return getPrescriptionDetailsFromResults(results);
+    public Prescription getMainPrescriptionForAppointment(int appointmentId) {
+        Prescription prescription = new Prescription();
+        try {
+            PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                    .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
+                    .withRestriction(Restrictions.nullRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID))
+                    .createStatement();
+            ResultSet results = statement.executeQuery();
+            if(results.next()){
+                prescription =  getPrescriptionDetailsFromResults(results);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        return null;
+        return prescription;
     }
 
     public Prescription getPrescriptionById(int id) throws SQLException {
