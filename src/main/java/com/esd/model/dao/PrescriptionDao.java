@@ -25,7 +25,7 @@ public class PrescriptionDao {
             "values (?, ?, ?, ?, ?, ?)";
 
     private static final String INSERT_INTO_PRESCRIPTIONS_EXCLUDING_LINK = "insert into prescriptions " +
-            "(employeeId, patientId, ORIGINATINGPRESCRIPTIONID ,prescriptionDetails, appointmentId, issueDate) " +
+            "(employeeId, patientId, ,prescriptionDetails, appointmentId, issueDate) " +
             "values (?, ?, ?, ?, ?)";
 
     private static final String UPDATE_PRESCRIPTIONS = "update prescriptions set "+
