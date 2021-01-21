@@ -36,17 +36,22 @@
                         <option value="<%=thirdParty.getId()%>" <%=(Integer)request.getAttribute("referalId") == thirdParty.getId() ? "selected" : ""%>><%=thirdParty.getName()%></option>
                     <% } %>
                 </select></br>
-                <% if(request.getAttribute("prescription") == null){ %>
+                <% Prescription prescription = (Prescription) request.getAttribute("prescription");
+                if(prescription.getId() == 0){ %>
                     <input type="submit" name="issuePrescription" value="Issue Prescription"/>
-                <% }else{
-                    Prescription prescription = (Prescription) request.getAttribute("prescription");
-                %>
-                    Prescription issued: <a href="">Download prescription</a> <input type="submit" name="editPrescription" value="Edit Prescription"/>
+                <% }else{%>
+                    <input type="submit" name="editPrescription" value="Edit Prescription"/>
                 <% } %>
 
                 <input type="submit" name="completeAppointment" value="Complete Appointment"/>
             </form>
-
+            <% if(prescription.getId() != 0){ %>
+            <a href="${pageContext.request.contextPath}/prescriptions/pdf?selectedPrescriptionId=<%=prescription.getId()%>" target="_blank">
+                <button class="input_form_button">
+                    Download Prescription
+                </button>
+            </a>
+            <% } %>
         </main>
     </div>
 </div>

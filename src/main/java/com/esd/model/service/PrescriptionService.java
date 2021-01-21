@@ -67,28 +67,23 @@ public class PrescriptionService {
     }
 
     public Prescription getPrescriptionForAppointment(int appointmentId) {
-        try {
-            return prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
+        return prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
     }
 
     public Prescription getPrescriptionById(int appointmentId) {
+        Prescription prescription = new Prescription();
         try {
-            return prescriptionDao.getPrescriptionById(appointmentId);
+            prescription = prescriptionDao.getPrescriptionById(appointmentId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return prescription;
     }
 
     public void repeatPrescription(Prescription prescription, PrescriptionRepeat repeat, LocalDate repeatUntil) {
         if(repeat == PrescriptionRepeat.NEVER){
             return;
         }
-
 
         int originatingPrescriptionId = prescription.getId();
 

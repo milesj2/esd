@@ -33,20 +33,18 @@ public class AppointmentCompletedController extends HttpServlet {
         try {
             int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
             Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
-            Invoice invoice = InvoiceService.getInstance().getInvoiceByAppointmentID(appointment.getId());
-            Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
-
             request.setAttribute("scheduleLink", UrlUtils.absoluteUrl(request, "/appointments/schedule"));
-            if(invoice != null){
+
+            Invoice invoice = InvoiceService.getInstance().getInvoiceFromAppointmentByInvoiceId(appointment.getId());
+            if(invoice == null){
                 request.setAttribute("invoiceDownloadLink",
                         UrlUtils.absoluteUrl(request, "/invoices/pdf?selectedInvoiceId="+invoice.getId()));
             }
-
-            if(prescription != null){
+            Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
+            if(prescription == null){
                 request.setAttribute("prescriptionViewLink",
                         UrlUtils.absoluteUrl(request, "/prescriptions/view?selectedPrescriptionId="+prescription.getId()));
             }
-
             RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentCompleted.jsp");
             view.forward(request, response);
         } catch (Exception e) {

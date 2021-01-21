@@ -2,7 +2,6 @@ package com.esd.model.dao;
 
 import com.esd.model.dao.queryBuilders.SelectQueryBuilder;
 import com.esd.model.dao.queryBuilders.joins.Joins;
-import com.esd.model.dao.queryBuilders.restrictions.Restriction;
 import com.esd.model.dao.queryBuilders.restrictions.Restrictions;
 import com.esd.model.data.persisted.Prescription;
 import com.esd.model.data.persisted.SystemUser;
@@ -26,7 +25,7 @@ public class PrescriptionDao {
             "values (?, ?, ?, ?, ?, ?)";
 
     private static final String INSERT_INTO_PRESCRIPTIONS_EXCLUDING_LINK = "insert into prescriptions " +
-            "(employeeId, patientId, prescriptionDetails, appointmentId, issueDate) " +
+            "(employeeId, patientId, ,prescriptionDetails, appointmentId, issueDate) " +
             "values (?, ?, ?, ?, ?)";
 
     private static final String UPDATE_PRESCRIPTIONS = "update prescriptions set "+
@@ -47,14 +46,18 @@ public class PrescriptionDao {
         return instance;
     }
 
-    public Prescription getMainPrescriptionForAppointment(int appointmentId) throws SQLException {
-        PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
-                .withRestriction(Restrictions.nullRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID))
-                .createStatement();
-        ResultSet results = statement.executeQuery();
-        if(results.next()){
-            return getPrescriptionDetailsFromResults(results);
+    public Prescription getMainPrescriptionForAppointment(int appointmentId) {
+        try {
+            PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
+                    .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
+                    .withRestriction(Restrictions.nullRestriction(DaoConsts.PRESCRIPTION_ORIGINATING_PRESCRIPTION_ID))
+                    .createStatement();
+            ResultSet results = statement.executeQuery();
+            if(results.next()){
+                return getPrescriptionDetailsFromResults(results);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

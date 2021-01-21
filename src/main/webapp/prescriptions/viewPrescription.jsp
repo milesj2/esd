@@ -55,7 +55,9 @@
             <span>Prescription will be available for download on the issue date</span>
 
         <% } else { %>
-            <a href="#">Download prescription</a>
+            <a href="${pageContext.request.contextPath}/prescriptions/pdf?selectedPrescriptionId=<%=prescription.getId()%>" target="_blank">
+                <button class="input_form_button">Download Prescription</button>
+            </a>
         <% } %>
 
         </main>
