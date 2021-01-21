@@ -107,12 +107,19 @@ public class AppointmentInProgressController extends HttpServlet {
         }else if(request.getParameter("completeAppointment") != null){
 
             int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
+            int selectedThirdParty = Integer.parseInt(request.getParameter("referalId"));
+
             Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
             appointment.setStatus(AppointmentStatus.COMPLETE);
             appointment.setNotes(request.getParameter("notes"));
+
+            if(selectedThirdParty != -1){
+                appointment.setThirdPartyId(selectedThirdParty);
+            }
+            AppointmentsService.getInstance().updateAppointment(appointment);
             InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
 
-            AppointmentsService.getInstance().updateAppointment(appointment);
+
             String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
             response.sendRedirect(
                     UrlUtils.absoluteUrl(request, "/appointments/completed?" + selectedAppointmentIdParam));

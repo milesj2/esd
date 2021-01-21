@@ -20,7 +20,7 @@ public class AppointmentDao {
             "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus, notes)" +
             " values (?,?,?,?,?,?,?)";
 
-    private static String UPDATE_APPOINTMENT = "update appointments set" +
+    private static String UPDATE_APPOINTMENT_WITHOUT_THIRD_PARTY = "update appointments set" +
             " appointmentdate = ?," +
             " appointmenttime = ?," +
             " slots = ?," +
@@ -30,12 +30,27 @@ public class AppointmentDao {
             " notes = ? " +
             "where id = ?";
 
+    private static String UPDATE_APPOINTMENT_WITH_THIRD_PARTY = "update appointments set" +
+            " appointmentdate = ?," +
+            " appointmenttime = ?," +
+            " slots = ?," +
+            " employeeid = ?," +
+            " patientid = ?," +
+            " appointmentstatus = ?, " +
+            " notes = ? " +
+            "thirdPartyId = ? " +
+            "where id = ?";
+
     public void updateAppointment(Appointment appointment) throws SQLException {
         if(appointment.getId()==0){
             throw new IllegalArgumentException("appointment must have id");
         }
         Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
+        String query = UPDATE_APPOINTMENT_WITHOUT_THIRD_PARTY;
+        if(appointment.getThirdPartyId() > 0){
+            query = UPDATE_APPOINTMENT_WITH_THIRD_PARTY;
+        }
+        PreparedStatement statement = con.prepareStatement(query);
         statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
         statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
         statement.setInt(3, appointment.getSlots());
@@ -45,6 +60,9 @@ public class AppointmentDao {
         statement.setString(7, appointment.getNotes());
         //where id
         statement.setInt(8, appointment.getId());
+        if(appointment.getThirdPartyId() > 0){
+            statement.setInt(9, appointment.getThirdPartyId());
+        }
         statement.executeUpdate();
     }
 
