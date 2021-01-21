@@ -18,6 +18,7 @@ public class Appointment {
     private int patientId;
     private int employeeId;
     private int slots = 1;
+    private int thirdPartyId;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private AppointmentStatus status;
@@ -90,9 +91,13 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
     }
 
-    public boolean isCancled() {
+    public boolean isCanceled() {
        return this.status.equals(AppointmentStatus.CANCELED);
     }
+
+    public int getThirdPartyId() { return thirdPartyId; }
+
+    public void setThirdPartyId(int thirdPartyId) { this.thirdPartyId = thirdPartyId; }
 
     public String getNotes() {
         return notes;

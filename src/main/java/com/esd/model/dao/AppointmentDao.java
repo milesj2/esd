@@ -91,6 +91,7 @@ public class AppointmentDao {
         appointment.setAppointmentTime(LocalTime.parse(resultSet.getString(DaoConsts.APPOINTMENT_TIME)));
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
         appointment.setStatus(AppointmentStatus.valueOf(resultSet.getString(DaoConsts.APPOINTMENT_STATUS)));
+        appointment.setThirdPartyId(resultSet.getInt(DaoConsts.THIRDPARTY_ID));
         appointment.setNotes(resultSet.getString(DaoConsts.APPOINTMENT_NOTES));
         return appointment;
     }
@@ -101,7 +102,7 @@ public class AppointmentDao {
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         if(!result.next()){
-            throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
+            throw new SQLDataException("No result exists for appointment id: " + appointmentId);
         }
         return processResultSetForAppointment(result);
     }

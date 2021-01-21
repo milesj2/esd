@@ -174,7 +174,7 @@ public class AppointmentsService {
 
             //loop all booked appointments and slots removing any overlaps
             for(Appointment a : bookedAppointments){
-                if(a.isCancled()){
+                if(a.isCanceled()){
                     continue;
                 }
 
@@ -226,7 +226,7 @@ public class AppointmentsService {
 
             //loop all booked appointments and slots removing any overlaps
             for(Appointment a : bookedAppointments){
-                if(a.isCancled()){
+                if(a.isCanceled()){
                     continue;
                 }
                 for (int i = allSlots.size() - 1; i >= 0; i--) {

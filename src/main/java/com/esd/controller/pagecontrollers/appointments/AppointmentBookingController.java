@@ -72,16 +72,12 @@ public class AppointmentBookingController extends HttpServlet {
                     return;
                 }
             }
-
         }
-
 
         if(patientId == -1){
             response.sendRedirect(UrlUtils.error(request, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
             return;
         }
-
-
 
         //next step is to select the appointment date
         LocalDate date;

@@ -71,6 +71,13 @@
                             <td><strong>Appointment slots:</strong></td>
                             <td><input name=<%=DaoConsts.APPOINTMENT_SLOTS%> value=<%=appointment.getSlots()%> readonly="readonly"/></td>
                         </tr>
+                        <tr>
+                            <td><strong>Is referred:</strong></td>
+                            <%
+                                String hasThirdPartyId = appointment.getThirdPartyId() > 0 ? "YES" : "NO";
+                                out.print("<td><input value=\"" + hasThirdPartyId + "\" + readonly=\"readonly\"/></td>");
+                            %>
+                        </tr>
                         <% } catch (Exception e) {
                             e.printStackTrace();
                         } %>

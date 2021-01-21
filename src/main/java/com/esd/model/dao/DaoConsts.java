@@ -96,7 +96,7 @@ public class DaoConsts {
     public final static String SYSTEMSETTING_SETTINGKEY = "settingKey";
     public final static String SYSTEMSETTING_SETTINGVALUE = "settingVal";
     
-    public final static String THIRDPARTY_ID = "id";
+    public final static String THIRDPARTY_ID = "thirdPartyId";
     public final static String THIRDPARTY_NAME = "thirdPartyName";
     public final static String THIRDPARTY_ADDRESS1 = "addressline1";
     public final static String THIRDPARTY_ADDRESS2 = "addressline2";
