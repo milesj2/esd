@@ -60,8 +60,8 @@ public class AppointmentInProgressController extends HttpServlet {
             appointment.setStatus(AppointmentStatus.INPROGRESS);
             AppointmentsService.getInstance().updateAppointment(appointment);
         }
-        Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
 
+        Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
 
         UserDetails patientDetails = UserDetailsService.getInstance().getUserDetailsByID(appointment.getPatientId());
         UserDetails employeeDetails = UserDetailsService.getInstance().getUserDetailsByID(appointment.getPatientId());
@@ -87,6 +87,7 @@ public class AppointmentInProgressController extends HttpServlet {
             String selectedAppointmentIdParam = "selectedAppointmentId=" + request.getParameter("selectedAppointmentId");
             int selectedAppointmentId = Integer.parseInt(request.getParameter("selectedAppointmentId"));
             Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
+
             Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
 
             response.sendRedirect(
