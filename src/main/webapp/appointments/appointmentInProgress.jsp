@@ -45,13 +45,13 @@
 
                 <input type="submit" name="completeAppointment" value="Complete Appointment"/>
             </form>
-            <%if(prescription.getId() != 0){ %>
+            <% if(prescription.getId() != 0){ %>
             <a href="${pageContext.request.contextPath}/prescriptions/pdf?selectedPrescriptionId=<%=prescription.getId()%>" target="_blank">
                 <button class="input_form_button">
                     Download Prescription
                 </button>
             </a>
-            <%}%>
+            <% } %>
         </main>
     </div>
 </div>
