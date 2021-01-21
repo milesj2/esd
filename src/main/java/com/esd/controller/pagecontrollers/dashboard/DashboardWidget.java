@@ -23,15 +23,15 @@ public class DashboardWidget {
             APPOINTMENT_BOOKING_WIDGET,
             APPOINTMENT_SCHEDULE_WIDGET,
             INVOICE_SEARCH_WIDGET,
-            PRESCRIPTION_SEARCH_WIDGET
+            PRESCRIPTION_SEARCH_WIDGET,
+            REFERAL_SEARCH_WIDGET
     );
 
     public static final List<DashboardWidget> PATIENT_WIDGETS  = Arrays.asList(
     );
 
     public static final List<DashboardWidget> COMMON_EMPLOYEE_WIDGETS  = Arrays.asList(
-            SEARCH_USERS_WIDGET,
-            REFERAL_SEARCH_WIDGET
+            SEARCH_USERS_WIDGET
     );
 
     public static final List<DashboardWidget> ADMIN_WIDGETS = Arrays.asList(
