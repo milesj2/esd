@@ -4,9 +4,11 @@
 <script>
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
+
 function dropDown(dropdownId) {
   document.getElementById(dropdownId).classList.toggle("show");
 }
+
 </script>
 <% SystemUser uiCurrentUser = (SystemUser)(session.getAttribute("currentSessionUser"));%>
 <div class="sidebar_container">
@@ -32,10 +34,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
+                        <a href="${pageContext.request.contextPath}/appointments/book">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Schedule</a>
                     </li>
                 </ul>
             </li>
@@ -64,10 +66,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
+                        <a href="${pageContext.request.contextPath}/appointments/book">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Schedule</a>
                     </li>
                 </ul>
             </li>
@@ -90,10 +92,10 @@ function dropDown(dropdownId) {
                 <a data-toggle="collapse" class="dropdown-toggle dropdown-btn" onclick="dropDown('appointmentSubMenu')" href="#">Appointments</a>
                 <ul id="appointmentSubMenu" class="list-unstyled dropdown-container">
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/schedule">Book An Appointment</a>
+                        <a href="${pageContext.request.contextPath}/appointments/book">Book An Appointment</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/appointments/viewAppointment">View Appointments</a>
+                        <a href="${pageContext.request.contextPath}/appointments/schedule">Schedule</a>
                     </li>
                 </ul>
             </li>
