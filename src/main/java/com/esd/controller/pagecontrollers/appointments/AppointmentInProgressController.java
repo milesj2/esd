@@ -110,7 +110,6 @@ public class AppointmentInProgressController extends HttpServlet {
             Appointment appointment = AppointmentsService.getInstance().getAppointmentById(selectedAppointmentId);
             appointment.setStatus(AppointmentStatus.COMPLETE);
             appointment.setNotes(request.getParameter("notes"));
-
             InvoiceService.getInstance().createInvoiceFromAppointment(appointment);
 
             AppointmentsService.getInstance().updateAppointment(appointment);

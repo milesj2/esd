@@ -16,6 +16,7 @@ public class DashboardWidget {
     public static DashboardWidget MANAGE_THIRD_PARTY_WIDGET = new DashboardWidget("Manage Third Party", "thirdPartyManagement/manage", "res/icons/settings.png");
     public static DashboardWidget PRESCRIPTION_SEARCH_WIDGET = new DashboardWidget("Prescriptions", "prescriptions/search", "res/icons/calendar.png");
     public static DashboardWidget MY_ACCOUNT_WIDGET = new DashboardWidget("My Account", "users/my-account", "res/icons/users.png");
+    public static DashboardWidget REFERAL_SEARCH_WIDGET = new DashboardWidget("ReferalSearch", "referals/search", "res/icons/users.png");
 
     public static final List<DashboardWidget> COMMON_WIDGETS  = Arrays.asList(
             MY_ACCOUNT_WIDGET,
@@ -29,7 +30,8 @@ public class DashboardWidget {
     );
 
     public static final List<DashboardWidget> COMMON_EMPLOYEE_WIDGETS  = Arrays.asList(
-            SEARCH_USERS_WIDGET
+            SEARCH_USERS_WIDGET,
+            REFERAL_SEARCH_WIDGET
     );
 
     public static final List<DashboardWidget> ADMIN_WIDGETS = Arrays.asList(

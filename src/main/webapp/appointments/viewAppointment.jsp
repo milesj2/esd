@@ -2,6 +2,7 @@
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.service.UserDetailsService" %>
+<%@ page import="com.esd.model.data.AppointmentStatus" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,8 +20,9 @@
                 <h2>View & Amend Appointment Details</h2>
                 <form class="input_form" method="post" action="${pageContext.request.contextPath}/appointments/viewAppointment">
                     <table>
+                        <% Appointment appointment = (Appointment) request.getAttribute("appointment"); %>
                         <% try {
-                            Appointment appointment = (Appointment) request.getAttribute("appointment");
+
                             UserDetails employeeDetails = UserDetailsService.getInstance().getUserDetailsByUserID(appointment.getEmployeeId());
                             UserDetails patientDetails = UserDetailsService.getInstance().getUserDetailsByUserID(appointment.getPatientId());
                         %>
@@ -72,6 +74,7 @@
                             e.printStackTrace();
                         } %>
                     </table>
+                    <% if(appointment.getStatus() != AppointmentStatus.COMPLETE){ %>
                     <div>
                         <input type="submit" name="inprogress" value="Start Appointment">
                         <input type="submit" name="amend" value="Amend">
@@ -81,6 +84,7 @@
                         <strong><%=request.getAttribute("msg")%></strong>
                         <% } %>
                     </div>
+                    <% } %>
                 </form>
             </main>
         </div>
