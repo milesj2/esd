@@ -26,6 +26,10 @@
         <main>
             <% SystemUser currentUser = AuthenticationUtils.getCurrentUser(request); %>
             <form class="input_form" method="POST" action="${__SELF}">
+        <% if (request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_USER) != null) { %>
+                <input type="hidden" name="<%=AppointmentScheduleController.ATTRIBUTE_SELECTED_USER%>"
+                       value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_USER)%>"/>
+        <% } %>
                 <table>
                     <tr>
                         <th>Appointment Date</th>
