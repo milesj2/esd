@@ -65,6 +65,7 @@ create table appointments(
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
     notes LONG VARCHAR default 'n/a',
+    appointmentReason LONG VARCHAR default '',
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id) ON DELETE CASCADE,
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
     constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE
@@ -128,7 +129,7 @@ values ('admin', 'admin', 'ADMIN', true),
 
 
 insert into userDetails(userId, firstName, lastName, addressLine1, addressLine2, addressLine3, town, postCode, dob)
-values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DATE('1982-05-13')),       --admim @USERGROUP=ADMIN
+values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DATE('1982-05-13')),       --admin @USERGROUP=ADMIN
        (2,'Casandra', 'Smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29')), --receptionist @USERGROUP=RECEPTIONIST
        (3,'Dr First', 'Doctor', '52 John Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20')),      --doctor @USERGROUP=DOCTOR
        (4,'Sandra', 'Johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13')),   --nurse @USERGROUP=NURSE
@@ -149,7 +150,7 @@ values (3,1),
        (4,1),
        (5,2);
 
---create 2 days of appointments
+--create appointments
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID, APPOINTMENTSTATUS)
 VALUES ('2021-01-21', '14:00:00', 3, 1, 'PENDING'),
        ('2021-01-21', '14:15:00', 3, 1, 'PENDING'),

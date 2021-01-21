@@ -69,6 +69,7 @@
                             <% for (Appointment appointment : appointments) { %>
                                 <div class="appointmentRow">
                                     <span class="appointmentTime"><%=new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis())%>-<%=new Time(appointment.getEndTime().toDateTimeToday().getMillis())%></span>
+                                    <span>reason: <%=appointment.getAppointmentReason().isEmpty() ? "No reason given" : appointment.getAppointmentReason()%></span>
                                     <span class="patientName">Patient Name: <%=appointment.getPatientDetails().getFullName()%></span>
                                     <%
                                         SystemUser employeeUser = SystemUserService.getInstance().getUserByUserDetailsId(appointment.getEmployeeDetails().getId());

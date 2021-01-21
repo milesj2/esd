@@ -87,7 +87,7 @@ public class ThirdPartyDao {
     
     private ThirdParty getThirdPartyFromResults(ResultSet result) throws SQLException {
         return new ThirdParty(
-                result.getInt(DaoConsts.THIRDPARTY_ID),
+                result.getInt(DaoConsts.ID),
                 result.getString(DaoConsts.THIRDPARTY_NAME),
                 result.getString(DaoConsts.THIRDPARTY_ADDRESS1),
                 result.getString(DaoConsts.THIRDPARTY_ADDRESS2),

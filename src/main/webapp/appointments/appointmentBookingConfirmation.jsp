@@ -54,6 +54,7 @@
             Appointment Date: <%=originalAppointment.getAppointmentDate() %></br>
             Appointment Time: <%=originalAppointment.getAppointmentTime() %></br>
             Slots: <%=originalAppointment.getSlots() %></br>
+            AppointmentReason: <%=originalAppointment.getAppointmentReason()%></br>
 
             <% } %>
             <h1>Appointment details</h1>
@@ -86,6 +87,14 @@
                 Slots: <input type="text" readonly name="slots" value="<%=request.getParameter("slots")%>"/></br>
                 Appointment Date: <input type="text" readonly name="appointmentDate" value="<%=request.getParameter("appointmentDate")%>"/></br>
                 Time: <input type="text" readonly name="appointmentTime" value="<%=request.getParameter("appointmentTime")%>"/></br>
+
+                <% if(!(Boolean)request.getAttribute("confirmed")) {%>
+                    Please enter appointment reason:
+                    <input type="text" name="appointmentReason" value="<%=request.getAttribute("appointmentReason")%>"/></br>
+                <% }else{ %>
+                    Appointment reason
+                    <input type="text" readonly name="appointmentReason" value="<%=request.getAttribute("appointmentReason")%>"/></br>
+                <% } %>
 
                 <% if(!(Boolean)request.getAttribute("confirmed")) {%>
                     <input type="submit" value="Confirm Appointment"/>

@@ -27,10 +27,6 @@ public class ReferalSearchController extends GenericSearchController {
     private InvoiceService invoiceService = InvoiceService.getInstance();
 
     public ReferalSearchController() {
-//        select P.FIRSTNAME, P.LASTNAME, E.FIRSTNAME, E.LASTNAME, t.THIRDPARTYNAME, A.APPOINTMENTDATE, A.APPOINTMENTTIME from APPOINTMENTS A
-//        join THIRDPARTY T on APPOINTMENTS.THIRDPARTYID = T.ID
-//        join USERDETAILS E on APPOINTMENTS.EMPLOYEEID = E.ID
-//        join USERDETAILS P on APPOINTMENTS.PATIENTID = P.ID;
         columns = Arrays.asList(
                 new SearchColumn("P." + DaoConsts.USERDETAILS_FIRSTNAME, "Patient first name", "text"),
                 new SearchColumn("P." + DaoConsts.USERDETAILS_LASTNAME, "Patient last name", "text"),
@@ -38,8 +34,8 @@ public class ReferalSearchController extends GenericSearchController {
                 new SearchColumn("E." + DaoConsts.USERDETAILS_LASTNAME, "Practitioner last name", "text"),
                 new SearchColumn("T." + DaoConsts.THIRDPARTY_ADDRESS1, "Third Party Address", "text"),
                 new SearchColumn("T." + DaoConsts.THIRDPARTY_NAME, "Third Party name", "text"),
-                new SearchColumn("A." + DaoConsts.APPOINTMENT_DATE, "Third Party name", "date"),
-                new SearchColumn("A." + DaoConsts.APPOINTMENT_TIME, "Third Party name", "time")
+                new SearchColumn("A." + DaoConsts.APPOINTMENT_DATE, "Appointment Date", "date"),
+                new SearchColumn("A." + DaoConsts.APPOINTMENT_TIME, "Appointment Time", "time")
         );
 
         selectedKey = "selectedReferalId";

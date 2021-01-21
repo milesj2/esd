@@ -39,6 +39,9 @@ public class AppointmentBookingConfirmationController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("selectedAppointmentId"));
                 Appointment appointment = AppointmentsService.getInstance().getAppointmentById(id);
                 request.setAttribute("originalAppointment", appointment);
+                request.setAttribute("appointmentReason", appointment.getAppointmentReason() != null ? appointment.getAppointmentReason() : "");
+            }else{
+                request.setAttribute("appointmentReason", "");
             }
             request.setAttribute("confirmed", false);
             RequestDispatcher view = request.getRequestDispatcher("/appointments/appointmentBookingConfirmation.jsp");
@@ -51,10 +54,12 @@ public class AppointmentBookingConfirmationController extends HttpServlet {
             int patientId = Integer.parseInt(request.getParameter("patientId"));
 
             int slots = Integer.parseInt(request.getParameter("slots"));
+            String appointmentReason = request.getParameter("appointmentReason");
+            request.setAttribute("appointmentReason", appointmentReason);
             LocalDate appointmentDate = new LocalDate(request.getParameter("appointmentDate"));
             LocalTime appointmentTime = new LocalTime(request.getParameter("appointmentTime"));
 
-            AppointmentPlaceHolder appointmentPlaceHolder = new AppointmentPlaceHolder(employeeId, appointmentDate, appointmentTime, slots);
+            AppointmentPlaceHolder appointmentPlaceHolder = new AppointmentPlaceHolder(employeeId, appointmentReason, appointmentDate, appointmentTime, slots);
 
             boolean success;
             if (request.getParameter("selectedAppointmentId") != null){
@@ -63,7 +68,6 @@ public class AppointmentBookingConfirmationController extends HttpServlet {
             }else{
                 success = AppointmentsService.getInstance().bookAppointment(appointmentPlaceHolder, patientId);
             }
-
             if(success){
                 request.setAttribute("confirmed", true);
                 request.setAttribute("confirmationMessage", "Appointment successfully booked");

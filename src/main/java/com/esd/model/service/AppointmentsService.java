@@ -115,6 +115,7 @@ public class AppointmentsService {
         }
         Appointment appointment = new Appointment();
         appointment.setEmployeeId(placeholder.getEmployeeId());
+        appointment.setAppointmentReason(placeholder.getAppointmentReason());
         appointment.setPatientId(patientId);
         appointment.setAppointmentDate(placeholder.getAppointmentDate());
         appointment.setAppointmentTime(placeholder.getAppointmentTime());
@@ -145,6 +146,7 @@ public class AppointmentsService {
         }
         Appointment appointment = new Appointment();
         appointment.setId(appointmentId);
+        appointment.setAppointmentReason(placeholder.getAppointmentReason());
         appointment.setEmployeeId(placeholder.getEmployeeId());
         appointment.setPatientId(patientId);
         appointment.setAppointmentDate(placeholder.getAppointmentDate());
@@ -174,7 +176,7 @@ public class AppointmentsService {
 
             //loop all booked appointments and slots removing any overlaps
             for(Appointment a : bookedAppointments){
-                if(a.isCancled()){
+                if(a.isCanceled()){
                     continue;
                 }
 
@@ -226,7 +228,7 @@ public class AppointmentsService {
 
             //loop all booked appointments and slots removing any overlaps
             for(Appointment a : bookedAppointments){
-                if(a.isCancled()){
+                if(a.isCanceled()){
                     continue;
                 }
                 for (int i = allSlots.size() - 1; i >= 0; i--) {

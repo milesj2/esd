@@ -1,6 +1,4 @@
 <%@ page import="com.esd.model.data.persisted.SystemUser" %>
-<%@ page import="com.esd.model.data.UserGroup" %>
-<%@ page import="com.esd.model.data.persisted.SystemUser" %>
 <%@ page import="com.esd.controller.pagecontrollers.dashboard.DashboardWidget" %>
 <%@ page import="java.util.List" %>
 

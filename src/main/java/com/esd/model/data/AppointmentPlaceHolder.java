@@ -13,16 +13,18 @@ public class AppointmentPlaceHolder {
     private int slots = 1;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
+    private String appointmentReason;
 
 
     public AppointmentPlaceHolder() {
     }
 
-    public AppointmentPlaceHolder(int employeeId, LocalDate appointmentDate, LocalTime appointmentTime, int slots) {
+    public AppointmentPlaceHolder(int employeeId, String appointmentReason, LocalDate appointmentDate, LocalTime appointmentTime, int slots) {
         this.employeeId = employeeId;
         this.slots = slots;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
+        this.appointmentReason = appointmentReason;
     }
 
     public AppointmentPlaceHolder(int employeeId, LocalDate appointmentDate, LocalTime appointmentTime) {
@@ -58,5 +60,9 @@ public class AppointmentPlaceHolder {
 
     public UserDetails getEmployeeDetails() {
         return employeeDetails;
+    }
+
+    public String getAppointmentReason() {
+        return appointmentReason;
     }
 }

@@ -32,7 +32,6 @@ public class AppointmentController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
-
         if (!request.getParameterMap().containsKey("selectedAppointmentId")) {
             response.sendRedirect(UrlUtils.absoluteUrl(request, "/appointments/schedule"));
             return;

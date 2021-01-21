@@ -17,10 +17,10 @@ public class AppointmentDao {
     private static AppointmentDao instance;
 
     private static String INSERT_APPOINTMENT = "insert into appointments " +
-            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus, notes)" +
-            " values (?,?,?,?,?,?,?)";
+            "(appointmentdate, appointmenttime, slots, employeeid, patientid, appointmentstatus, notes, appointmentReason)" +
+            " values (?,?,?,?,?,?,?, ?)";
 
-    private static String UPDATE_APPOINTMENT = "update appointments set" +
+    private static String UPDATE_APPOINTMENT_WITHOUT_THIRD_PARTY = "update appointments set" +
             " appointmentdate = ?," +
             " appointmenttime = ?," +
             " slots = ?," +
@@ -28,6 +28,19 @@ public class AppointmentDao {
             " patientid = ?," +
             " appointmentstatus = ?, " +
             " notes = ? " +
+            " appointmentReason = ? " +
+            "where id = ?";
+
+    private static String UPDATE_APPOINTMENT_WITH_THIRD_PARTY = "update appointments set" +
+            " appointmentdate = ?," +
+            " appointmenttime = ?," +
+            " slots = ?," +
+            " employeeid = ?," +
+            " patientid = ?," +
+            " appointmentstatus = ?, " +
+            " notes = ? " +
+            " thirdPartyId = ?, " +
+            " appointmentReason = ? " +
             "where id = ?";
 
     public void updateAppointment(Appointment appointment) throws SQLException {
@@ -35,7 +48,11 @@ public class AppointmentDao {
             throw new IllegalArgumentException("appointment must have id");
         }
         Connection con = ConnectionManager.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(UPDATE_APPOINTMENT);
+        String query = UPDATE_APPOINTMENT_WITHOUT_THIRD_PARTY;
+        if(appointment.getThirdPartyId() > 0){
+            query = UPDATE_APPOINTMENT_WITH_THIRD_PARTY;
+        }
+        PreparedStatement statement = con.prepareStatement(query);
         statement.setDate(1, Date.valueOf(appointment.getAppointmentDate().toString()));
         statement.setTime(2, new Time(appointment.getAppointmentTime().toDateTimeToday().getMillis()));
         statement.setInt(3, appointment.getSlots());
@@ -45,6 +62,10 @@ public class AppointmentDao {
         statement.setString(7, appointment.getNotes());
         //where id
         statement.setInt(8, appointment.getId());
+        statement.setString(9, appointment.getAppointmentReason());
+        if(appointment.getThirdPartyId() > 0){
+            statement.setInt(10, appointment.getThirdPartyId());
+        }
         statement.executeUpdate();
     }
 
@@ -61,6 +82,7 @@ public class AppointmentDao {
         statement.setInt(5, appointment.getPatientId());
         statement.setString(6, appointment.getStatus().toString());
         statement.setString(7, appointment.getNotes());
+        statement.setString(8, appointment.getAppointmentReason());
         statement.executeUpdate();
     }
 
@@ -91,7 +113,9 @@ public class AppointmentDao {
         appointment.setAppointmentTime(LocalTime.parse(resultSet.getString(DaoConsts.APPOINTMENT_TIME)));
         appointment.setSlots(resultSet.getInt(DaoConsts.APPOINTMENT_SLOTS));
         appointment.setStatus(AppointmentStatus.valueOf(resultSet.getString(DaoConsts.APPOINTMENT_STATUS)));
+        appointment.setThirdPartyId(resultSet.getInt(DaoConsts.THIRDPARTY_ID));
         appointment.setNotes(resultSet.getString(DaoConsts.APPOINTMENT_NOTES));
+        appointment.setAppointmentReason(resultSet.getString(DaoConsts.APPOINTMENT_APPOINTMENT_REASON));
         return appointment;
     }
 
@@ -101,7 +125,7 @@ public class AppointmentDao {
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
         if(!result.next()){
-            throw new SQLDataException("No result exists for Appointment id: " + appointmentId);
+            throw new SQLDataException("No result exists for appointment id: " + appointmentId);
         }
         return processResultSetForAppointment(result);
     }
