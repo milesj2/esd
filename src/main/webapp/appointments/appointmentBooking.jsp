@@ -24,7 +24,10 @@
         <%@ include file="../res/components/titlebar.jsp" %>
         <main>
             <form action="${__SELF}">
-                <input onchange="submit()" min="<%=new LocalDate()%>" name="<%= AppointmentBookingController.ATTRIBUTE_SELECTED_DATE %>" type="date" value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE) %>">
+                <label for="appointmentTime">Appointment Date</label>
+                <br>
+                <br>
+                <input id="appointmentTime" onchange="submit()" min="<%=new LocalDate()%>" name="<%= AppointmentBookingController.ATTRIBUTE_SELECTED_DATE %>" type="date" value="<%=request.getAttribute(AppointmentBookingController.ATTRIBUTE_SELECTED_DATE) %>">
                 <% if(request.getParameter("selectedUserId") != null){ %>
                     <input type="hidden" name="selectedUserId" value="<%=request.getParameter("selectedUserId")%>">
                 <% } %>
@@ -70,6 +73,7 @@
                                 Sorry there are no available appointments for this day
                                 <% }else{
                                     for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
+
                                     <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
                                 <% }
                             }%>

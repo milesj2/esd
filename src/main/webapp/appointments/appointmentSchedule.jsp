@@ -25,27 +25,46 @@
         <%@ include file="../res/components/titlebar.jsp" %>
         <main>
             <% SystemUser currentUser = AuthenticationUtils.getCurrentUser(request); %>
-            <form method="POST" action="${__SELF}">
-                <% if (request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_USER) != null) { %>
+            <form class="input_form" method="POST" action="${__SELF}">
+        <% if (request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_USER) != null) { %>
                 <input type="hidden" name="<%=AppointmentScheduleController.ATTRIBUTE_SELECTED_USER%>"
                        value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_USER)%>"/>
-                <% } %>
-
-                <input onchange="submit()" name="<%= AppointmentScheduleController.ATTRIBUTE_SELECTED_DATE %>"
-                       type="date"
-                       value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_DATE) %>"/>
-                <input onchange="submit()" name="<%= AppointmentScheduleController.ATTRIBUTE_SELECTED_SPAN %>"
-                       type="number"
-                       value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_SPAN) %>"/>
+        <% } %>
+                <table>
+                    <tr>
+                        <th>Appointment Date</th>
+                        <th>Day Span</th>
+                        <% if (UserGroup.employees.contains(currentUser.getUserGroup())) { %>
+                            <th>Search and Select User</th>
+                            <th>Entire Schedule</th>
+                        <% } %>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input onchange="submit()" name="<%= AppointmentScheduleController.ATTRIBUTE_SELECTED_DATE %>"
+                                   type="date"
+                                   value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_DATE) %>"/>
+                        </td>
+                        <td>
+                            <input onchange="submit()" name="<%= AppointmentScheduleController.ATTRIBUTE_SELECTED_SPAN %>"
+                                   type="number"
+                                   value="<%=request.getAttribute(AppointmentScheduleController.ATTRIBUTE_SELECTED_SPAN) %>"/>
+                        </td>
 
                 <% if (UserGroup.employees.contains(currentUser.getUserGroup())) { %>
+                        <td>
+                        <input type="submit" name="<%=AppointmentScheduleController.ATTRIBUTE_SELECT_USER%>"
+                               value="Select User"/>
+                        </td>
+                        <td>
+                        <input onchange="submit()" type="checkbox"
+                               name="<%=AppointmentScheduleController.ATTRIBUTE_ENTIRE_SCHEDULE%>"
+                                <%=(Boolean)(request.getAttribute(AppointmentScheduleController.ATTRIBUTE_ENTIRE_SCHEDULE)) != null ? "checked" : ""%>/>
 
-                <input type="submit" name="<%=AppointmentScheduleController.ATTRIBUTE_SELECT_USER%>"
-                       value="Select User"/>
-                <input onchange="submit()" type="checkbox"
-                       name="<%=AppointmentScheduleController.ATTRIBUTE_ENTIRE_SCHEDULE%>"
-                       <%=(Boolean)(request.getAttribute(AppointmentScheduleController.ATTRIBUTE_ENTIRE_SCHEDULE)) != null ? "checked" : ""%>/>
+                        </td>
                 <% } %>
+                    </tr>
+                </table>
             </form>
             <h2>Appointments</h2>
             <%
@@ -76,7 +95,6 @@
                                     %>
                                     <span class="patientName">Practitioner: <%=employeeUser.getUserGroup() == UserGroup.DOCTOR ? "Dr " : "Nurse "%> <%=appointment.getEmployeeDetails().getLastName()%></span>
                                     <div class="appointmentLinks">
-                                        <a href="<%=UrlUtils.absoluteUrl(request, "appointments/book?selectedAppointmentId=" + appointment.getId())%>">Amend Appointment</a>
                                         <a href="<%=UrlUtils.absoluteUrl(request, "appointments/viewAppointment?selectedAppointmentId=" + appointment.getId())%>">View Appointment</a></div>
                                 </div>
                             <% } %>
