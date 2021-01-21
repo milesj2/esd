@@ -115,6 +115,7 @@ public class AppointmentsService {
         }
         Appointment appointment = new Appointment();
         appointment.setEmployeeId(placeholder.getEmployeeId());
+        appointment.setAppointmentReason(placeholder.getAppointmentReason());
         appointment.setPatientId(patientId);
         appointment.setAppointmentDate(placeholder.getAppointmentDate());
         appointment.setAppointmentTime(placeholder.getAppointmentTime());
@@ -145,6 +146,7 @@ public class AppointmentsService {
         }
         Appointment appointment = new Appointment();
         appointment.setId(appointmentId);
+        appointment.setAppointmentReason(placeholder.getAppointmentReason());
         appointment.setEmployeeId(placeholder.getEmployeeId());
         appointment.setPatientId(patientId);
         appointment.setAppointmentDate(placeholder.getAppointmentDate());

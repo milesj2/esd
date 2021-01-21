@@ -65,6 +65,7 @@ create table appointments(
     appointmentStatus varchar(255) NOT NULL default 'PENDING',
     thirdPartyId INTEGER,
     notes LONG VARCHAR default 'n/a',
+    appointmentReason LONG VARCHAR default '',
     constraint fk_appointments_thirdParty_id foreign key(thirdPartyId) references thirdParty(id) ON DELETE CASCADE,
     constraint fk_appointments_employee_id foreign key(employeeId) references userDetails(id) ON DELETE CASCADE,
     constraint fk_appointments_patient_id foreign key(patientId) references userDetails(id) ON DELETE CASCADE

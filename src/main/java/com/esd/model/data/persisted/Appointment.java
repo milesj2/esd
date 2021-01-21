@@ -23,6 +23,7 @@ public class Appointment {
     private LocalTime appointmentTime;
     private AppointmentStatus status;
     private String notes;
+    private String appointmentReason;
     private UserDetails patientDetails;
     private UserDetails employeeDetails;
 
@@ -133,5 +134,13 @@ public class Appointment {
             e.printStackTrace();
         }
         return getAppointmentTime();
+    }
+
+    public String getAppointmentReason() {
+        return appointmentReason;
+    }
+
+    public void setAppointmentReason(String appointmentReason) {
+        this.appointmentReason = appointmentReason;
     }
 }
