@@ -146,7 +146,8 @@ public class UserDetailsDao {
    public List<UserDetails> getFilteredDetails(SystemUser currentUser, Map<String, Object> args) throws SQLException {
 
        ArrayList<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-       SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS);
+       SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_USERDETAILS)
+               .withJoin(Joins.innerJoin(DaoConsts.TABLE_SYSTEMUSER, DaoConsts.TABLE_SYSTEMUSER_REFERENCE + DaoConsts.ID, DaoConsts.SYSTEMUSER_ID_FK));
 
        Iterator mapIter = args.entrySet().iterator();
        while(mapIter.hasNext()) {

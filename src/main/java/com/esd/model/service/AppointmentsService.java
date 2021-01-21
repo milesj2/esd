@@ -205,7 +205,7 @@ public class AppointmentsService {
     public List<AppointmentPlaceHolder> generatePossibleAppointmentsForEmployee(int employeeDetailsId, int requestedSlotLength, LocalDate date){
         try {
             UserDetails employeeDetails = UserDetailsDao.getInstance().getUserDetailsByUserId(employeeDetailsId);
-            List<WorkingHours> workingTimes = workingHoursDao.getWorkingHoursForEmployee(employeeDetailsId);
+            List<WorkingHours> workingTimes = WorkingHoursService.getInstance().getWorkingHoursForEmployee(employeeDetailsId);
 
             int day = date.getDayOfWeek();
 

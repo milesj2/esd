@@ -38,7 +38,8 @@ public class UserSearchController extends GenericSearchController {
                 new SearchColumn(DaoConsts.USERDETAILS_ADDRESS1, "Address", "text"),
                 new SearchColumn(DaoConsts.USERDETAILS_TOWN, "Town", "text"),
                 new SearchColumn(DaoConsts.USERDETAILS_POSTCODE, "Post Code", "text"),
-                new SearchColumn(DaoConsts.USERDETAILS_DOB, "Date of birth", "date")
+                new SearchColumn(DaoConsts.USERDETAILS_DOB, "Date of birth", "date"),
+                new SearchColumn(DaoConsts.SYSTEMUSER_USERGROUP, "Usergroup", "text")
         );
         selectedKey = "selectedUserId";
     }
