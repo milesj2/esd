@@ -19,4 +19,5 @@ public enum UserGroup {
 
     public static List<UserGroup> patients = Arrays.asList(NHS_PATIENT, PRIVATE_PATIENT);
     public static List<UserGroup> employees = Arrays.asList(DOCTOR, NURSE, RECEPTIONIST, ADMIN);
+    public static List<UserGroup> practitioner = Arrays.asList(DOCTOR, NURSE);
 }

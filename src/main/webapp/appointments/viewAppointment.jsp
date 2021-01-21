@@ -2,6 +2,7 @@
 <%@ page import="com.esd.model.data.persisted.Appointment" %>
 <%@ page import="com.esd.model.data.persisted.UserDetails" %>
 <%@ page import="com.esd.model.service.UserDetailsService" %>
+<%@ page import="com.esd.controller.utils.AuthenticationUtils" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +74,9 @@
                         } %>
                     </table>
                     <div>
-                        <input type="submit" name="inprogress" value="Start Appointment">
+                        <% if(UserGroup.practitioner.contains(AuthenticationUtils.getCurrentUserGroup(request))) { %>
+                            <input type="submit" name="inprogress" value="Start Appointment">
+                        <% } %>
                         <input type="submit" name="amend" value="Amend">
                         <input type="submit" name="cancel" value="Cancel Appointment">
                         <% if (request.getAttribute("msg") != null) { %>
