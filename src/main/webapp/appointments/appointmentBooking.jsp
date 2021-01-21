@@ -66,9 +66,13 @@
                                 <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>"/>
                             <% } %>
 
-                            <% for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
-                                <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
-                            <% }%>
+                            <% if( doctorAppointments.get(id).isEmpty()){ %>
+                                Sorry there are no available appointments for this day
+                                <% }else{
+                                    for(AppointmentPlaceHolder placeHolder : doctorAppointments.get(id)){%>
+                                    <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
+                                <% }
+                            }%>
                         </form>
 
                     </div>
@@ -81,6 +85,7 @@
                 <% if(nurseAppointments.isEmpty()){%>
                 Sorry there are no available appointments for this day
                 <% }else{
+
                     for(Integer id : nurseAppointments.keySet()){
                 %>
                 <div>
@@ -100,9 +105,13 @@
                         <input type="hidden" name="selectedAppointmentId" value="<%=request.getParameter("selectedAppointmentId")%>"/>
                         <% } %>
 
-                        <% for(AppointmentPlaceHolder placeHolder : nurseAppointments.get(id)){%>
+                        <% if( nurseAppointments.get(id).isEmpty()){ %>
+                        Sorry there are no available appointments for this day
+                        <% }else{
+                            for(AppointmentPlaceHolder placeHolder : nurseAppointments.get(id)){%>
                         <input type="submit" name="appointmentTime" value="<%=placeHolder.getAppointmentTime()%>"/>
-                        <% }%>
+                        <% }
+                        }%>
                     </form>
 
                 </div>

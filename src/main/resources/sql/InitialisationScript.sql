@@ -119,6 +119,7 @@ values ('admin', 'admin', 'ADMIN', true),
        ('receptionist', 'receptionist', 'RECEPTIONIST', true),
        ('doctor', 'doctor', 'DOCTOR', true),
        ('nurse', 'nurse', 'NURSE', true),
+       ('pnurse', 'nurse', 'NURSE', true),
        ('patient1', 'patient1', 'NHS_PATIENT', true),
        ('patient2', 'patient2', 'NHS_PATIENT', true),
        ('patient3', 'patient3', 'PRIVATE_PATIENT', true),
@@ -131,19 +132,22 @@ values (1,'Tom', 'Thatcher', '64 East Street', '', '', 'Bristol', 'BS108TY', DAT
        (2,'Casandra', 'Smith', '18 Richards Street', '', '', 'Bristol', 'BS078TP', DATE('1955-11-29')), --receptionist @USERGROUP=RECEPTIONIST
        (3,'Dr First', 'Doctor', '52 John Road', '', '', 'Bristol', 'BS098TP', DATE('1980-12-20')),      --doctor @USERGROUP=DOCTOR
        (4,'Sandra', 'Johnson', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13')),   --nurse @USERGROUP=NURSE
-       (5,'Rob', 'Smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01')),             --patient1 @USERGROUP=PATIENT
-       (6,'Liz', 'Brown', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DATE('2001-07-11')),        --patient2 @USERGROUP=PATIENT
-       (7,'Jane', 'Jones', '52 Selbrooke Crescent', '', '', 'Bristol', 'BS162PS', DATE('2001-07-11')),  --patient3 @USERGROUP=PATIENT
-       (8,'Alfred', 'Blue', '22 Denmark Street', '', '', 'Bristol', 'BS15DQ', DATE('2001-07-11')),      --patient4 @USERGROUP=PATIENT
-       (9,'Tim', 'Hesitant', '10 Stoke Park', '', '', 'Bristol', 'BS91LF', DATE('2001-07-11'));         --patient5 @USERGROUP=PATIENT
+       (5,'John', 'tipsy', '64 Albert Street', '', '', 'Bristol', 'BS098TP', DATE('1982-05-13')),   --pnurse @USERGROUP=NURSE
+       (6,'Rob', 'Smith', '12 Oak Road', '', '', 'Bristol', 'BS215TP', DATE('1995-02-01')),             --patient1 @USERGROUP=PATIENT
+       (7,'Liz', 'Brown', '93 Snowflake Road', '', '', 'Bristol', 'BS45TP', DATE('2001-07-11')),        --patient2 @USERGROUP=PATIENT
+       (8,'Jane', 'Jones', '52 Selbrooke Crescent', '', '', 'Bristol', 'BS162PS', DATE('2001-07-11')),  --patient3 @USERGROUP=PATIENT
+       (9,'Alfred', 'Blue', '22 Denmark Street', '', '', 'Bristol', 'BS15DQ', DATE('2001-07-11')),      --patient4 @USERGROUP=PATIENT
+       (10,'Tim', 'Hesitant', '10 Stoke Park', '', '', 'Bristol', 'BS91LF', DATE('2001-07-11'));         --patient5 @USERGROUP=PATIENT
 
 --working hours
 insert into workingHours(workingDays, startTime, endTime)
-values('1,2,3,4,5', TIME('9:00:00'), TIME('17:00:00'));
+values('1,2,3,4,5', TIME('9:00:00'), TIME('17:00:00')),
+      ('1,5', TIME('9:00:00'), TIME('17:00:00'));
 
 insert into workingHoursJT(employeeId, workingHoursId)
 values (3,1),
-       (4,1);
+       (4,1),
+       (5,2);
 
 --create 2 days of appointments
 insert into APPOINTMENTS(APPOINTMENTDATE, APPOINTMENTTIME, EMPLOYEEID, PATIENTID, APPOINTMENTSTATUS)
