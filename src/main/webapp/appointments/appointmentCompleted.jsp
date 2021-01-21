@@ -24,9 +24,21 @@
         <%@ include file="../res/components/titlebar.jsp" %>
         <main>
             <h1>Appointment Completed</h1>
-            <a href="<%=request.getAttribute("scheduleLink")%>">Back to schedule</a>
-            <a href="<%=request.getAttribute("invoiceDownloadLink")%>" target="_blank">Download Invoice</a>
-            <a href="<%=request.getAttribute("prescriptionViewLink")%>">View Prescriptions</a>
+            <% if(request.getAttribute("scheduleLink") != null){%>
+            <a href="<%=request.getAttribute("scheduleLink")%>">
+                <button class="input_form_button">Back to schedule</button>
+            </a>
+            <%}%>
+            <% if(request.getAttribute("invoiceDownloadLink") != null){%>
+            <a href="<%=request.getAttribute("invoiceDownloadLink")%>" target="_blank">
+                <button class="input_form_button">Download Invoice</button>
+            </a>
+            <%}%>
+            <% if(request.getAttribute("prescriptionViewLink") != null){%>
+            <a href="<%=request.getAttribute("prescriptionViewLink")%>">
+                <button class="input_form_button">View Prescriptions</button>
+            </a>
+            <%}%>
         </main>
     </div>
 </div>
