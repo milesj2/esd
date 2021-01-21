@@ -171,12 +171,12 @@ public class ThirdPartyDao {
             queryBuilder.and(Restrictions.like(pair.getKey().toString(), pair.getValue()));
         }
 
-//        switch(currentUser.getUserGroup()){
-//            case NHS_PATIENT:
-//            case PRIVATE_PATIENT:
-//                queryBuilder.withRestriction(Restrictions.equalsRestriction("P." + DaoConsts.ID, currentUser.getUserDetails().getId()));
-//                break;
-//        }
+        switch(currentUser.getUserGroup()){
+            case NHS_PATIENT:
+            case PRIVATE_PATIENT:
+                queryBuilder.withRestriction(Restrictions.equalsRestriction("P." + DaoConsts.ID, currentUser.getUserDetails().getId()));
+                break;
+        }
 
         PreparedStatement statement = queryBuilder.createStatement();
         ResultSet result = statement.executeQuery();
