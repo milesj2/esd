@@ -46,7 +46,7 @@ create table userDetails(
     addressLine2 varchar(255) NOT NULL,
     addressLine3 varchar(255) NOT NULL,
     town varchar(255) NOT NULL,
-    postCode varchar(7) NOT NULL,
+    postCode varchar(8) NOT NULL,
     dob DATE NOT NULL,
     constraint fk_userdetails_user_id foreign key(userId) references systemUser(id) ON DELETE CASCADE
 );
@@ -189,26 +189,6 @@ values(1, 1, 2, 'some text here', 1, '2020-11-01'),
       (1, 1, 2, 'different text', 1, '2020-11-07'),
       (1, 2, 2, 'some text here', 1, '2020-11-01'),
       (1, 2, 2, 'different text', 1, '2020-11-07');
-
---create an invoice for each appointment,
-insert into INVOICE(INVOICEDATE, INVOICETIME, EMPLOYEEID,PATIENTID,INVOICESTATUS, PRIVATEPATIENT, APPOINTMENTID, STATUSCHANGEDATE)
-VALUES ('2021-01-21', '14:15:00', 3, 1, 'OVERDUE', false, 1, '2020-11-01'),
-       ('2021-01-21', '14:15:00', 3, 1, 'OVERDUE', false, 2, '2020-11-01'),
-       ('2021-01-21', '14:30:00', 3, 1, 'PAID', false, 3, '2020-12-01'),
-       ('2021-01-21', '14:00:00', 3, 1, 'PAID', false, 5, '2020-12-01'),
-       ('2021-01-22', '14:15:00', 3, 1, 'PAID', false, 6, '2020-12-01'),
-       ('2021-01-23', '14:45:00', 3, 1, 'UNPAID', false, 4, '2020-11-01'),
-       ('2021-01-24', '14:30:00', 3, 1, 'UNPAID', false, 7, '2020-12-01');
-
---create invoice items
-insert into INVOICEITEM(INVOICEID, ITEMCOST, QUANTITY, DESCRIPTION)
-VALUES (1, 100.00, 1, 'Appointment Cost'),
-       (2, 100.00, 1, 'Appointment Cost'),
-       (3, 100.00, 1, 'Appointment Cost'),
-       (4, 100.00, 1, 'Appointment Cost'),
-       (5, 100.00, 1, 'Appointment Cost'),
-       (6, 100.00, 1, 'Appointment Cost'),
-       (7, 100.00, 1, 'Appointment Cost');
 
 -- initialise system settings
 insert into systemSetting(settingKey, settingVal)

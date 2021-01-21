@@ -82,7 +82,7 @@
                             e.printStackTrace();
                         } %>
                     </table>
-                    <% if(appointment.getStatus() != AppointmentStatus.COMPLETE){ %>
+                    <% if(appointment.getStatus() != AppointmentStatus.COMPLETE && appointment.getStatus() != AppointmentStatus.CANCELED){ %>
                     <div>
                         <% if(UserGroup.practitioner.contains(AuthenticationUtils.getCurrentUserGroup(request))) { %>
                             <input type="submit" name="inprogress" value="Start Appointment">

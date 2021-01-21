@@ -27,7 +27,7 @@ public class AppointmentDao {
             " employeeid = ?," +
             " patientid = ?," +
             " appointmentstatus = ?, " +
-            " notes = ? " +
+            " notes = ?, " +
             " appointmentReason = ? " +
             "where id = ?";
 
@@ -61,11 +61,15 @@ public class AppointmentDao {
         statement.setString(6, appointment.getStatus().toString());
         statement.setString(7, appointment.getNotes());
         //where id
-        statement.setInt(8, appointment.getId());
-        statement.setString(9, appointment.getAppointmentReason());
+
+        statement.setString(8, appointment.getAppointmentReason());
         if(appointment.getThirdPartyId() > 0){
-            statement.setInt(10, appointment.getThirdPartyId());
+            statement.setInt(9, appointment.getThirdPartyId());
+            statement.setInt(10, appointment.getId());
+        }else{
+            statement.setInt(9, appointment.getId());
         }
+
         statement.executeUpdate();
     }
 

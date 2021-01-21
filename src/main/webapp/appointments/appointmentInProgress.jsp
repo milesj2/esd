@@ -37,7 +37,7 @@
                     <% } %>
                 </select></br>
                 <% Prescription prescription = (Prescription) request.getAttribute("prescription");
-                if(prescription.getId() == 0){ %>
+                if(prescription == null){ %>
                     <input type="submit" name="issuePrescription" value="Issue Prescription"/>
                 <% }else{%>
                     <input type="submit" name="editPrescription" value="Edit Prescription"/>
@@ -45,7 +45,7 @@
 
                 <input type="submit" name="completeAppointment" value="Complete Appointment"/>
             </form>
-            <% if(prescription.getId() != 0){ %>
+            <% if(prescription != null){ %>
             <a href="${pageContext.request.contextPath}/prescriptions/pdf?selectedPrescriptionId=<%=prescription.getId()%>" target="_blank">
                 <button class="input_form_button">
                     Download Prescription

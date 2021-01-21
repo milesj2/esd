@@ -36,12 +36,12 @@ public class AppointmentCompletedController extends HttpServlet {
             request.setAttribute("scheduleLink", UrlUtils.absoluteUrl(request, "/appointments/schedule"));
 
             Invoice invoice = InvoiceService.getInstance().getInvoiceFromAppointmentByInvoiceId(appointment.getId());
-            if(invoice == null){
+            if(invoice != null){
                 request.setAttribute("invoiceDownloadLink",
                         UrlUtils.absoluteUrl(request, "/invoices/pdf?selectedInvoiceId="+invoice.getId()));
             }
             Prescription prescription = PrescriptionService.getInstance().getPrescriptionForAppointment(appointment.getId());
-            if(prescription == null){
+            if(prescription != null){
                 request.setAttribute("prescriptionViewLink",
                         UrlUtils.absoluteUrl(request, "/prescriptions/view?selectedPrescriptionId="+prescription.getId()));
             }
