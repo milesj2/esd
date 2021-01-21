@@ -16,13 +16,15 @@ public class DashboardWidget {
     public static DashboardWidget MANAGE_THIRD_PARTY_WIDGET = new DashboardWidget("Manage Third Party", "thirdPartyManagement/manage", "res/icons/settings.png");
     public static DashboardWidget PRESCRIPTION_SEARCH_WIDGET = new DashboardWidget("Prescriptions", "prescriptions/search", "res/icons/calendar.png");
     public static DashboardWidget MY_ACCOUNT_WIDGET = new DashboardWidget("My Account", "users/my-account", "res/icons/users.png");
+    public static DashboardWidget REFERAL_SEARCH_WIDGET = new DashboardWidget("ReferalSearch", "referals/search", "res/icons/users.png");
 
     public static final List<DashboardWidget> COMMON_WIDGETS  = Arrays.asList(
             MY_ACCOUNT_WIDGET,
             APPOINTMENT_BOOKING_WIDGET,
             APPOINTMENT_SCHEDULE_WIDGET,
             INVOICE_SEARCH_WIDGET,
-            PRESCRIPTION_SEARCH_WIDGET
+            PRESCRIPTION_SEARCH_WIDGET,
+            REFERAL_SEARCH_WIDGET
     );
 
     public static final List<DashboardWidget> PATIENT_WIDGETS  = Arrays.asList(

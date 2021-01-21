@@ -167,7 +167,7 @@ public class InvoiceDao {
 
     public Invoice getInvoiceByAppointmentId(int id) throws SQLException {
         SelectQueryBuilder queryBuilder = new SelectQueryBuilder(DaoConsts.TABLE_INVOICE)
-                .withRestriction(Restrictions.equalsRestriction(DaoConsts.INVOICE_ID, id));
+                .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, id));
         return processResultSetForInvoices(true, queryBuilder.createStatement()).get(0);
     }
 

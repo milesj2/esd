@@ -13,6 +13,7 @@ public class DaoConsts {
     public final static String EMPLOYEE_ID_FK = "employeeid";
     public final static String SYSTEMUSER_ID_FK = "userId";
     public final static String WORKINGHOURS_ID_FK = "workingHoursId";
+    public final static String THIRDPARTY_ID_FK = "thirdPartyId";
 
     public static final String TABLE_THIRDPARTY = "thirdParty";
     public static final String TABLE_THIRDPARTY_REFERENCE = TABLE_THIRDPARTY + ".";
