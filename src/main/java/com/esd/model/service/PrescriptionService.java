@@ -67,13 +67,7 @@ public class PrescriptionService {
     }
 
     public Prescription getPrescriptionForAppointment(int appointmentId) {
-        Prescription prescription = new Prescription();
-        try {
-            prescription = prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return prescription;
+        return prescriptionDao.getMainPrescriptionForAppointment(appointmentId);
     }
 
     public Prescription getPrescriptionById(int appointmentId) {

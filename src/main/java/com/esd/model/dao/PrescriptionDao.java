@@ -47,7 +47,6 @@ public class PrescriptionDao {
     }
 
     public Prescription getMainPrescriptionForAppointment(int appointmentId) {
-        Prescription prescription = new Prescription();
         try {
             PreparedStatement statement = new SelectQueryBuilder(DaoConsts.TABLE_PRESCRIPTIONS)
                     .withRestriction(Restrictions.equalsRestriction(DaoConsts.APPOINTMENT_ID_FK, appointmentId))
@@ -55,12 +54,12 @@ public class PrescriptionDao {
                     .createStatement();
             ResultSet results = statement.executeQuery();
             if(results.next()){
-                prescription =  getPrescriptionDetailsFromResults(results);
+                return getPrescriptionDetailsFromResults(results);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return prescription;
+        return null;
     }
 
     public Prescription getPrescriptionById(int id) throws SQLException {
