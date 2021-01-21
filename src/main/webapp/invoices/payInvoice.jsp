@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <title>Pay for Invoice</title>
     <link rel="stylesheet" href="../res/css/master.css">
     <script src="../res/js/main.js"></script>
@@ -112,7 +112,7 @@
                         </tr>
                         <tr>
                             <th>Total Amount</th>
-                            <td>£<%=(Double)request.getAttribute("totalDue")%></td>
+                            <td>&#163;<%=(Double)request.getAttribute("totalDue")%></td>
                         </tr>
                     </table>
                 </div>
@@ -143,9 +143,9 @@
 
                     <div style="padding:5px;"><label for="cvv">CVV*</label>
                         <input type="text" id="cvv" name="cvv" placeholder="352" size="3" maxlength="3" pattern="[0-9]{3}" required></div><br>
-                    <input type="submit" value="Pay £<%=(Double)request.getAttribute("totalDue")%>" class="btn">
+                    <input type="submit" value="Pay &#163;<%=(Double)request.getAttribute("totalDue")%>" class="btn">
                     <%}else{%>
-                    <h5>Payment for this invoice is paid in full.</h4>
+                    <h4>Payment for this invoice is paid in full.</h4>
                     <%}%>
                 </div>
             </form>
