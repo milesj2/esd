@@ -5,6 +5,7 @@ import com.esd.model.data.WorkingHours;
 import com.esd.model.util.DateUtil;
 import org.joda.time.LocalTime;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,5 +36,9 @@ public class WorkingHoursService {
             instance = new WorkingHoursService();
         }
         return instance;
+    }
+
+    public void addWorkingHoursToEmployee(WorkingHours workingHours) throws SQLException {
+        workingHoursDao.addWorkingHoursToEmployee(workingHours);
     }
 }

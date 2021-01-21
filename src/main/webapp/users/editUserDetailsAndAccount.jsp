@@ -34,10 +34,12 @@
             <h1>Editing User <%= systemUser.getUsername() %></h1>
             <h2>Name: <%= systemUser.getUserDetails().getFirstName() %></h2>
             <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/manage';">Cancel</button>
-            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/delete?userID=<% out.print(systemUser.getId()); %>';">Delete</button>
+            <br>
+            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/delete?userID=<%=systemUser.getId() %>';">Delete</button>
+            <br>
+            <button class="input_form_button" onclick="window.location='${pageContext.request.contextPath}/users/hours?id=<%=systemUser.getId()%>';">Edit Working Hours</button>
+            <br>
             <form class="input_form" method="post" action="${pageContext.request.contextPath}/users/edit" id="userEdit">
-                <input type="submit" name="saveEdit" value="Save">
-                <br>
                 <input type="hidden" name="id" value="<%= systemUser.getId() %>">
                 <label for="username">Username</label>
                 <input id="username" name="username" type="text" value="<%= systemUser.getUsername() %>">
@@ -89,6 +91,8 @@
                     <span class="switch-label" data-on="on" data-off="off"></span>
                     <span class="switch-handle"></span>
                 </label>
+                <br>
+                <input type="submit" name="saveEdit" value="Save">
             </form>
         </main>
     </div>
