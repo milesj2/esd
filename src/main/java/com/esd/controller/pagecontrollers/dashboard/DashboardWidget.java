@@ -9,8 +9,8 @@ public class DashboardWidget {
     public static DashboardWidget SEARCH_USERS_WIDGET = new DashboardWidget("Search Users", "users/search", "res/icons/user-search.png");
     public static DashboardWidget REPORTS_WIDGET = new DashboardWidget("Admin Reports", "admin/reports", "res/icons/clipboard.png");
     public static DashboardWidget INVOICE_SEARCH_WIDGET = new DashboardWidget("Search Invoices", "invoices/search", "res/icons/receipt-search.png");
-    public static DashboardWidget APPOINTMENT_BOOKING_WIDGET = new DashboardWidget("Appointment Booking", "appointments/book", "res/icons/calendar.png");
-    public static DashboardWidget APPOINTMENT_SEARCH_WIDGET = new DashboardWidget("Appointment Search", "appointments/search", "res/icons/calendar.png");
+    public static DashboardWidget APPOINTMENT_BOOKING_WIDGET = new DashboardWidget("Appointment Booking", "appointments/book", "res/icons/calendar-plus.png");
+    public static DashboardWidget APPOINTMENT_SEARCH_WIDGET = new DashboardWidget("Appointment Search", "appointments/search", "res/icons/appointment-search.png");
     public static DashboardWidget APPOINTMENT_SCHEDULE_WIDGET = new DashboardWidget("Appointments", "appointments/schedule", "res/icons/calendar.png");
     public static DashboardWidget MANAGE_SYSTEM_SETTINGS_WIDGET = new DashboardWidget("Manage System Settings", "admin/settings", "res/icons/settings.png");
     public static DashboardWidget MANAGE_THIRD_PARTY_WIDGET = new DashboardWidget("Manage Third Party", "thirdPartyManagement/manage", "res/icons/settings.png");

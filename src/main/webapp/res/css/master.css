@@ -414,6 +414,18 @@ body.register-page nav {
 .input_form input[type=submit]:disabled {
     background-color: #6c757d;
 }
+
+.input_form th {
+    text-align: left;
+    padding-right: 20px;
+}
+
+.input_form td {
+    padding-right: 40px;
+}
+
+
+
 /***** containers ******/
 .container_header {
     display: flex;
